@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>借款任务管理</title>
+
+<!-- header binge -->
+<include file="Public/header" />
+
+<!-- header end -->
+
+<script type="text/javascript" src="{$Think.config.URL}js/new/unify.js"></script>
+
+<script type="text/javascript">
+jQuery(document).ready(function(){
+
+	
+	jQuery('.taglist .close').click(function(){
+		jQuery(this).parent().remove();
+		return false;
+	});
+	
+});
+</script>
+</head>
+
+
+<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="js/excanvas.min.js"></script><![endif]-->
+</head>
+<body >
+
+<!-- header binge -->
+<include file="Public/head" />
+
+<!-- header end -->
+    
+    <div class="rightpanel">
+        
+        <ul class="breadcrumbs">
+            <li><a href="{:U('Console/dashboard')}"><i class="iconfa-home"></i></a> <span class="separator"></span></li>
+            <li><a href="{:U('Console/dashboard')}">后台面板</a> <span class="separator"></span></li>
+            <li>任务管理</li>
+        </ul>
+               
+        <div class="maincontent">
+            <div class="maincontentinner">
+                <div class="row-fluid">
+                        <div>
+                           <div class="widgetbox personal-information">
+                               <h4 class="widgettitle">放款列表</h4>
+                               <div class="widgetcontent dataTables_wrapper">
+                               		<form id="form" action="{:U('Task/examine_list')}" method="post">
+		                            	<input type="hidden" value="{$type}" id="type">
+		                            	<select name="type" style="width: 80px;" id="select1">
+		                            		<option value="1">手机号</option>
+		                            		<option value="2">姓名</option>
+		                            	</select>
+		                            	<input type="text" class="input-xlarge" name="content" placeholder="请输入要搜索的手机号码或姓名" style="width:200px;" value="{$content}">
+		                            	<input type="submit" class="btn btn-primary" value="搜索" name="submit">
+		                            </form>
+                                   <table class="table">
+                                   	<tr>                                    	
+                                        <th width="150px">用户手机号</th>
+                                        <th width="150px">姓名</th>
+                                   		<th width="150px">申请时间</th>
+                                   		<th width="50px">额度</th>
+                                   		<th width="50px">期限</th>
+                                        <th width="50px">初审状态</th>
+                                   		<th width="50px">银行卡是否验证</th>
+                                   		<th width="50px">实际放款</th>
+                                   		<th width="150px">银行卡号</th>
+                                   		<th width="100px">开户行</th>
+                                   		<th width="50px">审核人员</th>
+                                   		<th width="150px">操作</th>                                                                  		
+                                   	</tr>
+                                   	<volist name="list" id="vo">
+                                   		<tr>                                        	 
+                                   			 <td width="150px">{$vo.phone}</td>
+                                   			 <td width="150px">{$vo.name}</td>
+	                                   		 <td width="150px">{$vo.apply_time}</td>
+	                                   		 <td width="100px">{$vo.money_num}</td>
+	                                   		 <td width="100px">{$vo.time_length}</td>
+	                                         <td width="150px">
+	                                         	<if condition="$vo.state eq 0">
+	                                         		未审
+	                                         	<else/>
+	                                         		<if condition="$vo.is_adopt eq 1">
+	                                         			初审通过
+	                                         		<else/>
+	                                         			未通过
+	                                         		</if>
+	                                         	</if>
+	                                         </td>
+	                                         <td width="150px">
+	                                         	<if condition="$vo.is_payment eq null">
+	                                         		未绑定
+	                                         	<elseif condition="$vo.is_payment eq 0"/>
+	                                         		未验证
+	                                         	<elseif condition="$vo.is_payment eq 1"/>
+	                                         		验证成功
+	                                         	<elseif condition="$vo.is_payment eq 2"/>
+	                                         		验证失败
+	                                         	</if>
+	                                         </td>   
+	                                         <td>{$vo.daozhang}</td>
+	                                         <td>{$vo.bank_num}</td>
+	                                         <td>{$vo.account_opening}</td>
+	                                         <td>{$vo.loan_people}</td>              
+	                                         <td>
+	                                         	<a href="#myModal" role="button"  data-toggle="modal" onclick="loan(this)" id="{$vo.phone}">确定放款</a>
+	                                         </td>
+                                        </tr>
+                                   	</volist>
+                                   	
+                                   </table>
+                                   
+                                 {$page}
+                           </div>
+                        </div>
+                        
+                        <div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+						  <div class="modal-header">
+						    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+						    <h3 id="myModalLabel">放款</h3>
+						  </div>
+						  <div class="modal-body">
+						    <p>确定是否放款</p>
+						  </div>
+						  <div class="modal-footer">
+						  <input type="hidden" value="" id="phone">
+						    <button class="btn" data-dismiss="modal" aria-hidden="true">取消</button>
+						    <button class="btn btn-primary" onclick="is_loan()">确定</button>
+						    <button class="btn btn-primary" onclick="loan_fail()">放款失败</button>
+						  </div>
+						</div>
+                        
+                        
+                    </div><!--row-fluid-->
+                  
+                  
+        		 <!-- footer binge -->
+				<include file="Public/footer" />
+				
+				<!-- footer end -->
+                
+                
+        </div><!--maincontent-->
+        
+    </div><!--rightpanel-->
+    
+</div><!--mainwrapper-->
+
+</body>
+<script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+<script>
+function loan(obj){
+	var phone = obj.id;
+	$('#phone').val(phone);
+}
+function is_loan(){
+	var phone = $('#phone').val();
+	$.ajax({
+		type:"POST",
+		url:"{:U('Task/loan_success')}",
+		data:{'phone':phone},
+		success:function(data){
+			if(data == "放款失败"){
+				alert(data);
+			}else{
+				setTimeout(function(){window.location.href="{:U('Transaction/loan_list')}"},1000);
+			}
+		}
+	})
+}
+function loan_fail(){
+	var phone = $('#phone').val();
+	window.location.href="/index.php/Task/fangkuanshibai?phone="+phone;
+}
+</script>
+</html>

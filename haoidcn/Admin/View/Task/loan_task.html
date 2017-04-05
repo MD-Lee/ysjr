@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>任务管理</title>
+
+<!-- header binge -->
+<include file="Public/header" />
+<link rel="stylesheet" href="//apps.bdimg.com/libs/jqueryui/1.10.4/css/jquery-ui.min.css">
+<script src="//apps.bdimg.com/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="{$Think.config.URL}js/jquery.cookie.js"></script>
+<script src="//apps.bdimg.com/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+
+<!-- header end -->
+
+<script type="text/javascript" src="{$Think.config.URL}js/new/unify.js"></script>
+
+<script type="text/javascript">
+jQuery(document).ready(function(){
+
+	
+	jQuery('.taglist .close').click(function(){
+		jQuery(this).parent().remove();
+		return false;
+	});
+	
+});
+</script>
+</head>
+
+
+<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="js/excanvas.min.js"></script><![endif]-->
+</head>
+<body >
+
+<!-- header binge -->
+<include file="Public/head" />
+
+<!-- header end -->
+    
+    <div class="rightpanel">
+        
+        <ul class="breadcrumbs">
+            <li><a href="{:U('Console/dashboard')}"><i class="iconfa-home"></i></a> <span class="separator"></span></li>
+            <li><a href="{:U('Console/dashboard')}">后台面板</a> <span class="separator"></span></li>
+            <li>任务管理</li>
+        </ul>
+               
+        <div class="maincontent">
+            <div class="maincontentinner">
+                <div class="row-fluid">
+                        <div>
+                           <div class="widgetbox personal-information">
+                               <h4 class="widgettitle">借款任务管理</h4>
+                               <div class="widgetcontent dataTables_wrapper">
+                               	<form id="form" action="{:U('Task/search_loan_task')}">
+                               		<select name="type" style="width: 80px;">
+                               			<option value="1">手机号</option>
+                               			<option value="2">姓名</option>
+                               		</select>
+                            		<input type="text" class="input-xlarge" name="content" placeholder="请输入要搜索的手机号码或姓名" style="width:150px;">
+                            		<select name="money_num" style="width:60px;">
+										  <option value="">额度</option>
+										  <volist name='loan' id="money">
+										  	<option value="{$money.money_num}">{$money.money_num}</option>
+										  </volist>
+								  	</select>
+								  	<select name="time_length" style="width:60px;">
+										  <option value="">期限</option>
+										  <option value="7">7</option>
+										  <option value="14">14</option>
+								  	</select>
+								  	<input type="text" class="input-xlarge" name="is_renewal" placeholder="续期" style="width:30px;">
+                            		<select name="state" style="width:120px;">
+										  <option value="">状态</option>
+										  <option value="0">待审核</option>
+										  <option value="1">初审通过</option>
+										  <option value="2">初审未通过</option>
+										  <option value="3">银行卡通过</option>
+										  <option value="4">银行卡未通过</option>
+										  <option value="5">待放款</option>
+										  <option value="6">已放款</option>
+										  <option value="7">已还款</option>
+										  <option value="10">还款中</option>
+										  <option value="8">未还款</option>
+										  <option value="9">逾期</option>
+								  	</select>
+								  	<if condition="$limits eq '1'">
+								  	<select name="loan_people" style="width:100px;">
+                            			<option value="">选择审核人员</option>
+	                            			<volist name="name" id="vo">
+	                            				<option value="{$vo.userid}">{$vo.userid}</option>
+	                            			</volist>
+                            		</select>
+                            		</if>
+								  	<span>日期：<input type="text" id="datepicker1" style="width:80px" name="apply_time1">至<input type="text" id="datepicker2" style="width:80px" name="apply_time2"></span>
+                            		<input type="button" class="btn btn-primary" value="搜索" onclick="user_search()">
+                            	</form>
+                            	<div id="tab1">
+                                   <table class="table">
+	                                   	<tr>                                    	
+	                                        <th width="150px">用户手机号</th>
+	                                        <th width="150px">姓名</th>
+	                                   		<th width="150px">申请时间</th>
+	                                   		<th width="150px">个人信用报告协议书</th>
+	                                   		<th width="100px">额度</th>
+	                                   		<th width="100px">期限</th>
+	                                        <th width="150px">服务密码</th>
+	                                        <th width="150px">续期数</th>
+	                                        <th width="150px">已完成期数</th>
+	                                        <th width="100px;">审核人员</th>
+	                                   		<th width="100px">操作</th>   
+	                                   		<th width="100px;">审核状态</th>                                                               		
+	                                   	</tr>
+	                                   	<volist name="list" id="vo">
+	                                   		<tr>                                        	 
+	                                   			<td>{$vo.phone}</td>
+	                                   			<td>{$vo.name}</td>
+	                                   			<td>{$vo.apply_time}</td>
+	                                   			<td><a href="{:U('Task/xieyi',array('phone'=>$vo['phone']))}">协议时间：{$vo.time}</a></td>
+	                                            <td>{$vo.money_num}</td>
+	                                   			<td>{$vo.time_length}</td>
+	                                   			<td>{$vo.service_pwd}</td> 
+	                                   			<td>{$vo.is_renewal}</td> 
+	                                   			<td>{$vo.complete_renewal}</td>
+	                                   			<td>{$vo.loan_people}</td>
+	                                   			<if condition="$vo.state eq 0">
+		                                   				<td>
+		                                   					<a href="{:U('Task/details',array('phone'=>$vo[phone]))}">审核</a>
+		                                   				</td>
+	                                   			<else/>
+	                                   				<td>已审</td>
+	                                   			</if>
+	                                   			<td>
+	                                   			<if condition="$vo.is_adopt eq 1">
+	                                   				初审通过
+	                                   			<elseif condition="$vo.is_adopt eq 2"/>
+	                                   				不通过
+	                                   			</if>
+	                                   			</td>  
+	                                        </tr>
+	                                   	</volist>
+                                   	
+                                   </table>
+                                   {$page}
+                                 </div>
+                                 
+                                 <div id="tab2" style="display:none">
+                                 	<table class="table" id="table">
+                                 		<tr id="tr">                                    	
+	                                        <th width="150px">用户手机号</th>
+	                                        <th width="150px">姓名</th>
+	                                   		<th width="150px">申请时间</th>
+	                                   		<th width="150px">个人信用报告协议书</th>
+	                                   		<th width="100px">额度</th>
+	                                   		<th width="100px">期限</th>
+	                                        <th width="150px">服务密码</th>
+	                                        <th width="150px">续期数</th>
+	                                        <th width="100px;">审核人员</th>
+	                                   		<th width="100px">操作</th>   
+	                                   		<th width="100px;">审核状态</th>                                                               		
+	                                   	</tr>
+                                 	</table>
+                                 	<div id="page">
+                                 		
+                                 	</div>
+                                 </div>
+                                 
+                           </div>
+                        </div>
+                        
+                        
+
+                        
+                    </div><!--row-fluid-->
+                  
+                  
+        		 <!-- footer binge -->
+				<include file="Public/footer" />
+				
+				<!-- footer end -->
+                
+                
+        </div><!--maincontent-->
+        
+    </div><!--rightpanel-->
+    
+</div><!--mainwrapper-->
+
+</body>
+<script src="http://malsup.github.io/jquery.form.js"></script>
+<script>
+//日期选择器 
+$(function() {
+  $( "#datepicker1" ).datepicker({ dateFormat:"yy-mm-dd" });
+  $( "#datepicker2" ).datepicker({ dateFormat:"yy-mm-dd" });
+});
+//搜索手机用户 
+function user_search(){
+	$('#table #tr').siblings('tr').remove();
+	$('#form').ajaxSubmit({
+		type:"POST",
+		url:$('#form').attr('action'),
+		datatype:"json",
+		success:function(data){
+			$.each(data,function(){
+				if(this.state == 0){
+					$('#table').append("<tr><td>"+this.phone+"</td><td>"+this.name+"</td><td>"+this.apply_time+"</td><td><a href='/index.php/Task/xieyi?phone="+this.phone+"'>协议时间:"+this.time+"</a></td><td>"+this.money_num+"</td><td>"+this.time_length+"</td><td>"+this.service_pwd+"</td><td>"+this.is_renewal+"</td><td>"+this.loan_people+"</td>"
+										+"<td><a href='/index.php/Task/details?phone="+this.phone+"'>审核</a></td><td>"+this.is_adopt+"</td></tr>");
+				}else{
+					$('#table').append("<tr><td>"+this.phone+"</td><td>"+this.name+"</td><td>"+this.apply_time+"</td><td><a href='/index.php/Task/xieyi?phone="+this.phone+"'>协议时间:"+this.time+"</a></td><td>"+this.money_num+"</td><td>"+this.time_length+"</td><td>"+this.service_pwd+"</td><td>"+this.is_renewal+"</td><td>"+this.loan_people+"</td><td>已审</td><td>"+this.is_adopt+"</td</tr>");
+				}
+			});
+			$('#tab1').css('display','none');
+			$('#tab2').css('display','block');
+		}
+	})
+}
+</script>
+</html>

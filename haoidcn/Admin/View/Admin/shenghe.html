@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>银行卡详情</title>
+
+<!-- header binge -->
+<include file="Public/header" />
+
+<!-- header end -->
+
+<script type="text/javascript" src="{$Think.config.URL}js/new/unify.js"></script>
+
+<script type="text/javascript">
+jQuery(document).ready(function(){
+
+	
+	jQuery('.taglist .close').click(function(){
+		jQuery(this).parent().remove();
+		return false;
+	});
+	
+});
+</script>
+
+</head>
+
+
+<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="js/excanvas.min.js"></script><![endif]-->
+</head>
+<body>
+
+<!-- header binge -->
+<include file="Public/head" />
+
+<!-- header end -->
+    
+    <div class="rightpanel">
+        <!-- head binge -->
+        
+			<include file="Public/nav" name='银行卡详情'/>
+		
+		<!-- head end -->
+        
+        <div class="maincontent">
+            <div class="maincontentinner">
+                <div class="row-fluid">
+                   <div>
+                        <div class="widgetbox personal-information">
+                            <h4 class="widgettitle">银行卡详情</h4>
+                            <div class="widgetcontent" id="user" style="height: 700px;">
+                            	<div style="float:left;margin-top: -15px;">
+	                            	<if condition="$list['img'] eq null">
+	                            	    <span>图片:</span>
+	                            		<span>没有银行卡截图</span>
+	                            	<else/>
+		                            	<p>
+		                            		<a href="{$list['img']}" target="_blank"><img src="{$list['img']}" style="width:600px;height:600px"></a>
+		                            	</p>
+	                            	</if>
+                            	</div>
+                            	
+                            	<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true" style="margin-left:750px;">
+								  <div class="panel panel-default">
+								    <div class="panel-heading" role="tab" id="headingFour">
+								      <h4 class="panel-title">
+								        <a class="button" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+								          	银行卡信息
+								        </a>
+								      </h4>
+								    </div>
+								    <div id="collapseFour" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingFour">
+								      <div class="panel-body">
+								      		<p><span>姓名：</span><span>{$list['name']}</span></p>
+								      		<p><span>手机号：</span><span>{$list['phone']}</span></p>
+								      		<p><span>银行卡名称：</span><span>{$list['bank_name']}</span></p>
+											<p><span>银行卡号：</span><span>{$list['bank_num']}</span></p>
+											<p><span>开户网点：</span><span>{$list['account_opening']}</span></p>
+											<p><span>审核人员：</span><span>{$list['loan_people']}</span></p>
+								      </div>
+								    </div>
+								  </div>
+								  
+								  <button type="button" class="btn btn-primary" onclick="is_bank(this)" value="" id="{$phone}">通过</button>
+						    	<a type="button" class="btn" href="#myModal" role="button"  data-toggle="modal">不通过</a>
+								</div>
+
+                            </div>
+                                      
+                        </div>
+                        
+                        <div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+						  <div class="modal-header">
+						    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+						    <h3 id="myModalLabel">是否不通过</h3>
+						  </div>
+						  <div class="modal-body">
+						    <span>拒接理由:</span>
+						    <input type="text" name="liyou" id="liyou">
+						  </div>
+						  <div class="modal-footer">
+						    <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+						    <button type="button" class="btn btn-primary" onclick="no_bank(this)" id="{$phone}" aria-hidden="true" data-dismiss="modal">确定</button>
+						  </div>
+						</div>
+                    </div><!--row-fluid-->
+                  
+                  
+        		 <!-- footer binge -->
+				<include file="Public/footer" />
+				
+				<!-- footer end -->
+                
+                
+                
+            </div><!--maincontentinner-->
+        </div><!--maincontent-->
+        
+    </div><!--rightpanel-->
+    
+</div><!--mainwrapper-->
+
+</body>
+<script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+<script>
+function is_bank(obj){
+	var phone = obj.id;
+	$.ajax({
+		type:"POST",
+		url:"{:U('Admin/is_bank')}",
+		data:{'phone':phone},
+		datatype:"json",
+		success:function(data){
+			if(data == '验证成功'){
+				alert('验证成功');
+				setTimeout(function(){window.location.href="/index.php/Task/examine_list"},1000);
+			}
+		}
+	})
+}
+function no_bank(obj){
+	var phone = obj.id;
+	var liyou = $('#liyou').val();
+	$.ajax({
+		type:"POST",
+		url:"{:U('Admin/no_bank')}",
+		data:{
+			'phone':phone,
+			'liyou':liyou
+		},
+		datatype:"json",
+		success:function(data){
+			if(data == '验证失败'){
+				alert('验证成功');
+				setTimeout(function(){window.location.href="/index.php/Admin/bank_info"},1000);
+			}
+		}
+	})
+}
+</script>
+</html>

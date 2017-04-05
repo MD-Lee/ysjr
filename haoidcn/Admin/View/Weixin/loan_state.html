@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>e借款</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	<link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+	<link href="{$Think.config.URL}/css/lend_success.css" rel="stylesheet">
+	<script type="text/javascript" src="{$Think.config.URL}js/jquery-1.9.1.min.js"></script>
+	<script type="text/javascript" src="{$Think.config.URL}js/common.js"></script>
+</head>
+<body>
+	<div class="header top-head">
+		<h4 class="title">e借款
+		</h4>
+	</div>
+	<div class="center-block img-responsive">
+		<img src="{$Think.config.URL}/images/xianjinbashi/home.png" class="img-responsive">
+	</div>
+	<if condition="$data eq 1">
+		<a  class="center-block keep">后台审核中</a>
+	</if>
+	<if condition="$data eq 2">
+		<a  class="center-block keep">银行卡验证中</a>
+	</if>
+	<if condition="$data eq 3">
+		<a  class="center-block keep">持证自拍审核中</a>
+	</if>
+	<if condition="$data eq 4">
+		<a  class="center-block keep">未还款</a>
+	</if>
+	<if condition="$data eq 5">
+		<a  class="center-block keep">还未持证自拍</a>
+	</if>
+	<if condition="$data eq 6">
+		<a  class="center-block keep">持证自拍未通过</a>
+	</if>
+	<p class="center-block text">我们正在审核您的资料，请耐心等待。点击可以<a href="{:U('Weixin/lend_details',array('phone'=>$phone))}">查看详情</a></p>
+</body>
+</html>

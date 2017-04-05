@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>用户个人信息</title>
+
+<!-- header binge -->
+<include file="Public/header" />
+<!-- header end -->
+
+<script type="text/javascript" src="{$Think.config.URL}js/new/unify.js"></script>
+
+<script type="text/javascript">
+jQuery(document).ready(function(){
+
+	
+	jQuery('.taglist .close').click(function(){
+		jQuery(this).parent().remove();
+		return false;
+	});
+	
+});
+</script>
+
+</head>
+
+
+<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="js/excanvas.min.js"></script><![endif]-->
+</head>
+<body>
+
+<!-- header binge -->
+<include file="Public/head" />
+
+<!-- header end -->
+    
+    <div class="rightpanel">
+        <!-- head binge -->
+        
+			<include file="Public/nav" name='用户个人信息'/>
+		
+		<!-- head end -->
+        
+        <div class="maincontent">
+            <div class="maincontentinner">
+                <div class="row-fluid">
+                   <div>
+                        <div class="widgetbox personal-information">
+                            <h4 class="widgettitle">用户个人信息</h4>
+                            <div class="widgetcontent">
+                            	<form id="form" action="{:U('Admin/search_user_info')}">
+                            		<input type="text" class="input-xlarge" name="phone" placeholder="请输入要搜索的手机号码">
+                            		<select name="education">
+										  <option value="">教育水平</option>
+										  <option value="小学">小学</option>
+										  <option value="初中">初中</option>
+										  <option value="高中">高中</option>
+										  <option  value="大专">大专</option>
+										  <option value="本科">本科</option>
+										  <option value="研究生">研究生</option>
+										  <option value="博士">博士</option>
+								  	</select>
+                            		<input type="button" class="btn btn-primary" value="搜索" onclick="user_search()">
+                            	</form>
+                            	<div id="tab1">
+	                            	<table class="table table-bordered">
+	                            		<tr>
+	                            			<th width="150px;">手机号</th>
+	                            			<th width="150px;">姓名</th>
+	                            			<th width="200px;">身份证号码</th>
+	                            			<th width="200px;">QQ号码</th>
+	                            			<th width="200px;">电子邮箱地址</th>
+	                            			<th width="200px;">芝麻分</th>
+	                            			<th width="250px;">教育水平</th>
+	                            			<th width="250px;">婚姻状况</th>
+	                            			<th width="300px;">有没有子女</th>
+	                            			<th width="350px;">操作</th>
+	                            		</tr>
+	                            		<volist name="list" id="vo">
+	                            			<tr>
+	                            				<td>{$vo.phone}</td>
+	                            				<td>{$vo.name}</td>
+	                            				<td>{$vo.uid}</td>
+	                            				<td>{$vo.qq}</td>
+	                            				<td>{$vo.email}</td>
+	                            				<td>{$vo.integral}</td>
+	                            				<td>{$vo.education}</td>
+	                            				<td>{$vo.marriage}</td>
+	                            				<td>{$vo.is_children}</td>
+	                            				<td>
+	                            					<a href="#myModal" role="button" class="btn btn-inverse" data-toggle="modal" onclick="get_mobile(this)" id="{$vo.phone}">芝麻分</a>
+	                            				</td>
+	                            			</tr>
+	                            		</volist>
+	                            	</table> 
+									{$page}
+								</div>
+								<div id="tab2" style="display:none">
+									<table id="table" class="table table-bordered">
+										<tr id="tr">
+	                            			<th width="150px;">手机号</th>
+	                            			<th width="150px;">姓名</th>
+	                            			<th width="200px;">身份证号码</th>
+	                            			<th width="200px;">QQ号码</th>
+	                            			<th width="200px;">电子邮箱地址</th>
+	                            			<th width="200px;">芝麻分</th>
+	                            			<th width="250px;">教育水平</th>
+	                            			<th width="250px;">婚姻状况</th>
+	                            			<th width="300px;">有没有子女</th>
+	                            			<th width="350px;">操作</th>
+	                            		</tr>
+									</table>
+								</div>
+                            </div>
+                                      
+                        </div>
+
+
+						<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+						  <div class="modal-header">
+						    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+						    <h3 id="myModalLabel">添加芝麻分</h3>
+						  </div>
+						  <div class="modal-body">
+						    <span>芝麻分:</span>
+						    <input type="text" name="integral" id="integral">
+						    <input type="hidden" name="phone" value="">
+						  </div>
+						  <div class="modal-footer">
+						    <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+						    <button type="button" class="btn btn-primary" onclick="add_sesame()">确定</button>
+						  </div>
+						</div>
+                    </div><!--row-fluid-->
+                  
+                  
+        		 <!-- footer binge -->
+				<include file="Public/footer" />
+				
+				<!-- footer end -->
+                
+                
+                
+            </div><!--maincontentinner-->
+        </div><!--maincontent-->
+        
+    </div><!--rightpanel-->
+    
+</div><!--mainwrapper-->
+
+</body>
+<script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+<script>
+function get_mobile(obj){
+	var id = obj.id;
+	$("input[name='phone']").val(id);
+	var phone = $("input[name='phone']").val();
+	$.ajax({
+		type:"POST",
+		url:"{:U('Admin/get_integral')}",
+		data:{'phone':phone},
+		datatype:"json",
+		success:function(data){
+			$("#integral").val(data);
+		}
+	})
+}
+//搜索手机用户 
+function user_search(){
+	$('#table #tr').siblings('tr').remove();
+	$('#form').ajaxSubmit({
+		type:"POST",
+		url:$('#form').attr('action'),
+		datatype:"json",
+		success:function(data){
+			$.each(data,function(){
+				if(this.integral == null){
+					$('#table').append("<tr><td>"+this.phone+"</td><td>"+this.name+"</td><td>"+this.uid+"</td><td>"+this.qq+"</td><td>"+this.email+"</td><td></td><td>"+this.education+"</td><td>"+this.marriage+"</td><td>"+this.is_children+"</td><td><a href='#myModal' role='button' class='btn btn-inverse' data-toggle='modal' onclick='get_mobile(this)' id='"+this.phone+"'>芝麻分</a></td></tr>");
+				}else{
+					$('#table').append("<tr><td>"+this.phone+"</td><td>"+this.name+"</td><td>"+this.uid+"</td><td>"+this.qq+"</td><td>"+this.email+"</td><td>"+this.integral+"</td><td>"+this.education+"</td><td>"+this.marriage+"</td><td>"+this.is_children+"</td><td><a href='#myModal' role='button' class='btn btn-inverse' data-toggle='modal' onclick='get_mobile(this)' id='"+this.phone+"'>芝麻分</a></td></tr>");
+				}
+			});
+			$('#tab1').css('display','none');
+			$('#tab2').css('display','block');
+		}
+	})
+}
+function add_sesame(){
+	var integral = $("input[name='integral']").val();
+	var phone = $("input[name='phone']").val();
+	$.ajax({
+		type:"POST",
+		url:"{:U('Admin/integral')}",
+		data:{
+			"integral":integral,
+			"phone":phone
+		},
+		datatype:"json",
+		success:function(data){
+			if(data == '添加成功'){
+				setTimeout(function(){window.location.reload()},1000);
+			}else{
+				alert(data);
+			}
+		}
+	})
+}
+</script>
+</html>

@@ -1,0 +1,125 @@
+@CHARSET "UTF-8";
+html {
+  width: 100%;
+  margin: 0 auto;
+  background: url("/haoidcn/Admin/Public/images/xianjinbashi/beijing.png");
+  font-family: "Microsoft YaHei UI Light";	
+}
+body {
+	background-color: transparent!important;
+}
+a img{
+	float:left;
+}
+.container {
+	margin-top: 40px;
+}
+.img img{
+	width: 100%;
+}
+.deviation{
+	margin-top: 20px;
+}
+button{
+	height: 50px;
+	width: 40%;
+	margin-left: 10px;
+}
+.text1{
+	margin-left: 30px;
+}
+.text2{
+	float: right;
+	margin-right: 20px;
+}
+.btn {
+	background-color: #fff;
+	border: 2px solid #00B4FF;
+	color: #00B4FF;
+}
+.btn-primary.money{
+	background-color: #00B4FF;
+	border-color: #00B4FF;
+	color: #fff;
+}
+.btn-primary.lenth{
+	background-color: #00B4FF;
+	border-color: #00B4FF;
+	color: #fff;
+}
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active, .open .dropdown-toggle.btn-primary {
+	background-color: #00B4FF;
+	border-color: #00B4FF;
+	color: #fff;	
+}
+#register{
+	margin: auto;
+	width:100%;
+	font-size: 18px;
+	margin-top: 30px;
+	border-radius: 30px;
+}
+#txt3 {
+	margin-top: 20px;
+}
+#txt3 .repay {
+	font-size: 20px;
+	color: #00B4FF;	
+}
+/*返回*/
+.top-head {
+  position: fixed;
+  /*min-width: 320px;
+  max-width: 640px;*/
+  height: 40px;
+  width: 100%;
+  top: 0;
+  background-color: #fff;
+}
+.top-head .title {
+  position: relative;
+  display: block;
+  margin: 0 auto;
+  text-align: center;
+  vertical-align: middle;
+  font-size: 18px;
+  line-height: 40px;
+  font-weight: bold;
+}
+.title .back {
+  position: absolute;
+  left: 0;
+  top: 3px;
+}
+.top-head i.icon-back {
+  background-image: url("/haoidcn/Admin/Public/images/xianjinbashi/left.png");
+  height: 25px;
+  width: 25px;
+  margin-top: 5px;
+}
+i.icon {
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: 100% auto;
+  display: inline-block;
+  font-style: normal;
+  position: relative;
+  vertical-align: middle;
+  height: 30px;
+  width: 30px;
+}
+.top-head:after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 40px;
+  bottom: auto;
+  right: auto;
+  height: 1px;
+  width: 100%;
+  background-color: #c8c7cc;
+  display: block;
+  z-index: 15;
+  -webkit-transform-origin: 50% 0%;
+  transform-origin: 50% 0%;
+}

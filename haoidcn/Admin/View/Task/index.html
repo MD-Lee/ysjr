@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>任务管理</title>
+
+<!-- header binge -->
+<include file="Public/header" />
+
+<!-- header end -->
+
+<script type="text/javascript" src="{$Think.config.URL}js/new/unify.js"></script>
+
+<script type="text/javascript">
+jQuery(document).ready(function(){
+
+	
+	jQuery('.taglist .close').click(function(){
+		jQuery(this).parent().remove();
+		return false;
+	});
+	
+});
+</script>
+</head>
+
+
+<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="js/excanvas.min.js"></script><![endif]-->
+</head>
+<body >
+
+<!-- header binge -->
+<include file="Public/head" />
+
+<!-- header end -->
+    
+    <div class="rightpanel">
+        
+        <ul class="breadcrumbs">
+            <li><a href="{:U('Console/dashboard')}"><i class="iconfa-home"></i></a> <span class="separator"></span></li>
+            <li><a href="{:U('Console/dashboard')}">后台面板</a> <span class="separator"></span></li>
+            <li>任务管理</li>
+        </ul>
+               
+        <div class="maincontent">
+            <div class="maincontentinner">
+                <div class="row-fluid">
+                        <div>
+                           <div class="widgetbox personal-information">
+                               <h4 class="widgettitle">任务管理</h4>
+                               <div class="widgetcontent dataTables_wrapper">
+                                   <table class="table">
+                                   	<tr>                                    	
+                                        <th>商户类别</th>
+                                   		<th>标题</th>
+                                   		<th>日期</th>
+                                   		<th>时段开始</th>
+                                        <th>时段结束</th>
+                                   		<th>额度开始</th>
+                                        <th>额度结束</th>
+                                        <th>&nbsp;</th>                                                                     		
+                                   	</tr>
+                                   	<volist name="list" id="vo">
+                                   		<tr id="c_manage{$vo.id}">                                        	 
+                                   			<td>{$vo.bus_type_name}</td>
+                                   			<td>{$vo.title}</td>
+                                            <td>{$vo.date}</td>
+                                   			<td>{$vo.t_start}</td>
+                                   			<td>{$vo.t_end}</td>
+                                   			<td>{$vo.c_start}</td>
+                                   			<td>{$vo.c_end}</td>    
+                                            <td><a href="/index.php/Task/edit/id/{$vo.id}"  class="icon-pencil"></a></td                                       
+                                   		></tr>
+                                   	</volist>
+                                   	
+                                   </table>
+                                   
+		                           {$page}
+                                 
+                           </div>
+                        </div>
+                        
+                        
+                    </div><!--row-fluid-->
+                  
+                  
+        		 <!-- footer binge -->
+				<include file="Public/footer" />
+				
+				<!-- footer end -->
+                
+                
+        </div><!--maincontent-->
+        
+    </div><!--rightpanel-->
+    
+</div><!--mainwrapper-->
+
+</body>
+</html>

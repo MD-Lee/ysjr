@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>文章管理</title>
+
+<!-- header binge -->
+<include file="Public/header" />
+
+<!-- header end -->
+
+<script type="text/javascript" src="{$Think.config.URL}js/new/unify.js"></script>
+</head>
+
+
+<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="js/excanvas.min.js"></script><![endif]-->
+</head>
+<body >
+
+<!-- header binge -->
+<include file="Public/head" />
+
+<!-- header end -->
+    
+    <div class="rightpanel">
+        
+        <!-- head binge -->
+        
+			<include file="Public/nav" name='文章管理'/>
+		
+		<!-- head end -->
+                
+        <div class="maincontent">
+            <div class="maincontentinner">
+                <div class="row-fluid">
+                        <div>
+                            
+                                <div class="widgetbox personal-information">
+                                    <h4 class="widgettitle">编辑协议</h4>
+                                    <div class="widgetcontent">
+                                    	<div style="padding:15px 40px;">
+	                                    	<form action="{:U('Article/edit_agreement')}" class="editprofileform" id="form">
+		                                    	<!-- UE编辑器 -->
+												<div>
+													<script type="text/plain" id="container" name="info[content]">{$content}</script>
+													<script  type="text/javascript">
+														//实例化编辑器
+														var ue = UE.getEditor('container');
+														ue.ready(function() {
+														    //设置编辑器的内容
+														   // UE.getEditor('container').execCommand('insertHtml', "")
+														});
+													</script>
+												</div>
+												<input type="hidden" id="uid" value="{$id}">
+		                                    </form>
+                                            <p>
+	                                        	<button class="btn btn-primary" onclick="edit_agreement()">修改协议</button>
+			                                </p>
+                                    	</div>
+                                    </div>
+                                </div>
+                            
+                        </div><!--span8-->
+                    </div><!--row-fluid-->
+                   <div style="height:292px;"></div>
+                  
+        		 <!-- footer binge -->
+				<include file="Public/footer" />
+				
+				<!-- footer end -->
+                
+                
+                
+            </div><!--maincontentinner-->
+        </div><!--maincontent-->
+        
+    </div><!--rightpanel-->
+    
+</div><!--mainwrapper-->
+<script>
+function edit_agreement(){
+	var id = $('#uid').val();
+	$('#form').ajaxSubmit({
+		type:"POST",
+		url:$('#form').attr('action'),
+		data:{'id':id},
+		datatype:"json",
+		success:function(data){
+			if(data == '修改成功'){
+				alert(data);
+				setTimeout(function(){window.location.reload()},1000);
+			}
+		}
+	})
+}
+</script>
+</body>
+</html>

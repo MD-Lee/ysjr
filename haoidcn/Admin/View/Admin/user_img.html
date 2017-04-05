@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>用户持证自拍资料</title>
+
+<!-- header binge -->
+<include file="Public/header" />
+
+<!-- header end -->
+
+<script type="text/javascript" src="{$Think.config.URL}js/new/unify.js"></script>
+
+<script type="text/javascript">
+jQuery(document).ready(function(){
+
+	
+	jQuery('.taglist .close').click(function(){
+		jQuery(this).parent().remove();
+		return false;
+	});
+	
+});
+</script>
+
+</head>
+
+
+<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="js/excanvas.min.js"></script><![endif]-->
+</head>
+<body>
+
+<!-- header binge -->
+<include file="Public/head" />
+
+<!-- header end -->
+    
+    <div class="rightpanel">
+        <!-- head binge -->
+        
+			<include file="Public/nav" name='用户持证自拍资料'/>
+		
+		<!-- head end -->
+        
+        <div class="maincontent">
+            <div class="maincontentinner">
+                <div class="row-fluid">
+                   <div>
+                        <div class="widgetbox personal-information">
+                            <h4 class="widgettitle">用户持证自拍资料</h4>
+                            <div class="widgetcontent">
+                            <if condition="$limits eq '1'">
+                            	<form id="form" action="{:U('Admin/search_user_img')}">
+                            		<input type="text" class="input-xlarge" name="phone" placeholder="请输入要搜索的手机号码">
+                            		<select name="is_adopt">
+										  <option value="">是否验证</option>
+										  <option value="">申请</option>
+										  <option value="">通过</option>
+										  <option value="">未通过</option>
+								  	</select>
+                            		<input type="button" class="btn btn-primary" value="搜索" onclick="user_search()">
+                            	</form>
+                            </if>
+                            	<div id="tab1">
+	                            	<table class="table table-bordered">
+	                            		<tr>
+	                            			<th width="200px;">手机号</th>
+	                            			<th width="200px;">用户资料图片</th>
+	                            			<th width="200px;">上传时间</th>
+	                            			<th width="200px;">操作</th>
+	                            		</tr>
+	                            		<volist name="list" id="vo">
+	                            			<tr>
+	                            				<td>{$vo.phone}</td>
+	                            				<td>
+	                            					<img src="/{$vo.img_url}" width="200px" style="height: 150px;">
+	                            				</td>
+	                            				<td>{$vo.time}</td>
+	                            				<td>
+	                            					<div class="btn-group">
+		                            					<if condition="$vo.is_adopt eq  0">
+											                <button class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">验证身份证<span class="caret"></span></button>
+											                <ul class="dropdown-menu">
+											                  <li><a href="#" onclick="is_adopt(this)" id="{$vo.openid}">确认</a></li>
+											                  <li><a href="#" onclick="no_adopt(this)" id="{$vo.openid}">否定</a></li>
+											                </ul>
+											            <elseif condition="$vo.is_adopt eq  1"/>
+											            	<button class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">已通过<span class="caret"></span></button>
+											            <elseif condition="$vo.is_adopt eq  2"/>
+											            	<button class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">未通过<span class="caret"></span></button>
+											            </if>
+										            </div>
+	                            				</td>
+	                            			</tr>
+	                            		</volist>
+	                            	</table> 
+									{$page}
+								</div>
+								<div id="tab2" style="display:none">
+									<table id="table"  class="table table-bordered">
+										<tr id="tr">
+	                            			<th width="200px;">手机号</th>
+	                            			<th width="200px;">用户资料图片</th>
+	                            			<th width="200px;">上传时间</th>
+	                            			<th width="200px;">操作</th>
+	                            		</tr>
+									</table>
+								</div>
+                            </div>
+                                      
+                        </div>
+
+                    </div><!--row-fluid-->
+                  
+                  
+        		 <!-- footer binge -->
+				<include file="Public/footer" />
+				
+				<!-- footer end -->
+                
+                
+                
+            </div><!--maincontentinner-->
+        </div><!--maincontent-->
+        
+    </div><!--rightpanel-->
+    
+</div><!--mainwrapper-->
+
+</body>
+<script>
+//搜索手机用户 
+function user_search(){
+	$('#table #tr').siblings('tr').remove();
+	$('#form').ajaxSubmit({
+		type:"POST",
+		url:$('#form').attr('action'),
+		datatype:"json",
+		success:function(data){
+			/* $.each(data,function(){
+				$('#table').append("<tr><td>"+this.phone+"</td><td>"+this.name+"</td><td>"+this.work+"</td><td>"+this.wages+"</td><td>"+this.company_name+"</td><td>"+this.province+"</td><td>"+this.city+"</td><td>"+this.address+"</td><td>"+this.zip_code+"</td></tr>");
+			});
+			$('#tab1').css('display','none');
+			$('#tab2').css('display','block'); */
+		}
+	})
+}
+function is_adopt(obj){
+	var id = obj.id;
+	$.ajax({
+		type:"POST",
+		url:"{:U('Admin/is_adopt')}",
+		data:{'id':id},
+		datatype:"json",
+		success:function(data){
+			if(data == '已验证'){
+				alert('验证成功');
+				setTimeout(function(){window.location.reload()},1000);
+			}
+		}
+	})
+}
+function no_adopt(obj){
+	var id = obj.id;
+	$.ajax({
+		type:"POST",
+		url:"{:U('Admin/no_adopt')}",
+		data:{'id':id},
+		datatype:"json",
+		success:function(data){
+			if(data == '已验证'){
+				alert('未通过');
+				setTimeout(function(){window.location.reload()},1000);
+			}
+		}
+	})
+}
+</script>
+</html>

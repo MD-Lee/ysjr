@@ -1,0 +1,179 @@
+@CHARSET "UTF-8";
+html {
+  width: 100%;
+  margin: 0 auto;
+  background: url("/haoidcn/Admin/Public/images/xianjinbashi/beijing.png");
+  font-family: "Microsoft YaHei UI Light";	
+}
+.container {
+	margin-top: 40px;
+}
+.img img {
+	width: 100%;
+}
+.btn.btn-primary{
+	background-color: #00B4FF;
+	border-color: #00B4FF;
+	height: 50px;
+}
+#register{
+	margin-top: 30px;
+	width:100%;
+	font-size: 18px;
+	border-radius: 30px;
+	    margin-bottom: 20px;
+}
+/*返回*/
+.top-head {
+  position: fixed;
+  /*min-width: 320px;
+  max-width: 640px;*/
+  height: 40px;
+  width: 100%;
+  top: 0;
+  background-color: #fff;
+      z-index: 999;
+}
+.top-head .title {
+  position: relative;
+  display: block;
+  margin: 0 auto;
+  text-align: center;
+  vertical-align: middle;
+  font-size: 18px;
+  line-height: 40px;
+  font-weight: bold;
+}
+.title .back {
+  position: absolute;
+  left: 0;
+  top: 3px;
+}
+.top-head i.icon-back {
+  background-image: url("/haoidcn/Admin/Public/images/xianjinbashi/left.png");
+  height: 25px;
+  width: 25px;
+  margin-top: 5px;
+}
+i.icon {
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: 100% auto;
+  display: inline-block;
+  font-style: normal;
+  position: relative;
+  vertical-align: middle;
+  height: 30px;
+  width: 30px;
+}
+.top-head:after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 40px;
+  bottom: auto;
+  right: auto;
+  height: 1px;
+  width: 100%;
+  background-color: #c8c7cc;
+  display: block;
+  z-index: 15;
+  -webkit-transform-origin: 50% 0%;
+  transform-origin: 50% 0%;
+}
+/*查看贷款详情按钮*/
+.look {
+	margin-top: 30px;
+	width: 90%;
+	height: 50px;
+	background-color: #00b4ff;
+	border-radius: 30px;;
+}
+.look .bowling {
+	display: block;
+	width: 65%;
+	text-align: center;
+	line-height: 50px;
+	color: #fff;
+	font-size: 16px;
+}
+.look .bowling .tubiao {
+	width: 20px;
+	height: 20px;
+	margin-top: 14px;
+	background: url("/haoidcn/Admin/Public/images/xianjinbashi/123.png") no-repeat;
+	background-size: 100% 100%;
+}
+/*选择框样式*/
+select {
+	-moz-appearance: none;
+    -webkit-appearance:none;
+    appearance:none; 
+    background-color: transparent; 
+    display: block;
+    width: 100%;
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.428571429;
+    color: #555;
+    height: 50px;
+    vertical-align: middle;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
+    -webkit-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+}
+.select{
+	position: relative;	   
+	background-color: transparent;  
+}	
+.select .down {
+	position: absolute;
+	border-left: 1px solid #ccc;
+	z-index: -1;
+	right: 0;
+	top: 0;
+	width: 60px;
+	height: 50px;
+}
+.select .down .down-img {
+	position: absolute;
+	right: 0;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	margin: auto;
+	width: 25px;
+	height: 25px;
+	background: url("/haoidcn/Admin/Public/images/xianjinbashi/down.svg") no-repeat;
+	background-size: 100% 100%;	
+}
+.tab-content>div {
+	display: none;
+}
+.tab-content .blcok {
+	display: block;
+}
+#next {
+	border-radius: 30px;
+}
+.or button {
+	width: 45%;
+	border-radius: 30px;
+}
+.half {
+	width: 45%;
+}
+.half select {
+	width: 100%;
+}
+/*表单*/
+.list {
+	margin-top: 30px;
+}
+.form-control {
+    height: 50px;
+}

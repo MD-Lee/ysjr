@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>常见问题</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+		<link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+		<link href="{$Think.config.URL}/css/problem.css" rel="stylesheet">
+		<script type="text/javascript" src="{$Think.config.URL}js/jquery-1.9.1.min.js"></script>
+		<script type="text/javascript" src="{$Think.config.URL}js/common.js"></script>
+	</head>
+	<body>
+    	<ul class="mune-list">
+	    	<volist name="list2" id="info">
+	        	<li class="item" href="">
+	            	<a href="#">
+	                	<span class="fl box raiders"></span>
+	                		{$info.title}
+	            	</a>
+	        	</li>
+	        </volist>
+    	</ul>
+    	<div class="pos">
+			<div class="line">
+			    <p></p>
+			    <span>常见问题</span>
+			    <p></p>
+			</div>
+			<div class="search">
+				<p>
+					<input type="text" placeholder="请输入你的问题" />
+					<i class="icon search2"></i>					
+				</p>
+
+			</div>
+    	</div>
+    	<ul class="list">
+    		<volist name="list" id="vo">
+	    		<li class="bug">
+	    			<div class="heading">
+	    				Q{$vo.id}:{$vo.title}
+	    				<i class="up"></i>
+	    			</div>
+	    			<p class="con">
+						{$vo.content}
+	    			</p>
+	    		</li>
+	    	</volist>
+    	</ul>
+	</body>
+	<script type="text/javascript">
+//		问题列表切换
+		$(".heading").click(function(){
+			var display =$(this).siblings("p").css('display');
+			if(display=="none") {
+				$(this).children("i").addClass("down").parents(".bug").siblings(".bug").children(".heading").children("i").removeClass("down");
+				$(this).addClass("beij").parent(".bug").siblings(".bug").children(".heading").removeClass("beij")
+				$(this).siblings("p").show().parent(".bug").siblings(".bug").children("p").hide();
+				$(this).parent(".bug").addClass("bug-ground").siblings(".bug").removeClass("bug-ground")				
+			} else {
+				$(this).siblings("p").hide();
+				$(this).parent(".bug").removeClass("bug-ground");
+				$(this).children("i").removeClass("down");
+				$(this).removeClass("beij");
+			}
+		})
+//		滚动到一定距离输入框改完窗口定位方式
+        $(window).scroll(function() {
+            // 当滚动到最底部以上100像素时， 加载新内容
+            if ($(this).scrollTop() >= 105) {
+                $(".pos").css({
+					position: 'fixed',
+					width: '100%',
+					top: '0',
+					zIndex: 999
+				});
+            }else{
+                $(".pos").css({
+					position: 'initial'
+				});               
+           }
+        });		
+	</script>
+</html>

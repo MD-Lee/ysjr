@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>放款管理</title>
+
+<!-- header binge -->
+<include file="Public/header" />
+
+<!-- header end -->
+
+<script type="text/javascript" src="{$Think.config.URL}js/new/unify.js"></script>
+
+<script type="text/javascript">
+jQuery(document).ready(function(){
+
+	
+	jQuery('.taglist .close').click(function(){
+		jQuery(this).parent().remove();
+		return false;
+	});
+	
+});
+</script>
+
+</head>
+
+
+<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="js/excanvas.min.js"></script><![endif]-->
+</head>
+<body>
+
+<!-- header binge -->
+<include file="Public/head" />
+
+<!-- header end -->
+    
+    <div class="rightpanel">
+        <!-- head binge -->
+        
+			<include file="Public/nav" name='放款管理'/>
+		
+		<!-- head end -->
+        
+        <div class="maincontent">
+            <div class="maincontentinner">
+                <div class="row-fluid">
+                   <div>
+                        <div class="widgetbox personal-information">
+                            <h4 class="widgettitle">名单</h4>
+                            <div class="widgetcontent">
+                            	<form id="form" action="{:U('Transaction/no_repayment')}" method="post">
+	                            	<input type="hidden" value="{$type}" id="type">
+	                            	<select name="type" style="width: 80px;" id="select1">
+	                            		<option value="1">手机号</option>
+	                            		<option value="2">姓名</option>
+	                            	</select>
+	                            	<input type="text" class="input-xlarge" name="content" placeholder="请输入要搜索的手机号码或姓名" style="width:200px;" value="{$content}">
+	                            	<input type="submit" class="btn btn-primary" value="搜索" name="submit">
+	                            </form>
+                            	<table class="table table-bordered">
+                            		<tr>
+                            			<th width="150px;">手机号</th>
+                            			<th width="100px;">姓名</th>
+                            			<th width="150px;">银行卡号</th>
+                            			<th width="100px;">金额</th>
+                            			<th width="100px;">期限</th>
+                            			<th width="100px;">续期数</th>
+                            			<th width="100px;">到期还款额</th>
+                            			<th width="100px;">放款日期</th>
+                            			<th width="100px;">约定还款日期</th>
+                            			<th width="100px;">实际还款日期</th>
+                            			<th width="200px;">还款方式</th>
+                            			<th width="200px;">还款类型</th>
+                            			<th width="100px;">审核人员</th>
+                            			<th width="200px;">操作</th>
+                            		</tr>
+                            		<volist name="list" id="vo">
+                            			<tr>
+                            				<td>{$vo.phone}</td>
+                            				<td>{$vo.name}</td>
+                            				<td>{$vo.bank_num}</td>
+                            				<td>{$vo.money_num}</td>
+                            				<td>{$vo.time_length}</td>
+                            				<td>{$vo.is_renewal}</td>
+                            				<td>{$vo.sum}</td>
+                            				<td>{$vo.payment_time}</td>
+                            				<td>{$vo.appoint_time}</td>
+                            				<td>
+                            					<if condition="$vo.actual_time eq null">
+                            						未还款
+                            					<else/>
+                            						{$vo.actual_time}
+                            					</if>
+                            				</td>
+                            				<td>
+                            				<if condition="$vo.trade_mode eq 1">
+                            					银行卡还款
+                            				<elseif condition="$vo.trade_mode eq 2"/>
+                            					支付宝还款
+                            				<else/>
+                            					
+                            				</if>
+                            				</td>
+                            				<td>
+                            				<if condition="$vo.huankuan_type eq 1">
+                            					全额还款
+                            				<elseif condition="$vo.huankuan_type eq 2"/>
+                            					续期费付款
+                            				<else/>
+                            					
+                            				</if>
+                            				</td>
+                            				<td>{$vo.loan_people}</td>
+                            				<td>
+                            				<if condition="$vo.wait_xuqi eq 2">
+                            					已收款
+                            				<elseif condition="$vo.is_repayment eq 0"/>
+                           						<a href="#myModal" role="button" class="btn btn-default" data-toggle="modal" onclick="loan(this)" id="{$vo.phone}">审核</a>
+                            				<elseif condition="$vo.is_repayment eq 1"/>
+                            					已还款
+                            				</if>
+                            				</td>
+                            			</tr>
+                            		</volist>
+                            	</table> 
+								{$page}
+                            </div>
+                                      
+                        </div>
+
+						<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+						  <div class="modal-header">
+						    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+						    <h3 id="myModalLabel">确定收款</h3>
+						  </div>
+						  <div class="modal-body">
+						    <p>是否已经确定还款</p>
+						  </div>
+						  <div class="modal-footer">
+						  <input type="hidden" value="" id="phone">
+						    <button class="btn" data-dismiss="modal" aria-hidden="true">取消</button>
+						    <button class="btn btn-primary" onclick="is_Loan()">确定收款</button>
+						    <button class="btn btn-primary" onclick="no_Loan()">未收款</button>
+						  </div>
+						</div>
+                    </div><!--row-fluid-->
+                  
+                  
+        		 <!-- footer binge -->
+				<include file="Public/footer" />
+				
+				<!-- footer end -->
+                
+                
+                
+            </div><!--maincontentinner-->
+        </div><!--maincontent-->
+        
+    </div><!--rightpanel-->
+    
+</div><!--mainwrapper-->
+
+</body>
+<script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+<script>
+function loan(obj){
+	var phone = obj.id;
+	$('#phone').val(phone);
+}
+function is_Loan(){
+	var phone = $('#phone').val();
+	$.ajax({
+		type:"POST",
+		url:"{:U('Transaction/is_loan')}",
+		data:{'phone':phone},
+		datatype:"jaon",
+		success:function(data){
+			setTimeout(function(){window.location.reload()},1000);
+		}
+	})
+}
+function no_Loan(){
+	var phone = $('#phone').val();
+	$.ajax({
+		type:"POST",
+		url:"{:U('Transaction/no_loan')}",
+		data:{'phone':phone},
+		datatype:"jaon",
+		success:function(data){
+			setTimeout(function(){window.location.reload()},1000);
+		}
+	})
+}
+</script>
+</html>

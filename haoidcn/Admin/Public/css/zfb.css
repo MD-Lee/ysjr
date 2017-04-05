@@ -1,0 +1,27 @@
+@CHARSET "UTF-8";
+.container{
+	margin-top: 65px;
+}
+.img-responsive{
+	width: 120px;
+}
+a{
+	color:#87DCFE;
+}
+#register {
+	margin-top: 30px;
+}
+.form-group input {
+	height: 45px;
+}
+.btn {
+	width: 100%;
+    background-color: #00B4FF;
+    border-color: #00B4FF;
+    height: 50px;
+    margin-top: 40px;
+    border-radius: 30px;
+}
+.text {
+	margin-top: 20px;
+}

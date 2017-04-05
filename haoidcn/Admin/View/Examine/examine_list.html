@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>审核员管理</title>
+
+<!-- header binge -->
+<include file="Public/header" />
+
+<!-- header end -->
+
+<script type="text/javascript" src="{$Think.config.URL}js/new/unify.js"></script>
+
+<script type="text/javascript">
+jQuery(document).ready(function(){
+
+	
+	jQuery('.taglist .close').click(function(){
+		jQuery(this).parent().remove();
+		return false;
+	});
+	
+});
+</script>
+
+</head>
+
+
+<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="js/excanvas.min.js"></script><![endif]-->
+</head>
+<body>
+
+<!-- header binge -->
+<include file="Public/head" />
+
+<!-- header end -->
+    
+    <div class="rightpanel">
+        <!-- head binge -->
+        
+			<include file="Public/nav" name='审核员管理'/>
+		
+		<!-- head end -->
+        
+        <div class="maincontent">
+            <div class="maincontentinner">
+                <div class="row-fluid">
+                   <div>
+                        <div class="widgetbox personal-information" id="info">
+                            <h4 class="widgettitle">审核成员信息</h4>
+                            <div class="widgetcontent">
+                            	<table class="table table-bordered">
+                            		<tr>
+                            			<th width="250px;">账号</th>
+                            			<th width="300px;">手机号</th>
+                            			<th width="200px;">微信</th>
+                            			<th width="200px;">qq</th>
+                            			<th width="200px;">邮箱</th>
+                            			<th width="200px;">性别</th>
+                            			<th width="200px;">操作</th>
+                            		</tr>
+                            		<volist name="list" id="vo">
+                            			<tr>
+                            				<td>{$vo.userid}</td>
+                            				<td>{$vo.phone}</td>
+                            				<td>{$vo.weixin}</td>
+                            				<td>{$vo.qq}</td>
+                            				<td>{$vo.email}</td>
+                            				<td>{$vo.sex}</td>
+                            				<td>
+                            					<a href="#" onclick="edit(this)" id="{$vo.id}">编辑</a>
+                            					<a href="#" onclick="delete_examine(this)" id="{$vo.id}">删除</a>
+                            				</td>
+                            			</tr>
+                            		</volist>
+                            	</table> 
+                            </div>
+                                      
+                        </div>
+
+								<div class="widgetbox personal-information" id="edit" style="display:none">
+                                    <h4 class="widgettitle">添加审核成员</h4>
+                                    <div class="widgetcontent">
+                                    	<div style="padding:15px 40px;">
+	                                    	<form action="{:U('Examine/edit_examine')}" class="editprofileform" id="form">
+	                                    		<p style="margin:0 0;">
+		                                            <label style="width:150px;">账号：</label>
+		                                            <input type="text" class="input-xlarge" id="userid" name="info[userid]" readonly="readonly"/>
+		                                        </p>
+		                                    	<p style="margin:0 0;">
+		                                            <label style="padding:0">密码：</label>
+		                                            <a href="#" onclick="modify_pwd()">修改密码?</a>
+		                                        </p>
+		                                    	<p style="margin:0 0;">
+		                                            <label style="width:150px;">手机：</label>
+		                                            <input type="text" class="input-xlarge" id="phone" name="info[phone]"/>
+		                                        </p>
+		                                    	<p style="margin:0 0;">
+		                                            <label style="width:150px;">微信：</label>
+		                                            <input type="text" class="input-xlarge" id="weixin" name="info[weixin]"/>
+		                                        </p>
+		                                        <p style="margin:0 0;">
+		                                            <label style="width:150px;">qq：</label>
+		                                            <input type="text" class="input-xlarge" id="qq" name="info[qq]"/>
+		                                        </p>
+		                                        <p style="margin:0 0;">
+		                                            <label style="width:150px;">邮箱：</label>
+		                                            <input type="email" class="input-xlarge" id="email" name="info[email]"/>
+		                                        </p>
+		                                        <p style="margin:0 0;">
+		                                            <label style="width:150px;">性别：</label>
+		                                            <select name="info[sex]" id="sex">
+		                                            	<option value="">选择性别</option>
+		                                            	<option value="男">男</option>
+		                                            	<option value="女">女</option>
+		                                            </select>
+		                                        </p>
+		                                        <input type="hidden" value="" name="id" id="uid">
+		                                    </form>
+                                            <p>
+	                                        	<button class="btn btn-primary" onclick="edit_examine()">修改信息</button>
+			                                </p>
+                                    	</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="widgetbox personal-information" style="display:none" id="pwd1">
+                                	<h4 class="widgettitle">修改密码</h4>
+                                	<div class="widgetcontent">
+	                                	<form id="password" action="{:U('Examine/edit_pwd')}">
+	                                       	<p>
+	                                            <label>旧密码：</label>
+	                                            <input type="password" name="pwd1" class="input-xlarge" value="" />
+	                                        </p>
+	                                        <p>
+	                                            <label>新密码：</label>
+	                                            <input type="password" name="pwd" id="pwd" class="input-xlarge" value="" />
+	                                        </p>
+	                                        
+	                                        <p>
+	                                            <label>确认密码：</label>
+	                                            <input type="password" name="pwd2" class="input-xlarge" value="" />
+	                                        </p>
+	                                        <button type="button" class="btn btn-primary" onclick="edit_pwd()">修改密码</button>
+	                                     </form>
+                                    </div>
+                                </div>
+                                
+                    </div><!--row-fluid-->
+                  
+                  
+        		 <!-- footer binge -->
+				<include file="Public/footer" />
+				
+				<!-- footer end -->
+                
+                
+                
+            </div><!--maincontentinner-->
+        </div><!--maincontent-->
+        
+    </div><!--rightpanel-->
+    
+</div><!--mainwrapper-->
+<script>
+//显示出要编辑信息的div  
+function edit(obj){
+	var id = obj.id;
+	$.ajax({
+		type:'POST',
+		url:"{:U('Examine/assignment')}",
+		data:{'id':id},
+		datetype:'json',
+		success:function(list){
+			$('#userid').val(list[0]['userid']);
+			$('#pwd').val(list[0]['pwd']);
+			$('#phone').val(list[0]['phone']);
+			$('#weixin').val(list[0]['weixin']);
+			$('#qq').val(list[0]['qq']);
+			$('#email').val(list[0]['email']);
+			$('#uid').val(list[0]['id']);
+			$('#sex').find("option[value='"+list[0]['sex']+"']").attr("selected",true);
+			$('#info').css('display','none');
+			$('#edit').css('display','block');
+		}
+	})
+}
+
+//修改借款配置的方法 
+function edit_examine(){
+	$('#form').ajaxSubmit({
+		type:"POST",
+		url:$('#form').attr('action'),
+		datetype:"json",
+		success:function(data){
+			if(data == '修改成功'){
+				alert(data);
+				setTimeout(function(){window.location.href="{:U('Examine/examine_list')}"},1000);
+			}
+		}
+	})
+}
+
+function delete_examine(obj){
+	var id = obj.id;
+	$.ajax({
+		type:"POST",
+		url:"{:U('Examine/delete_examine')}",
+		data:{'id':id},
+		datatype:"json",
+		success:function(data){
+			if(data == '删除成功'){
+				alert(data);
+				setTimeout(function(){window.location.href="{:U('Examine/examine_list')}"},1000);
+			}
+		}
+	})
+}
+
+function modify_pwd(){
+	$('#edit').css("display","none");
+	$('#pwd1').css("display","block");
+}
+//输入框非空的方法
+function checkText(){
+	return $("#password").validate({
+		/*更改错误信息位置的方法*/
+		errorPlacement: function(error, element) {
+	        error.appendTo( element.parent("p"));
+	    },
+	    errorElement: "span",
+		rules:{
+			"pwd1":{
+				required:true
+			},
+			"pwd":{
+				required:true
+			},
+			"pwd2":{
+				required:true,
+				equalTo:"#pwd"
+			}
+		},
+		messages:{
+			"pwd1":{
+				required:'请输入旧密码'
+			},
+			"pwd":{
+				required:'请输入新密码'
+			},
+			"pwd2":{
+				required:'请输入新密码',
+				equalTo:'两次输入的密码不一样'
+			}
+		}
+	})
+}
+function edit_pwd(){
+	if(!checkText().form())return;
+	var id = $('#uid').val();
+	$('#password').ajaxSubmit({
+		type:"POST",
+		url:$('#password').attr('action'),
+		data:{"id":id},
+		datatype:"json",
+		success:function(data){
+			if(data == '修改密码成功'){
+				setTimeout(function(){window.location.href="{:U('Examine/examine_list')}"},1000);
+			}else{
+				alert(data);
+			}
+		}
+	})
+}
+</script>
+</body>
+</html>

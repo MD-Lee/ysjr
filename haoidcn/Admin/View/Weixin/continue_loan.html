@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>继续借款</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	<link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+	<link href="{$Think.config.URL}/css/lend_success.css" rel="stylesheet">
+	<script type="text/javascript" src="{$Think.config.URL}js/jquery-1.9.1.min.js"></script>
+	<script type="text/javascript" src="{$Think.config.URL}js/common.js"></script>
+	<style>
+        .class {
+	-webkit-animation:rotage-change 2s linear 0.5s infinite ;
+}
+@-webkit-keyframes rotage-change {
+             /*起始*/
+         from {         
+              -webkit-transform: rotate(0deg);
+         }
+         /*结束*/
+         to {
+              -webkit-transform: rotate(360deg);
+         }
+      }
+</style>
+</head>
+<body>
+	<div class="center-block img-responsive">
+		<img src="{$Think.config.URL}/images/xianjinbashi/home.png" class="img-responsive">
+	</div>
+	<if condition="$url eq verify_mobile">
+		<a href="{:U('Weixin/verify_mobile',array('phone'=>$phone,'openid'=>$openid))}" class="center-block keep" id="jiekuan">继续借款</a>
+	<elseif condition="$url eq verify_user_info"/>
+		<a href="{:U('Weixin/verify_user_info',array('phone'=>$phone,'openid'=>$openid))}" class="center-block keep" id="jiekuan2">继续借款</a>
+	</if>
+	<p class="center-block text">您有一笔正在进行中的借款。点击可以<a href="{:U('Weixin/lend_details',array('phone'=>$phone))}" id="xiangqing">查看详情</a></p>
+	<div class="class" style="display:none;width: 50px;height: 50px;position: fixed;left: 45%;top:35%;">
+		<img src="{$Think.config.URL}/images/xianjinbashi/jiazai.png" width="50px" height="50px">
+	</div>
+</body>
+<script>
+$('#jiekuan').click(function(){
+	$('.class').css('display','block');
+})
+$('#jiekuan2').click(function(){
+	$('.class').css('display','block');
+})
+$('#xiangqing').click(function(){
+	$('.class').css('display','block');
+})
+</script>
+</html>

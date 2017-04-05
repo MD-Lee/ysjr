@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>文章管理</title>
+
+<!-- header binge -->
+<include file="Public/header" />
+
+<!-- header end -->
+
+<script type="text/javascript" src="{$Think.config.URL}js/new/unify.js"></script>
+</head>
+
+
+<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="js/excanvas.min.js"></script><![endif]-->
+</head>
+<body >
+
+<!-- header binge -->
+<include file="Public/head" />
+
+<!-- header end -->
+    
+    <div class="rightpanel">
+        
+        <!-- head binge -->
+        
+			<include file="Public/nav" name='文章管理'/>
+		
+		<!-- head end -->
+                
+        <div class="maincontent">
+            <div class="maincontentinner">
+                <div class="row-fluid">
+                        <div>
+                            
+                                <div class="widgetbox personal-information">
+                                    <h4 class="widgettitle">添加常见问题</h4>
+                                    <div class="widgetcontent">
+                                    	<div style="padding:15px 40px;">
+	                                    	<form action="{:U('Article/problem_method')}" class="editprofileform" id="form">
+	                                    		<p style="margin:0 0;">
+		                                            <label>问题的标题：</label>
+		                                            <input type="text" class="input-xlarge" name="info[title]"/>
+		                                        </p>
+		                                    	<!-- UE编辑器 -->
+												<div>
+													<script  id="container" name="info[content]"></script>
+													<script  type="text/javascript">
+														//实例化编辑器
+														var ue = UE.getEditor('container');
+													</script>
+												</div>
+		                                    </form>
+                                            <p>
+	                                        	<button class="btn btn-primary" onclick="problem_method()">添加保存</button>
+			                                </p>
+                                    	</div>
+                                    </div>
+                                </div>
+                            
+                        </div><!--span8-->
+                    </div><!--row-fluid-->
+                   <div style="height:292px;"></div>
+                  
+        		 <!-- footer binge -->
+				<include file="Public/footer" />
+				
+				<!-- footer end -->
+                
+                
+                
+            </div><!--maincontentinner-->
+        </div><!--maincontent-->
+        
+    </div><!--rightpanel-->
+    
+</div><!--mainwrapper-->
+<script>
+//输入框非空的方法
+function checkText(){
+	return $("#form").validate({
+		/*更改错误信息位置的方法*/
+		errorPlacement: function(error, element) {
+	        error.appendTo( element.parent("p"));
+	    },
+	    errorElement: "div",
+		rules:{
+			"info[title]":{
+				required:true
+			},
+			"info[content]":{
+				required:true
+			}
+		},
+		messages:{
+			"info[title]":{
+				required:'请输入问题的标题'
+			},
+			"info[content]":{
+				required:'请输入问题的内容'
+			}
+		}
+	})
+}
+function problem_method(){
+	if(!checkText().form())return;
+	$('#form').ajaxSubmit({
+		type:"POST",
+		url:$('#form').attr('action'),
+		datetype:"json",
+		success:function(data){
+			alert(data);
+			setTimeout(function(){window.location.href="{:U('Article/problem_list')}"},1000);
+		}
+	})
+}
+</script>
+</body>
+</html>

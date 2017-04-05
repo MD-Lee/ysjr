@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>借款套餐配置列表</title>
+
+<!-- header binge -->
+<include file="Public/header" />
+
+<!-- header end -->
+
+<script type="text/javascript" src="{$Think.config.URL}js/new/unify.js"></script>
+
+<script type="text/javascript">
+jQuery(document).ready(function(){
+
+	
+	jQuery('.taglist .close').click(function(){
+		jQuery(this).parent().remove();
+		return false;
+	});
+	
+});
+</script>
+
+</head>
+
+
+<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="js/excanvas.min.js"></script><![endif]-->
+</head>
+<body>
+
+<!-- header binge -->
+<include file="Public/head" />
+
+<!-- header end -->
+    
+    <div class="rightpanel">
+        <!-- head binge -->
+        
+			<include file="Public/nav" name='借款套餐配置列表'/>
+		
+		<!-- head end -->
+        
+        <div class="maincontent">
+            <div class="maincontentinner">
+                <div class="row-fluid">
+                   <div>
+                        <div class="widgetbox personal-information" id="info">
+                            <h4 class="widgettitle">借款套餐配置列表</h4>
+                            <div class="widgetcontent">
+                            	<table class="table table-bordered">
+                            		<tr>
+                            			<th width="250px;">借款金额</th>
+                            			<th width="250px;">期限</th>
+                            			<th width="300px;">快速信审费</th>
+                            			<th width="300px;">账户管理费</th>
+                            			<th width="200px;">利息</th>
+                            			<th width="200px;">实际到账总额</th>
+                            			<th width="200px;">操作</th>
+                            		</tr>
+                            		<volist name="list" id="vo">
+                            			<tr>
+                            				<td>{$vo.money_num}元</td>
+                            				<td>{$vo.time_length}天</td>
+                            				<td>{$vo.letter}元</td>
+                            				<td>{$vo.account_money}元</td>
+                            				<td>{$vo.interest}元</td>
+                            				<td>{$vo.sum}元</td>
+                            				<td>
+                            					<a href="#" onclick="edit(this)" id="{$vo.id}">更新配置</a>
+                            					<!-- <a href="#" onclick="delete_money_manage(this)" id="{$vo.id}">删除</a> -->
+                            				</td>
+                            			</tr>
+                            		</volist>
+                            	</table> 
+                            </div>
+                                      
+                        </div>
+
+						<div class="widgetbox personal-information" style="display:none" id="edit">
+                            <h4 class="widgettitle">修改配置</h4>
+                            <div class="widgetcontent">
+                            	<div style="padding:15px 40px;">
+                             	<form action="{:U('Admin/edit_money_manage')}" class="editprofileform" id="form">
+                             		<p style="margin:0 0;">
+                                      <label style="width:150px;">借款金额：</label>
+                                      <input type="text" class="input-xlarge" name="info[money_num]" readonly="readonly" id="money_num"/>
+                                  	</p>
+                                  	<p style="margin:0 0;">
+                                  	  <label style="width:150px;">期限：</label>
+                                      <select name="info[time_length]">
+                                      	<option value="7">7天</option>
+                                      	<option value="14">14天</option>
+                                      </select>
+                                  	</p>
+                              		<p style="margin:0 0;">
+                                      <label style="width:150px;">快速信审费：</label>
+                                      <input type="text" class="input-xlarge" name="info[letter]" id="letter"/>
+                                  	</p>
+                              		<p style="margin:0 0;">
+                                      <label style="width:150px;">账号管理费：</label>
+                                      <input type="text" class="input-xlarge" name="info[account_money]" id="account_money"/>
+                                  	</p>
+                              		<p style="margin:0 0;">
+                                      <label style="width:150px;">利息：</label>
+                                      <input type="text" class="input-xlarge" name="info[interest]" id="interest"/>
+                                      <input type="hidden"  name="info[id]" id="info_id"/>
+                                  	</p>
+                              	</form>
+                                    <p>
+                                 	<button class="btn btn-primary" onclick="edit_money()">修改配置</button>
+                           			</p>
+                            	</div>
+                            </div>
+                        </div>
+                    </div><!--row-fluid-->
+                  
+                  
+        		 <!-- footer binge -->
+				<include file="Public/footer" />
+				
+				<!-- footer end -->
+                
+                
+                
+            </div><!--maincontentinner-->
+        </div><!--maincontent-->
+        
+    </div><!--rightpanel-->
+    
+</div><!--mainwrapper-->
+<script>
+//显示出要编辑信息的div  
+function edit(obj){
+	var id = obj.id;
+	$.ajax({
+		type:'POST',
+		url:"{:U('Admin/edit_money')}",
+		data:{'id':id},
+		datetype:'json',
+		success:function(list){
+			$('#money_num').val(list[0]['money_num']);
+			$('#letter').val(list[0]['letter']);
+			$('#account_money').val(list[0]['account_money']);
+			$('#interest').val(list[0]['interest']);
+			$('#info_id').val(list[0]['id']);
+			$('#info').css('display','none');
+			$('#edit').css('display','block');
+		}
+	})
+}
+
+//修改借款配置的方法 
+function edit_money(){
+	$('#form').ajaxSubmit({
+		type:"POST",
+		url:$('#form').attr('action'),
+		datetype:"json",
+		success:function(data){
+			if(data == '修改配置成功'){
+				alert(data);
+				setTimeout(function(){window.location.href='money_manage.html'},1000);
+			}
+		}
+	})
+}
+
+function delete_money_manage(obj){
+	var id = obj.id;
+	$.ajax({
+		type:"POST",
+		url:"{:U('Admin/delete_money_manage')}",
+		data:{'id':id},
+		datatype:"json",
+		success:function(data){
+			if(data == '删除配置成功'){
+				alert(data);
+				setTimeout(function(){window.location.href='money_manage.html'},1000);
+			}
+		}
+	})
+}
+</script>
+</body>
+</html>

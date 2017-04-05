@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>周期信息</title>
+
+<!-- header binge -->
+<include file="Public/header" />
+
+<!-- header end -->
+
+<script type="text/javascript" src="{$Think.config.URL}js/new/unify.js"></script>
+
+<script type="text/javascript">
+jQuery(document).ready(function(){
+
+	
+	jQuery('.taglist .close').click(function(){
+		jQuery(this).parent().remove();
+		return false;
+	});
+	
+});
+</script>
+
+</head>
+
+
+<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="js/excanvas.min.js"></script><![endif]-->
+</head>
+<body>
+
+<!-- header binge -->
+<include file="Public/head" />
+
+<!-- header end -->
+    
+    <div class="rightpanel">
+        <!-- head binge -->
+        
+			<include file="Public/nav" name='周期信息'/>
+		
+		<!-- head end -->
+        
+        <div class="maincontent">
+            <div class="maincontentinner">
+                <div class="row-fluid">
+                   <div>
+                        <div class="widgetbox personal-information">
+                            <h4 class="widgettitle">周期信息</h4>
+                            <div class="widgetcontent">
+                            	<table class="table table-bordered">
+                            		<tr>
+                            			<th width="250px;">借款时长</th>
+                            			<th width="300px;">快速信审费</th>
+                            			<th width="300px;">账户管理费</th>
+                            			<th width="400px;">利息</th>
+                            		</tr>
+                            		<volist name="list" id="vo">
+                            			<tr>
+                            				<td>{$vo.time_long}天</td>
+                            				<td>{$vo.letter}元</td>
+                            				<td>{$vo.account_money}元</td>
+                            				<td>{$vo.interest}元</td>
+                            			</tr>
+                            		</volist>
+                            	</table> 
+                            </div>
+                                      
+                        </div>
+
+                    </div><!--row-fluid-->
+                  
+                  
+        		 <!-- footer binge -->
+				<include file="Public/footer" />
+				
+				<!-- footer end -->
+                
+                
+                
+            </div><!--maincontentinner-->
+        </div><!--maincontent-->
+        
+    </div><!--rightpanel-->
+    
+</div><!--mainwrapper-->
+
+</body>
+</html>

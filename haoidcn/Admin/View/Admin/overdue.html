@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>逾期配置</title>
+
+<!-- header binge -->
+<include file="Public/header" />
+
+<!-- header end -->
+
+<script type="text/javascript" src="{$Think.config.URL}js/new/unify.js"></script>
+</head>
+
+
+<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="js/excanvas.min.js"></script><![endif]-->
+</head>
+<body >
+
+<!-- header binge -->
+<include file="Public/head" />
+
+<!-- header end -->
+    
+    <div class="rightpanel">
+        
+        <!-- head binge -->
+        
+			<include file="Public/nav" name='逾期配置'/>
+		
+		<!-- head end -->
+                
+        <div class="maincontent">
+            <div class="maincontentinner">
+                <div class="row-fluid">
+                        <div>
+                            
+                                <div class="widgetbox personal-information">
+                                    <h4 class="widgettitle">逾期配置</h4>
+                                    <div class="widgetcontent">
+                                    	<div style="padding:15px 40px;">
+	                                    	<form action="{:U('Admin/add_overdue')}" id="form">
+		                                    	<p style="margin:0 0;">
+		                                            <label style="float:left;margin-top: 5px;">逾期罚金：</label>
+		                                            <input type="text" class="input-xlarge" name="info[interest]" value="{$interest}"/>
+		                                        </p>
+		                                        <input type="hidden" value="{$id}" name="info[id]">
+		                                    </form>
+                                            <p>
+	                                        	<button class="btn btn-primary" onclick="add_overdue()">更新配置</button>
+			                                </p>
+                                    	</div>
+                                    </div>
+                                </div>
+                            
+                        </div><!--span8-->
+                    </div><!--row-fluid-->
+                   <div style="height:292px;"></div>
+                  
+        		 <!-- footer binge -->
+				<include file="Public/footer" />
+				
+				<!-- footer end -->
+                
+                
+                
+            </div><!--maincontentinner-->
+        </div><!--maincontent-->
+        
+    </div><!--rightpanel-->
+    
+</div><!--mainwrapper-->
+<script>
+function add_overdue(){
+	$('#form').ajaxSubmit({
+		type:"POST",
+		url:$('#form').attr('action'),
+		datatype:"json",
+		success:function(data){
+			alert(data);
+			setTimeout(function(){window.location.reload()},1000);
+		}
+	})
+}
+</script>
+</body>
+</html>

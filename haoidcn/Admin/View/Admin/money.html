@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>借款信息配置</title>
+
+<!-- header binge -->
+<include file="Public/header" />
+
+<!-- header end -->
+
+<script type="text/javascript" src="{$Think.config.URL}js/new/unify.js"></script>
+</head>
+
+
+<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="js/excanvas.min.js"></script><![endif]-->
+</head>
+<body >
+
+<!-- header binge -->
+<include file="Public/head" />
+
+<!-- header end -->
+    
+    <div class="rightpanel">
+        
+        <!-- head binge -->
+        
+			<include file="Public/nav" name='借款信息配置'/>
+		
+		<!-- head end -->
+                
+        <div class="maincontent">
+            <div class="maincontentinner">
+                <div class="row-fluid">
+                        <div>
+                            
+                                <div class="widgetbox personal-information">
+                                    <h4 class="widgettitle">借款信息配置</h4>
+                                    <div class="widgetcontent">
+                                    	<div style="padding:15px 40px;">
+	                                    	<form action="add_info.html" class="editprofileform" id="form">
+	                                    		<p style="margin:0 0;">
+		                                            <label style="width:150px;">借款金额：</label>
+		                                            <input type="text" class="input-xlarge" name="info[money_num]"/>
+		                                        </p>
+		                                    	<p style="margin:0 0;">
+		                                            <label style="width:150px;">快速信审费：</label>
+		                                            <input type="text" class="input-xlarge" name="info[letter]"/>
+		                                        </p>
+		                                    	<p style="margin:0 0;">
+		                                            <label style="width:150px;">账号管理费：</label>
+		                                            <input type="text" class="input-xlarge" name="info[account_money]"/>
+		                                        </p>
+		                                    	<p style="margin:0 0;">
+		                                            <label style="width:150px;">利息：</label>
+		                                            <input type="text" class="input-xlarge" name="info[interest]"/>
+		                                        </p>
+		                                    </form>
+                                            <p>
+	                                        	<button class="btn btn-primary" onclick="add_money()">添加配置</button>
+			                                </p>
+                                    	</div>
+                                    </div>
+                                </div>
+                            
+                        </div><!--span8-->
+                    </div><!--row-fluid-->
+                   <div style="height:292px;"></div>
+                  
+        		 <!-- footer binge -->
+				<include file="Public/footer" />
+				
+				<!-- footer end -->
+                
+                
+                
+            </div><!--maincontentinner-->
+        </div><!--maincontent-->
+        
+    </div><!--rightpanel-->
+    
+</div><!--mainwrapper-->
+<script>
+//输入框非空的方法
+function checkText(){
+	return $("#form").validate({
+		/*更改错误信息位置的方法*/
+		errorPlacement: function(error, element) {
+	        error.appendTo( element.parent("p"));
+	    },
+	    errorElement: "span",
+		rules:{
+			"info[money_num]":{
+				required:true
+			},
+			"info[letter]":{
+				required:true
+			},
+			"info[account_money]":{
+				required:true
+			},
+			"info[interest]":{
+				required:true
+			},
+		},
+		messages:{
+			"info[money_num]":{
+				required:'请输入借款金额'
+			},
+			"info[letter]":{
+				required:'请输入快速信贷费'
+			},
+			"info[account_money]":{
+				required:'请输入账号管理费'
+			},
+			"info[interest]":{
+				required:'请输入利息'
+			},
+		}
+	})
+}
+function add_money(){
+	if(!checkText().form())return;
+	$('#form').ajaxSubmit({
+		type:"POST",
+		url:$('#form').attr('action'),
+		datetype:"json",
+		success:function(data){
+			alert(data);
+			setTimeout(function(){window.location.href='money_manage.html'},1000);
+		}
+	})
+}
+</script>
+</body>
+</html>

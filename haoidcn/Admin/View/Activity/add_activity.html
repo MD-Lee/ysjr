@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>添加活动</title>
+
+<!-- header binge -->
+<include file="Public/header" />
+<link rel="stylesheet" href="//apps.bdimg.com/libs/jqueryui/1.10.4/css/jquery-ui.min.css">
+<script src="//apps.bdimg.com/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="{$Think.config.URL}js/jquery.cookie.js"></script>
+<script src="//apps.bdimg.com/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+<!-- header end -->
+
+<script type="text/javascript" src="{$Think.config.URL}js/new/unify.js"></script>
+
+</head>
+
+
+<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="js/excanvas.min.js"></script><![endif]-->
+</head>
+<body >
+
+<!-- header binge -->
+<include file="Public/head" />
+
+<!-- header end -->
+    
+    <div class="rightpanel">
+        
+        <!-- head binge -->
+        
+			<include file="Public/nav" name='添加活动'/>
+		
+		<!-- head end -->
+        
+       
+        <div class="maincontent">
+            <div class="maincontentinner">
+                <div class="row-fluid">
+                        <div>
+                        	<input type="hidden" name="result" id="result" value="{$ok}">
+                            <form action="{:U('Activity/add_date')}" id='form' class="editprofileform" >
+                                <div class="widgetbox personal-information">
+                                    <h4 class="widgettitle">添加活动</h4>
+                                    <div class="widgetcontent">
+                                    	<div style="padding:15px 40px; display:block">
+                                    		<p style="margin:0 0;">
+	                                            <label style="width:150px;">活动开始：</label>
+	                                            <input type="text" id="datepicker1" name="info[time_start]">
+	                                        </p>
+	                                    	<p style="margin:0 0;">
+	                                            <label style="width:150px;">活动结束：</label>
+	                                            <input type="text" id="datepicker2" name="info[time_end]">
+	                                        </p>
+	                                    	<p style="margin:0 0;">
+	                                            <label style="width:150px;">优惠金额：</label>
+	                                            <input type="text" class="input-xlarge" name="info[money_num]" style="width:30px;"/>元
+	                                        </p>
+	                                        <p>
+	                                        	<input type="button" class="btn btn-primary" value="添加" onclick="add_activity()">
+			                                </p>
+                                    	</div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div><!--span8-->
+                    </div><!--row-fluid-->
+                   <div style="height:292px;"></div>
+                  
+        		 <!-- footer binge -->
+				<include file="Public/footer" />
+				
+				<!-- footer end -->
+                
+                
+                
+            </div><!--maincontentinner-->
+        </div><!--maincontent-->
+        
+    </div><!--rightpanel-->
+    
+</div><!--mainwrapper-->
+
+</body>
+<script src="http://malsup.github.io/jquery.form.js"></script>
+<script>
+//日期选择器 
+$(function() {
+  $( "#datepicker1" ).datepicker({ dateFormat:"yy-mm-dd" });
+  $( "#datepicker2" ).datepicker({ dateFormat:"yy-mm-dd" });
+});
+function add_activity(){
+	$('#form').ajaxSubmit({
+		type:"POST",
+		url:$('#form').attr('action'),
+		datetype:"json",
+		success:function(data){
+			if(data == '添加活动成功'){
+				alert(data);
+				setTimeout(function(){window.location.href="{:U('Activity/activity_list')}"},1000);
+			}else{
+				alert(data);
+			}
+		}
+	})
+}
+</script>
+</html>

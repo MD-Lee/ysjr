@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>资讯</title>
+
+<!-- header binge -->
+<include file="Public/header" />
+
+<link rel="stylesheet" href="/Uploads/kindeditor/themes/default/default.css" />
+<script charset="utf-8" src="/Uploads/kindeditor/kindeditor-all-min.js"></script>
+<script charset="utf-8" src="/Uploads/kindeditor/lang/zh-CN.js"></script>
+        
+<!-- header end -->
+
+<!--<script type="text/javascript" src="{$Think.config.URL}js/new/unify.js"></script>-->
+<script type="text/javascript">
+jQuery(document).ready(function(){
+
+	
+	jQuery('.taglist .close').click(function(){
+		jQuery(this).parent().remove();
+		return false;
+	});
+	
+});
+</script>
+</head>
+
+
+<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="js/excanvas.min.js"></script><![endif]-->
+</head>
+<body >
+
+<!-- header binge -->
+<include file="Public/head" />
+
+<!-- header end -->
+    
+    <div class="rightpanel">
+        
+        <ul class="breadcrumbs">
+            <li><a href="{:U('Console/dashboard')}"><i class="iconfa-home"></i></a> <span class="separator"></span></li>
+            <li><a href="{:U('Console/dashboard')}">后台面板</a> <span class="separator"></span></li>
+            <li>资讯</li>
+        </ul>
+        
+        <div class="maincontent">
+            <div class="maincontentinner">
+                <div class="row-fluid">
+                        <div>
+                           <div id="update" style="display: block;">
+                           	<form class="editprofileform" method="post" id="form1">
+                              <div class="widgetbox personal-information">
+                                  <h4 class="widgettitle">添加资讯</h4>
+                                  <div class="widgetcontent">
+                                  	  <input type="hidden" name="id" id="id" value="{$rs.id}">
+                                       <div id="update01" style="display: block;">
+	                                   	 <p>
+                                           <label>*标题：</label>
+	                                          <input type="text" name="title" id="title" class="input-xlarge" value="{$rs.title}">
+	                                       </p>
+	                                   	 <p>
+                                           <label>*内容：</label>
+		                                    <textarea name="content" style="width:800px;height:400px;visibility:hidden;" id="content">{$rs.content}</textarea>
+	                                     </p>		                                                                  
+		                                <p>
+		                                	<a href="javascript:void();" class="btn btn-primary" id="submitBtn"><small>提交信息</small></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		                                	<a href="javascript:void();" class="btn btn-primary" onclick="history.go(-1)"><small>取消</small></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		                                	<span id="caozuo"></span>
+		                                </p>
+                                  </div>
+                              </div>
+                              </div>
+                           </form>
+                        </div>
+                                                
+                    </div><!--row-fluid-->
+                  
+                  
+        		 <!-- footer binge -->
+				<include file="Public/footer" />
+				
+				<!-- footer end -->
+                
+                
+        </div><!--maincontent-->
+        
+    </div><!--rightpanel-->
+    
+</div><!--mainwrapper-->
+
+
+<script type="text/javascript">
+var editor;
+
+KindEditor.ready(function(K) {
+	editor = K.create('textarea[name="content"]', {
+		allowFileManager : true
+	});	
+});
+
+
+$('#submitBtn').click(function(){
+	submit=1;
+	
+	$("#form1 :input").each(function(){
+		if(this.value.length<1 && parseInt(this.value)<1){
+			submit=0;
+			alert($(this).parent().find('label').eq(0).html());
+			return false;
+		}
+	});
+		
+	if(submit<1)return false;
+	
+	
+	document.getElementById('content').value=editor.html();
+	
+	document.getElementById('form1').submit();
+});
+
+</script>
+
+
+</body>
+</html>

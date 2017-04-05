@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>填写放款资料</title>
+
+<!-- header binge -->
+<include file="Public/header" />
+
+<!-- header end -->
+
+<script type="text/javascript" src="{$Think.config.URL}js/new/unify.js"></script>
+</head>
+
+
+<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="js/excanvas.min.js"></script><![endif]-->
+</head>
+<body >
+
+<!-- header binge -->
+<include file="Public/head" />
+
+<!-- header end -->
+    
+    <div class="rightpanel">
+        
+        <!-- head binge -->
+        
+			<include file="Public/nav" name='填写放款资料'/>
+		
+		<!-- head end -->
+                
+        <div class="maincontent">
+            <div class="maincontentinner">
+                <div class="row-fluid">
+                        <div>
+                            
+                                <div class="widgetbox personal-information">
+                                    <h4 class="widgettitle">填写放款资料</h4>
+                                    <div class="widgetcontent">
+                                    	<div style="padding:15px 40px;">
+	                                    	<form action="{:U('Task/loan_success')}" class="editprofileform" id="form">
+	                                    		<p style="margin:0 0;">
+		                                            <label style="width:150px;">用户的银行卡号：</label>
+		                                            <input type="text" class="input-xlarge" name="info[bank_num]" value="{$bank}"/>
+		                                        </p>
+		                                    	<p style="margin:0 0;">
+		                                            <label style="width:150px;">实际放款额度：</label>
+		                                            <input type="text" class="input-xlarge" name="info[actual_money]"/>
+		                                        </p>
+		                                    	<p style="margin:0 0;">
+		                                    		<label style="width:150px;">风控级别：</label>
+		                                            <select name="info[level]">
+				                            			<option value="黄色标识">黄色标识</option>
+				                            			<option value="橙色标识">橙色标识</option>
+				                            			<option value="红色标识">红色标识</option>
+				                            		</select>
+		                                        </p>
+		                                        <input type="hidden" value="{$phone}" name="info[phone]">
+		                                    </form>
+                                            <p>
+	                                        	<button class="btn btn-primary" onclick="loan()">放款</button>
+			                                </p>
+                                    	</div>
+                                    </div>
+                                </div>
+                            
+                        </div><!--span8-->
+                    </div><!--row-fluid-->
+                   <div style="height:292px;"></div>
+                  
+        		 <!-- footer binge -->
+				<include file="Public/footer" />
+				
+				<!-- footer end -->
+                
+                
+                
+            </div><!--maincontentinner-->
+        </div><!--maincontent-->
+        
+    </div><!--rightpanel-->
+    
+</div><!--mainwrapper-->
+<script>
+//输入框非空的方法
+function checkText(){
+	return $("#form").validate({
+		/*更改错误信息位置的方法*/
+		errorPlacement: function(error, element) {
+	        error.appendTo( element.parent("p"));
+	    },
+	    errorElement: "p",
+		rules:{
+			"info[bank_num]":{
+				required:true
+			},
+			"info[actual_money]":{
+				required:true
+			},
+			"info[level]":{
+				required:true
+			}
+		},
+		messages:{
+			"info[bank_num]":{
+				required:'请输入银行卡号'
+			},
+			"info[actual_money]":{
+				required:'请输入实际放款额度'
+			},
+			"info[level]":{
+				required:'请选择风控等级'
+			}
+		}
+	})
+}
+function loan(){
+	if(!checkText().form())return;
+	$('#form').ajaxSubmit({
+		type:"POST",
+		url:$('#form').attr('action'),
+		datetype:"json",
+		success:function(data){
+			if(data == '放款成功'){
+				setTimeout(function(){window.location.href="{:U('Transaction/loan_list')}"},1000);
+			}
+		}
+	})
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>任务管理</title>
+
+<!-- header binge -->
+<include file="Public/header" />
+
+<!-- header end -->
+
+<script type="text/javascript" src="{$Think.config.URL}js/new/unify.js"></script>
+</head>
+
+
+<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="js/excanvas.min.js"></script><![endif]-->
+</head>
+<body >
+
+<!-- header binge -->
+<include file="Public/head" />
+
+<!-- header end -->
+    
+    <div class="rightpanel">
+        
+        <!-- head binge -->
+        
+			<include file="Public/nav" name='任务管理'/>
+		
+		<!-- head end -->
+                
+        <div class="maincontent">
+            <div class="maincontentinner">
+                <div class="row-fluid">
+                        <div>
+                            
+                                <div class="widgetbox personal-information">
+                                    <h4 class="widgettitle">审核备注</h4>
+                                    <div class="widgetcontent">
+                                    	<div style="padding:15px 40px;">
+	                                    	<form action="{:U('Task/on_adopt')}" id="form">
+		                                    	<p style="margin:0 0;">
+		                                            <div>手机号：{$phone}</div>
+		                                        </p>
+		                                        <p style="margin:0 0;">
+		                                            <div>借款额度：{$list['money_num']}</div>
+		                                        </p>
+		                                        <p style="margin:0 0;">
+		                                            <div>期限：<span id="time_length">{$list['time_length']}</span></div>
+		                                        </p>
+		                                        <p style="margin:0 0;">
+		                                        	<div>实际放款额度：{$list['daozhang']}</div>
+		                                        </p>
+		                                        <p style="margin:0 0;">
+		                                        	<label style="float:left;margin-top: 5px;">平台审批额度：</label>
+		                                        	<input type="text" class="input-xlarge" name="content"/>
+		                                        </p>
+		                                        <p style="margin:0 0;">
+		                                    		<label style="float: left;">风控级别：</label>
+		                                            <select name="level">
+				                            			<option value="良好">良好</option>
+				                            			<option value="一般">一般</option>
+				                            			<option value="优秀">优秀</option>
+				                            		</select>
+		                                        </p>
+		                                        <input type="hidden" value="{$phone}" name="phone">
+		                                    </form>
+                                            <p>
+	                                        	<button class="btn btn-primary" onclick="submit_loan()">提交审核</button>
+			                                </p>
+                                    	</div>
+                                    </div>
+                                </div>
+                            
+                        </div><!--span8-->
+                    </div><!--row-fluid-->
+                   <div style="height:292px;"></div>
+                  
+        		 <!-- footer binge -->
+				<include file="Public/footer" />
+				
+				<!-- footer end -->
+                
+                
+                
+            </div><!--maincontentinner-->
+        </div><!--maincontent-->
+        
+    </div><!--rightpanel-->
+    
+</div><!--mainwrapper-->
+<script>
+function submit_loan(){
+	var phone = $("input[name=phone]").val();
+	var content = $("input[name=content]").val();
+	var level = $("select[name=level]").val();
+	var time_length = $("#time_length").text();
+	$.ajax({
+		type:"POST",
+		url:"{:U('Task/adopt_ok')}",
+		data:{
+			'phone':phone,
+			'content':content,
+			'level':level,
+			'time_length':time_length
+		},
+		datatype:"json",
+		success:function(data){
+			if(data == '审核完毕'){
+				alert(data);
+				setTimeout(function(){window.location.href="/index.php/Task/loan_task"},1000);
+			}
+		}
+	})
+}
+</script>
+</body>
+</html>

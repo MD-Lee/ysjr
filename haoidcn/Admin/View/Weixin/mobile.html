@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>e借款</title>
+<link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+<link href="{$Think.config.URL}/css/Weixin.verify_mobile.css" rel="stylesheet">
+<script type="text/javascript" src="{$Think.config.URL}js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="{$Think.config.URL}js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="{$Think.config.URL}js/jquery.form-3.51.0.js"></script>
+</head>
+<body>
+	<div class="container">
+	  <form id="form" action="{:U('Weixin/verify_mobile_method')}">
+		  <div align="center" class="text">
+		  	<p id="phone">您的手机号：<span id="phoneInfo">{$result['retData']['telString']}</span></p>
+		  	<p>所属运营商：<span id="operator">{$result['retData']['carrier']}</span></p>
+		  </div>
+		  <div class="form-group">
+		    <input type="text" class="form-control" name="info[service_pwd]" placeholder="手机服务密码" style="width:70%;float:left;">
+		    <button type="button" class="btn btn-primary what" style="width:30%">
+		    	<a href="{:U('Weixin/guide')}">忘记密码？</a>
+		    </button>
+		  </div>
+		  <div class="form-group clearfix" >
+		    <input type="text" class="form-control" name="info[verify]" placeholder="请输入图片验证码" style="width:70%;float:left;">
+		    <p class="pull-left drawing" >
+		    	<img id="verify" src="{:U('Weixin/verify_c',array())}" style="display:inline"  title="点击刷新">
+		    </p>
+		    <a href="#" onclick="replace_verify()"><p>换一张</p></a>
+		  </div>
+		  <input type="hidden" value="{$openid}" id="openid">
+		  <a href="#" style="display: block;line-height: 45px;border-radius: 30px;" class="btn btn-primary" onclick="verify_mobile_method()">下一步</a>
+	  </form>
+	</div>
+</body>
+<script>
+//验证码生成  
+function replace_verify(){
+	var verifyimg = $('#verify').attr("src");
+	if( verifyimg.indexOf('?')>0){  
+        $('#verify').attr("src", verifyimg+'&random='+Math.random());  
+    }else{  
+        $('#verify').attr("src", verifyimg.replace(/\?.*$/,'')+'?'+Math.random());  
+    } 
+}
+//输入框非空方法 
+function checkText(){
+	return $("#form").validate({
+		errorPlacement: function(error, element) {  
+		    error.appendTo(element.parent());  
+		},
+		errorElement: "div",
+		rules:{
+			"info[service_pwd]":{
+				required:true,
+				number:true,
+				maxlength:6
+			},
+			"info[verify]":{
+				required:true
+			}
+		},
+		messages:{
+			"info[service_pwd]":{
+				required:'请输入您的运营商服务密码',
+				number:"请输入正确的服务密码",
+				maxlength:"请输入正确的服务密码"
+			},
+			"info[verify]":{
+				required:'请输入图形验证码'
+			}
+		}
+	})
+}
+//把信息传到后台验证
+function verify_mobile_method(){
+	if(!checkText().form())return;
+	var phone = $('#phone').find('span').text();
+	$('#form').ajaxSubmit({
+		type:"POST",
+		url:$('#form').attr('action'),
+		data:{'phone':phone},
+		datatype:"json",
+		success:function(data){
+			if(data == '下一步'){
+				var phone = $('#phone').find('span').text();
+				var openid = $('#openid').val();
+				setTimeout(function(){window.location.href="/index.php/Weixin/info?phone="+phone},1000);
+			}else{
+				alert(data);
+			}
+		}
+	})
+}
+</script>
+</html>

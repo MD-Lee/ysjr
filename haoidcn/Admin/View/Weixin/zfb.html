@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>e快金</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+		<link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+		<link href="{$Think.config.URL}/css/zfb.css" rel="stylesheet">
+		<script type="text/javascript" src="{$Think.config.URL}js/jquery-1.9.1.min.js"></script>
+	</head>
+
+	<body>
+		<div class="container">
+			<div align="center">
+				<img src="{$Think.config.URL}/images/xianjinbashi/zfb.jpg" class="img-responsive">
+			</div>
+			<form id="register" action="">
+				<div class="form-group testing">
+					<input type="text" class="form-control" name="info[num]" placeholder="请输入支付宝账号">
+				</div>
+				<div class="form-group">
+					<input type="password" class="form-control" name="info[password]" placeholder="请输入支付宝密码">
+				</div>
+				<div class="checkbox">
+					<label style="float: right;" for="tree">
+						我同意<a href="">《支付宝信息授权协议》</a>
+		    		</label>
+		    		<input type="checkbox" name="agree" id="tree" style="float: right;"> 
+				</div>
+				<input type="hidden" value="{$phone}" name='info[phone]'>
+				<button class="btn btn-primary" id="frame" type="button" onclick="zfb()">确定</button>
+			</form>
+			<div class="text">
+				<a href="">忘记密码?</a>
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript">
+		$("#frame").click(function() {
+			var account = $("input[name=account]").val();
+			console.log(account);
+		})
+		function zfb(){
+			$.ajax({
+				type:"POST",
+				url:"{:U('Weixin/add_zfb')}",
+				datatype:"json",
+				success:function(data){
+					if(data == '提交认证'){
+						alert(data);
+						setTimeout(function(){WeixinJSBridge.call('closeWindow')},1000);
+					}else{
+						alert(data);
+					}
+				}
+			})
+		}
+	</script>
+	<!--$(this).find("input").hasClass("err") || !$('input[name="agree"]').attr("checked")) {
+						if($('input[name="agree"]').attr("checked")) {
+							return false;
+						} else {
+							alert("请勾选协议")
+						}-->
+</html>

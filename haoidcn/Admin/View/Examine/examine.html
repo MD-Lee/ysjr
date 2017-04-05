@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>审核员管理</title>
+
+<!-- header binge -->
+<include file="Public/header" />
+
+<!-- header end -->
+
+<script type="text/javascript" src="{$Think.config.URL}js/new/unify.js"></script>
+</head>
+
+
+<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="js/excanvas.min.js"></script><![endif]-->
+</head>
+<body >
+
+<!-- header binge -->
+<include file="Public/head" />
+
+<!-- header end -->
+    
+    <div class="rightpanel">
+        
+        <!-- head binge -->
+        
+			<include file="Public/nav" name='审核员管理'/>
+		
+		<!-- head end -->
+                
+        <div class="maincontent">
+            <div class="maincontentinner">
+                <div class="row-fluid">
+                        <div>
+                            
+                                <div class="widgetbox personal-information">
+                                    <h4 class="widgettitle">添加审核成员</h4>
+                                    <div class="widgetcontent">
+                                    	<div style="padding:15px 40px;">
+	                                    	<form action="{:U('Examine/add_examine')}" class="editprofileform" id="form">
+	                                    		<p style="margin:0 0;">
+		                                            <label style="width:150px;">账号：</label>
+		                                            <input type="text" class="input-xlarge" name="info[userid]"/>
+		                                        </p>
+		                                    	<p style="margin:0 0;">
+		                                            <label style="width:150px;">密码：</label>
+		                                            <input type="password" class="input-xlarge" name="info[pwd]"/>
+		                                        </p>
+		                                    	<p style="margin:0 0;">
+		                                            <label style="width:150px;">手机：</label>
+		                                            <input type="text" class="input-xlarge" name="info[phone]"/>
+		                                        </p>
+		                                    	<p style="margin:0 0;">
+		                                            <label style="width:150px;">微信：</label>
+		                                            <input type="text" class="input-xlarge" name="info[weixin]"/>
+		                                        </p>
+		                                        <p style="margin:0 0;">
+		                                            <label style="width:150px;">qq：</label>
+		                                            <input type="text" class="input-xlarge" name="info[qq]"/>
+		                                        </p>
+		                                        <p style="margin:0 0;">
+		                                            <label style="width:150px;">邮箱：</label>
+		                                            <input type="email" class="input-xlarge" name="info[email]"/>
+		                                        </p>
+		                                        <p style="margin:0 0;">
+		                                            <label style="width:150px;">性别：</label>
+		                                            <select name="info[sex]">
+		                                            	<option value="">选择性别</option>
+		                                            	<option value="男">男</option>
+		                                            	<option value="女">女</option>
+		                                            </select>
+		                                        </p>
+		                                    </form>
+                                            <p>
+	                                        	<button class="btn btn-primary" onclick="add_agent()">添加成员</button>
+			                                </p>
+                                    	</div>
+                                    </div>
+                                </div>
+                            
+                        </div><!--span8-->
+                    </div><!--row-fluid-->
+                   <div style="height:292px;"></div>
+                  
+        		 <!-- footer binge -->
+				<include file="Public/footer" />
+				
+				<!-- footer end -->
+                
+                
+                
+            </div><!--maincontentinner-->
+        </div><!--maincontent-->
+        
+    </div><!--rightpanel-->
+    
+</div><!--mainwrapper-->
+<script>
+//输入框非空的方法
+function checkText(){
+	return $("#form").validate({
+		/*更改错误信息位置的方法*/
+		errorPlacement: function(error, element) {
+	        error.appendTo( element.parent("p"));
+	    },
+	    errorElement: "span",
+		rules:{
+			"info[userid]":{
+				required:true
+			},
+			"info[pwd]":{
+				required:true
+			},
+			"info[phone]":{
+				required:true
+			}
+		},
+		messages:{
+			"info[userid]":{
+				required:'请输入账号'
+			},
+			"info[pwd]":{
+				required:'请输入密码'
+			},
+			"info[phone]":{
+				required:'请输入手机号码'
+			}
+		}
+	})
+}
+function add_agent(){
+	if(!checkText().form())return;
+	$('#form').ajaxSubmit({
+		type:"POST",
+		url:$('#form').attr('action'),
+		datetype:"json",
+		success:function(data){
+			if(data == '添加成员成功'){
+				setTimeout(function(){window.location.href="{:U('Examine/examine_list')}"},1000);
+			}
+		}
+	})
+}
+</script>
+</body>
+</html>

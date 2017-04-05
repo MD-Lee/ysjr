@@ -1,0 +1,312 @@
+@CHARSET "UTF-8";
+.container {
+	margin-top: 40px;
+}
+.img img {
+	width: 100%;
+}
+.btn.btn-primary{
+	background-color: #00B4FF;
+	border-color: #00B4FF;
+	height: 50px;
+}
+#register{
+	margin-top: 30px;
+	width:100%;
+	font-size: 18px;
+	border-radius: 30px;
+}
+/*返回*/
+.top-head {
+  position: fixed;
+  /*min-width: 320px;
+  max-width: 640px;*/
+  height: 40px;
+  width: 100%;
+  top: 0;
+  background-color: #fff;
+}
+.top-head .title {
+  position: relative;
+  display: block;
+  margin: 0 auto;
+  text-align: center;
+  vertical-align: middle;
+  font-size: 18px;
+  line-height: 40px;
+  font-weight: bold;
+}
+.title .back {
+  position: absolute;
+  left: 0;
+  top: 3px;
+}
+.top-head i.icon-back {
+  background-image: url("/haoidcn/Admin/Public/images/xianjinbashi/left.png");
+  height: 25px;
+  width: 25px;
+  margin-top: 5px;
+}
+i.icon {
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: 100% auto;
+  display: inline-block;
+  font-style: normal;
+  position: relative;
+  vertical-align: middle;
+  height: 30px;
+  width: 30px;
+}
+.top-head:after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 40px;
+  bottom: auto;
+  right: auto;
+  height: 1px;
+  width: 100%;
+  background-color: #c8c7cc;
+  display: block;
+  z-index: 15;
+  -webkit-transform-origin: 50% 0%;
+  transform-origin: 50% 0%;
+}
+.clear {
+	clear:both;
+	height:0px;
+	overflow:hidden;
+	} 
+.clearfix:after {
+	content: "\200B";
+	display: block;
+	height: 0;
+	clear: both;
+}
+.clearfix{
+	*zoom: 1;
+}
+.fl {
+	float: left;
+}
+.fr {
+	float: right;
+}
+ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+/*头部导航*/
+.mune-list .item i.icon-right {
+  width: 20px;
+  height: 20px;
+  margin-top: 15px;
+}
+.mune-list {
+  margin-bottom: 0;
+  background-color: #fff;
+}
+.mune-list .item {
+  position: relative;
+  padding: 0 10px;
+  border-bottom: 1px solid #E4E4E4;
+  line-height: 50px;
+  text-indent: 45px;
+  font-weight: 500;
+}
+.item a {
+	display: block;
+	color: #000;
+}
+.item .box {
+	position: absolute;
+	left: 10px;
+	width: 30px;
+	height: 30px;
+	margin-top: 10px;
+}
+/*攻略*/
+.item .raiders {
+	background: url("/haoidcn/Admin/Public/images/xianjinbashi/search.svg") center center no-repeat;
+	background-size: 100% 100%;
+}
+/*绑银行卡*/
+.item .bank {
+	background: url("/haoidcn/Admin/Public/images/xianjinbashi/bank.svg") center center no-repeat;
+	background-size: 100% 100%;
+}
+/*自拍*/ 
+.item .photo {
+	background: url("/haoidcn/Admin/Public/images/xianjinbashi/photo.svg") center center no-repeat;
+	background-size: 100% 100%;
+} 
+.item .voice {
+	background: url("/haoidcn/Admin/Public/images/xianjinbashi/voice.svg") center center no-repeat;
+	background-size: 100% 100%;
+}
+.item .repayment {
+	background: url("/haoidcn/Admin/Public/images/xianjinbashi/repayment.svg") center center no-repeat;
+	background-size: 100% 100%;
+}
+.list-item {
+	margin-top: 10px;
+	overflow: hidden;
+	border: 1px solid #d8d8d8;
+	border-left: 0;
+	border-right: 0;
+	background-color: #fff;
+}
+.list-item .item {
+	width: 50%;
+	text-align: center;
+	margin-left: -1px;
+	border-left: 1px solid #d8d8d8;
+}
+.item .bottom {
+	margin-bottom: 0;
+	margin-top: 0;
+	height: 25px;
+	line-height: 25px;
+}
+.item .num {
+	font-weight: bold;
+	font-size: 20px;
+	color: #0080f5;
+}
+.item a {
+	color: #393939;
+	text-decoration:none;
+}
+i.icon-right {
+  background-image: url("/haoidcn/Admin/Public/images/xianjinbashi/right.svg");
+  height: 20px;
+  width: 20px;
+}
+/*横线*/
+.line{
+    width: 100%;
+    height: 40px;
+    left: 40%;
+    top: 200px;
+    background-color: #f0f0f0;
+    box-sizing: border-box;
+    line-height: 40px;
+    text-align: center;
+}
+.line *{
+    display: inline-block;
+}
+.line p{
+    height: 1px;
+    width: 15%;
+    background-color: #c0c0c0;
+    margin: 0;
+    position: relative;
+    top: -3px;
+}
+.line span{
+    line-height: 40px;
+    height: 40px;
+    display: inline-block;
+   	width: 20%;
+	text-align: center;
+	color: #8f8f8f;
+}
+/*搜索框*/
+.search {
+	background-color: #d3d3d3;	
+}
+.search p {
+	position: relative;
+	width: 80%;
+	height: 45px;
+	margin: 0 auto;
+	background-color: #d3d3d3;
+}
+.search input {
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	display: block;
+	width: 100%;
+	height: 35px;
+	margin: auto;
+	border: 0;
+	background-color: #fff;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	text-indent: 10px;
+}
+.search .search2 {
+	position: absolute;
+	background: url("/haoidcn/Admin/Public/images/xianjinbashi/search2.svg") center center no-repeat;
+	background-size: 100% 100%;
+	width: 20px;
+	height: 20px;
+	top: 13px;
+	right: 5px;
+}
+/*问题列表*/
+.list .bug {
+	padding: 0 1px;
+	border-bottom: 1px solid #dcdcdc;
+}
+.list .bug p {
+	margin-bottom: 0;
+	padding: 5px;
+	border-radius: 5px;
+}
+.list .bug  .heading {
+	height: 40px;
+	position: relative;
+}
+.list .bug p {
+	display: none;
+}
+.up {
+	position: absolute;
+	background: url("/haoidcn/Admin/Public/images/xianjinbashi/up.svg") center center no-repeat;
+	background-size: 100% 100%;
+	width: 20px;
+	height: 20px;
+	top: 5px;
+	right: 0px;
+    -webkit-transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+    transform: rotate(180deg);	
+}
+.down {
+	position: absolute;
+	background: url("/haoidcn/Admin/Public/images/xianjinbashi/down2.svg") center center no-repeat;
+	background-size: 100% 100%;
+	width: 20px;
+	height: 20px;
+	top: 5px;
+	right: 0px;	
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);		
+}
+.beij {
+	background-color: #4ba058;
+	color: #fff;
+}
+.bug-ground {
+	background-color: #f0f0f0;
+}
+/*改变窗口定位*/
+.pos-sech {
+	position: initial;
+	width: 100%;
+	top: 0;
+	z-index: 999;
+}

@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>调研列表</title>
+
+<!-- header binge -->
+<include file="Public/header" />
+
+<!-- header end -->
+
+<script type="text/javascript" src="{$Think.config.URL}js/new/unify.js"></script>
+
+<script type="text/javascript">
+jQuery(document).ready(function(){
+
+	
+	jQuery('.taglist .close').click(function(){
+		jQuery(this).parent().remove();
+		return false;
+	});
+	
+});
+</script>
+</head>
+
+
+<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="js/excanvas.min.js"></script><![endif]-->
+</head>
+<body >
+
+<!-- header binge -->
+<include file="Public/head" />
+
+<!-- header end -->
+    
+    <div class="rightpanel">
+        
+        <ul class="breadcrumbs">
+            <li><a href="{:U('Console/dashboard')}"><i class="iconfa-home"></i></a> <span class="separator"></span></li>
+            <li><a href="{:U('Console/dashboard')}">后台面板</a> <span class="separator"></span></li>
+            <li>调研列表</li>
+        </ul>
+               
+        <div class="maincontent">
+            <div class="maincontentinner">
+                <div class="row-fluid">
+                        <div class="form-content container-fluid">
+							<div class="row" style="padding-left: 34px;">
+			
+								<div class="fields clearfix">
+									<div class="field field-mobile-field col-sm-12 required"
+										data-api-code="field_1" data-type="MobileField"
+										data-label="您的手机号"
+										data-validations="[&quot;Presence&quot;,&quot;Uniqueness&quot;,&quot;Format&quot;]">
+			
+			
+										<div class="form-group">
+											<div class="field-label-container" onclick="">
+												<label class="field-label font-family-inherit"
+													for="entry_field_1"> 手机号 </label>
+											</div>
+											<div class="field-content">
+			
+												<div data-role='verification_sender'>
+													<input class="mobile-input input-with-icon" value="{$list['phone']}" readonly="true"/>
+												</div>
+			
+											</div>
+										</div>
+			
+			
+									</div>
+									<div class="field field-section-break col-sm-12">
+										<hr />
+			
+			
+										<div class="form-group">
+											<div class="field-label-container" onclick="">
+												<label class="field-label font-family-inherit"
+													for="entry_field_2"> </label>
+											</div>
+											<div class="field-content"></div>
+										</div>
+			
+			
+									</div>
+									<div class="field field-radio-button col-sm-12 required">
+			
+			
+										<div class="form-group">
+											<div class="field-label-container" onclick="">
+												<label class="field-label font-family-inherit"
+													for="entry_field_3"> 您是怎么关注到e快金的？ </label>
+											</div>
+											<div class="field-content">
+			
+												<div class="choices font-family-inherit">
+														<input type="radio" checked="checked"/>{$list['follow']}
+												</div>
+			
+											</div>
+										</div>
+			
+			
+									</div>
+									<div class="field field-section-break col-sm-12">
+										<hr />
+			
+			
+										<div class="form-group">
+											<div class="field-label-container" onclick="">
+												<label class="field-label font-family-inherit"
+													for="entry_field_4"> </label>
+											</div>
+											<div class="field-content"></div>
+										</div>
+			
+			
+									</div>
+									<div class="field field-section-break col-sm-12"
+										data-api-code="field_44" data-type="SectionBreak" data-label=""
+										data-validations="[]">
+										<hr />
+			
+			
+										<div class="form-group">
+											<div class="field-label-container" onclick="">
+												<label class="field-label font-family-inherit"
+													for="entry_field_44"> </label>
+											</div>
+											<div class="field-content"></div>
+										</div>
+			
+			
+									</div>
+									<div class="field field-radio-button col-sm-12 required">
+			
+			
+										<div class="form-group">
+											<div class="field-label-container" onclick="">
+												<label class="field-label font-family-inherit"
+													for="entry_field_7"> 在e快金借款，您最看重的因素是？ </label>
+											</div>
+											<div class="field-content">
+			
+												<div class="choices font-family-inherit">
+													<input type="radio" checked="checked"/>{$list['factor']}
+												</div>
+			
+											</div>
+										</div>
+			
+			
+									</div>
+									<div class="field field-section-break col-sm-12">
+										<hr />
+			
+			
+										<div class="form-group">
+											<div class="field-label-container" onclick="">
+												<label class="field-label font-family-inherit"
+													for="entry_field_33"> </label>
+											</div>
+											<div class="field-content"></div>
+										</div>
+			
+			
+									</div>
+									<div class="field field-number-field col-sm-12 required">
+			
+			
+										<div class="form-group">
+											<div class="field-label-container" onclick="">
+												<label class="field-label font-family-inherit"
+													for="entry_field_9"> 您期待的一次借款金额是多少？<span>（请输入500-5000之间的数字）</span>
+												</label>
+											</div>
+											<div class="field-content">
+												<input class="input-with-icon"  type="text" value="{$list['money_num']}"/>
+											</div>
+										</div>
+			
+			
+									</div>
+									<div class="field field-section-break col-sm-12">
+										<hr />
+			
+			
+										<div class="form-group">
+											<div class="field-label-container" onclick="">
+												<label class="field-label font-family-inherit"
+													for="entry_field_10"> </label>
+											</div>
+											<div class="field-content"></div>
+										</div>
+			
+			
+									</div>
+									<div class="field field-drop-down col-sm-12 required">
+			
+			
+										<div class="form-group">
+											<div class="field-label-container" onclick="">
+												<label class="field-label font-family-inherit"
+													for="entry_field_48"> 您期待的一次借款天数是多少？ </label>
+											</div>
+											<div class="field-content">
+			
+												<select name="time_length" id="entry_field_48"
+													class="needsclick" data-has-error="false">
+													<option value="{$list['time_length']}">{$list['time_length']}</option>
+												</select>
+			
+			
+			
+											</div>
+										</div>
+			
+			
+									</div>
+									<div class="field field-section-break col-sm-12">
+										<hr />
+			
+			
+										<div class="form-group">
+											<div class="field-label-container" onclick="">
+												<label class="field-label font-family-inherit"
+													for="entry_field_13"> </label>
+											</div>
+											<div class="field-content"></div>
+										</div>
+			
+			
+									</div>
+									<div class="field field-check-box col-sm-12 required">
+			
+			
+										<div class="form-group">
+											<div class="field-label-container" onclick="">
+												<label class="field-label font-family-inherit"
+													for="entry_field_14"> 您在e快金借款的主要用途是？ </label>
+											</div>
+											<div class="field-content">
+			
+												<div class="choices font-family-inherit">
+													<input type="checkbox"  checked="checked"/>
+														{$list['purpose']}
+												</div>
+			
+											</div>
+										</div>
+			
+			
+									</div>
+									<div class="field field-section-break col-sm-12">
+										<hr />
+			
+			
+										<div class="form-group">
+											<div class="field-label-container" onclick="">
+												<label class="field-label font-family-inherit"
+													for="entry_field_15"> </label>
+											</div>
+											<div class="field-content"></div>
+										</div>
+			
+			
+									</div>
+									<div class="field field-check-box col-sm-12 required">
+			
+			
+										<div class="form-group">
+											<div class="field-label-container" onclick="">
+												<label class="field-label font-family-inherit"
+													for="entry_field_16"> 借款过程中您曾经遇到过哪些问题？ </label>
+											</div>
+											<div class="field-content">
+			
+												<div class="choices font-family-inherit">
+													<input type="checkbox"checked="checked"/>
+														{$list['problem']}
+												</div>
+			
+											</div>
+										</div>
+			
+			
+									</div>
+									<div class="field field-section-break col-sm-12">
+										<hr />
+			
+			
+										<div class="form-group">
+											<div class="field-label-container" onclick="">
+												<label class="field-label font-family-inherit"
+													for="entry_field_17"> </label>
+											</div>
+											<div class="field-content"></div>
+										</div>
+			
+			
+									</div>
+									<div class="field field-radio-button col-sm-12 required">
+			
+			
+										<div class="form-group">
+											<div class="field-label-container" onclick="">
+												<label class="field-label font-family-inherit"
+													for="entry_field_18"> 您对我们的人工客服感觉如何？ </label>
+											</div>
+											<div class="field-content">
+			
+												<div class="choices font-family-inherit">
+													<input type="radio"checked="checked"/>{$list['service']}
+												</div>
+			
+											</div>
+										</div>
+			
+			
+									</div>
+									<div class="field field-section-break col-sm-12">
+										<hr />
+			
+			
+										<div class="form-group">
+											<div class="field-label-container" onclick="">
+												<label class="field-label font-family-inherit"
+													for="entry_field_19"> </label>
+											</div>
+											<div class="field-content"></div>
+										</div>
+			
+			
+									</div>
+									<div class="field field-radio-button col-sm-12 required">
+			
+			
+										<div class="form-group">
+											<div class="field-label-container" onclick="">
+												<label class="field-label font-family-inherit"
+													for="entry_field_20"> 您是否有信用卡？ </label>
+											</div>
+											<div class="field-content">
+			
+												<div class="choices font-family-inherit">
+												<if condition="$list['credit'] eq 1">
+													<input type="radio" name="credit" checked="checked"/>有
+												<else/>
+													<input type="radio" name="credit" checked="checked"/>没有
+												</if>
+												</div>
+			
+											</div>
+										</div>
+			
+			
+									</div>
+									<div class="field field-section-break col-sm-12">
+										<hr />
+			
+			
+										<div class="form-group">
+											<div class="field-label-container" onclick="">
+												<label class="field-label font-family-inherit"
+													for="entry_field_21"> </label>
+											</div>
+											<div class="field-content"></div>
+										</div>
+			
+			
+									</div>
+									<div class="field field-section-break col-sm-12">
+										<hr />
+			
+			
+										<div class="form-group">
+											<div class="field-label-container" onclick="">
+												<label class="field-label font-family-inherit"
+													for="entry_field_23"> </label>
+											</div>
+											<div class="field-content"></div>
+										</div>
+			
+			
+									</div>
+									<div class="field field-radio-button col-sm-12 required">
+			
+			
+										<div class="form-group">
+											<div class="field-label-container" onclick="">
+												<label class="field-label font-family-inherit"
+													for="entry_field_24"> 您在意您的征信记录吗？ </label>
+											</div>
+											<div class="field-content">
+			
+												<div class="choices font-family-inherit">
+													<input type="radio" checked="checked"/>{$list['faith']}
+												</div>
+			
+											</div>
+										</div>
+			
+			
+									</div>
+									<div class="field field-section-break col-sm-12"
+										data-api-code="field_25" data-type="SectionBreak" data-label=""
+										data-validations="[]">
+										<hr />
+			
+			
+										<div class="form-group">
+											<div class="field-label-container" onclick="">
+												<label class="field-label font-family-inherit"
+													for="entry_field_25"> </label>
+											</div>
+											<div class="field-content"></div>
+										</div>
+			
+			
+									</div>
+									<div class="field field-check-box col-sm-12 required">
+			
+			
+										<div class="form-group">
+											<div class="field-label-container" onclick="">
+												<label class="field-label font-family-inherit"
+													for="entry_field_26"> 您觉得征信记录不良会有哪些负面影响？ </label>
+											</div>
+											<div class="field-content">
+												<div class="choices font-family-inherit">
+													<input type="checkbox"checked="checked"/>
+														{$list['bad_faith']}
+												</div>
+			
+											</div>
+										</div>
+			
+			
+									</div>
+									<div class="field field-section-break col-sm-12">
+										<hr />
+			
+			
+										<div class="form-group">
+											<div class="field-label-container" onclick="">
+												<label class="field-label font-family-inherit"
+													for="entry_field_27"> </label>
+											</div>
+											<div class="field-content"></div>
+										</div>
+			
+			
+									</div>
+									<div class="field field-radio-button col-sm-12 required">
+			
+			
+										<div class="form-group">
+											<div class="field-label-container" onclick="">
+												<label class="field-label font-family-inherit"
+													for="entry_field_36"> 您急需用钱的时候多吗？ </label>
+											</div>
+											<div class="field-content">
+			
+												<div class="choices font-family-inherit">
+													<input type="radio" checked="checked"/>{$list['is_need_money']}
+												</div>
+			
+											</div>
+										</div>
+			
+			
+									</div>
+									<div class="field field-section-break col-sm-12">
+										<hr />
+			
+			
+										<div class="form-group">
+											<div class="field-label-container" onclick="">
+												<label class="field-label font-family-inherit"
+													for="entry_field_40"> </label>
+											</div>
+											<div class="field-content"></div>
+										</div>
+			
+			
+									</div>
+									<div class="field field-radio-button col-sm-12 required">
+			
+			
+										<div class="form-group">
+											<div class="field-label-container" onclick="">
+												<label class="field-label font-family-inherit"
+													for="entry_field_37"> 您一般在什么时候比较缺钱？ </label>
+											</div>
+											<div class="field-content">
+			
+												<div class="choices font-family-inherit">
+													<input type="radio"checked="checked"/>{$list['time_lack']}
+												</div>
+			
+											</div>
+										</div>
+			
+			
+									</div>
+									<div class="field field-section-break col-sm-12">
+										<hr />
+			
+			
+										<div class="form-group">
+											<div class="field-label-container" onclick="">
+												<label class="field-label font-family-inherit"
+													for="entry_field_8"> </label>
+											</div>
+											<div class="field-content"></div>
+										</div>
+			
+			
+									</div>
+									<div class="field field-number-field col-sm-12 required">
+			
+			
+										<div class="form-group">
+											<div class="field-label-container" onclick="">
+												<label class="field-label font-family-inherit"
+													for="entry_field_45"> 您几号发工资？
+												</label>
+											</div>
+											<div class="field-content">
+			
+												<input class="input-with-icon" type="number" value="{$list['pay_off']}"/>
+			
+			
+											</div>
+										</div>
+			
+			
+									</div>
+									<div class="field field-section-break col-sm-12">
+										<hr />
+			
+			
+										<div class="form-group">
+											<div class="field-label-container" onclick="">
+												<label class="field-label font-family-inherit"
+													for="entry_field_41"> </label>
+											</div>
+											<div class="field-content"></div>
+										</div>
+			
+			
+									</div>
+									<div class="field field-section-break col-sm-12">
+										<hr />
+			
+			
+										<div class="form-group">
+											<div class="field-label-container" onclick="">
+												<label class="field-label font-family-inherit"
+													for="entry_field_29"> </label>
+											</div>
+											<div class="field-content"></div>
+										</div>
+			
+			
+									</div>
+									<div class="field field-text-area col-sm-12 required">
+			
+			
+										<div class="form-group">
+											<div class="field-label-container" onclick="">
+												<label class="field-label font-family-inherit"
+													for="entry_field_30"> 您觉得e快金哪方面做的不错？<span>（请填写4-200个字符）</span>
+												</label>
+											</div>
+											<div class="field-content">
+												<div class="field-description clearfix">
+												</div>
+												<textarea rows="3" name="proposal" disabled="disabled">{$list['proposal']}</textarea>
+											</div>
+										</div>
+			
+			
+									</div>
+									<div class="field field-section-break col-sm-12">
+										<hr />
+			
+			
+										<div class="form-group">
+											<div class="field-label-container" onclick="">
+												<label class="field-label font-family-inherit"
+													for="entry_field_31"> </label>
+											</div>
+											<div class="field-content"></div>
+										</div>
+			
+			
+									</div>
+									<div class="field field-text-area col-sm-12 required">
+			
+			
+										<div class="form-group">
+											<div class="field-label-container" onclick="">
+												<label class="field-label font-family-inherit"
+													for="entry_field_32"> 您觉得e快金哪方面做的最差？<span>（请填写4-200个字符）</span>
+												</label>
+											</div>
+											<div class="field-content">
+												<textarea rows="3" name="complain" disabled="disabled">{$list['complain']}</textarea>
+			
+											</div>
+										</div>
+			
+			
+									</div>
+								</div>
+							</div>
+						</div>
+               	</div> 
+                
+        	</div><!--maincontent-->
+        
+    	</div><!--rightpanel-->
+    
+	</div><!--mainwrapper-->
+
+</body>
+</html>

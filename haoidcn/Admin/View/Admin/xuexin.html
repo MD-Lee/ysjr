@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>学信认证管理</title>
+
+<!-- header binge -->
+<include file="Public/header" />
+<link rel="stylesheet" href="//apps.bdimg.com/libs/jqueryui/1.10.4/css/jquery-ui.min.css">
+<script src="//apps.bdimg.com/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="{$Think.config.URL}js/jquery.cookie.js"></script>
+<script src="//apps.bdimg.com/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+<!-- header end -->
+
+<script type="text/javascript" src="{$Think.config.URL}js/new/unify.js"></script>
+
+<script type="text/javascript">
+jQuery(document).ready(function(){
+
+	
+	jQuery('.taglist .close').click(function(){
+		jQuery(this).parent().remove();
+		return false;
+	});
+	
+});
+</script>
+
+</head>
+
+
+<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="js/excanvas.min.js"></script><![endif]-->
+</head>
+<body>
+
+<!-- header binge -->
+<include file="Public/head" />
+
+<!-- header end -->
+    
+    <div class="rightpanel">
+        <!-- head binge -->
+        
+			<include file="Public/nav" name='学信认证管理'/>
+		
+		<!-- head end -->
+        
+        <div class="maincontent">
+            <div class="maincontentinner">
+                <div class="row-fluid">
+                   <div>
+                        <div class="widgetbox personal-information">
+                            <h4 class="widgettitle">学信认证管理</h4>
+                            <div class="widgetcontent" id="user">
+	                            <form id="form" action="{:U('Admin/xuexin_search')}">
+	                            	<input type="text" class="input-xlarge" name="phone" placeholder="请输入要搜索的手机号码" style="width:150px;">
+	                            	<input type="button" class="btn btn-primary" value="搜索" onclick="user_search()">
+	                            </form>
+	                            <div  id="tab1">
+	                            	<table class="table table-bordered">
+	                            		<tr>
+	                            			<th width="200px;">手机</th>
+	                            			<th width="200px;">账号</th>
+	                            			<th width="200px;">图片</th>
+	                            			<th width="300px;">认证时间</th>
+	                            		</tr>
+	                            		<volist name="list" id="vo">
+	                            			<tr id="{$vo.id}">
+	                            				<td>{$vo.phone}</td>
+	                            				<td>{$vo.num}</td>
+	                            				<td><a href="{$vo.url}" target="_blank"><img src="{$vo.url}" style="width:50px"></a></td>
+	                            				<td>{$vo.time}</td>
+	                            			</tr>
+	                            		</volist>
+	                            	</table> 
+	                            	{$page}
+                            	</div>
+                            	<div id="tab2" style="display:none">
+		                    		<table class="table table-bordered" id="table">
+		                    			<tr id="tr">
+	                            			<th width="200px;">手机</th>
+	                            			<th width="200px;">账号</th>
+	                            			<th width="200px;">图片</th>
+	                            			<th width="300px;">认证时间</th>
+	                            		</tr>
+		                    		</table> 
+		                    	</div>
+                            </div>
+                                      
+                        </div>
+                    </div><!--row-fluid-->
+                  
+                  
+        		 <!-- footer binge -->
+				<include file="Public/footer" />
+				
+				<!-- footer end -->
+                
+                
+                
+            </div><!--maincontentinner-->
+        </div><!--maincontent-->
+        
+    </div><!--rightpanel-->
+    
+</div><!--mainwrapper-->
+
+</body>
+<script src="http://malsup.github.io/jquery.form.js"></script>
+<script>
+//搜索手机用户 
+function user_search(){
+	$('#table #tr').siblings('tr').remove();
+	$('#form').ajaxSubmit({
+		type:"POST",
+		url:$('#form').attr('action'),
+		datatype:"json",
+		success:function(data){
+			$.each(data,function(){
+				$('#table').append("<tr><td>"+this.phone+"</td><td>"+this.num+"</td><td><a href='"+this.url+"' target='_blank'><img src='"+this.url+"' style='width:50px'></a></td><td>"+this.time+"</td></tr>");
+			});
+			$('#tab1').css('display','none');
+			$('#tab2').css('display','block');
+		}
+	})
+}
+</script>
+</html>

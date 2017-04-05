@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>注册</title>
+<link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+<link href="{$Think.config.URL}/css/Weixin.register.css" rel="stylesheet">
+<script type="text/javascript" src="{$Think.config.URL}js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="{$Think.config.URL}js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="{$Think.config.URL}js/validate-methods.js"></script>
+<script type="text/javascript" src="{$Think.config.URL}js/jquery.form-3.51.0.js"></script>
+<style>
+.class {
+	-webkit-animation:rotage-change 2s linear 0.5s infinite ;
+}
+@-webkit-keyframes rotage-change {
+             /*起始*/
+         from {         
+              -webkit-transform: rotate(0deg);
+         }
+         /*结束*/
+         to {
+              -webkit-transform: rotate(360deg);
+         }
+      }
+
+</style>
+</head>
+<body>
+	<div class="container">
+		<div align="center">
+			<img src="{$Think.config.URL}/images/xianjinbashi/1-zhuceye.png" class="img-responsive">
+		</div>
+		<form id="register" action="{:U('Weixin/user_register')}">
+		  <div class="form-group">
+		    <input type="text" class="form-control" name="info[phone]" placeholder="请输入您的手机号">
+		  </div>
+		  <div class="form-group">
+		    <input type="text" class="form-control" name="info[message_verify]" placeholder="请输入短信验证码" style="width:70%;float:left;">
+		    <button type="button" class="btn btn-primary" style="width:30%" id="sendcode">获取验证码</button>
+		  </div>
+		  <div class="class" style="display:none;width: 50px;height: 50px;position: fixed;left: 45%;top:35%;">
+				<img src="{$Think.config.URL}/images/xianjinbashi/jiazai.png" width="50px" height="50px">
+			</div>
+		  <div class="form-group">
+		    <input type="password" class="form-control" name="info[pwd]" id="pwd" placeholder="请设置登录密码" style="width:70%;float:left;">
+		    <button type="button" class="btn btn-primary" style="width:30%" id="password">显示密码</button>
+		  </div>
+		  <div class="form-group">
+		    <input type="text" class="form-control" name="info[recommend_code]" value="{$tuijian}" placeholder="推荐码（可选）">
+		  </div>
+		  <div class="checkbox">
+		    <label>
+		      <input type="checkbox" name="agree"> 我同意<a class="span" href="{:U('Weixin/agreement')}">《服务与隐私协议》</a>
+		    </label>
+		  </div>
+		  <input type="hidden" value="{$openid}" name="info[openid]">
+		  <input type="hidden" value="{$nickname}" name="info[uname]">
+		  <button type="button" class="btn btn-primary" id="frame" onclick="user_register()">提交注册</button>
+		</form>
+		<div class="text">
+			<a href="{:U('Weixin/login',array('openid'=>$openid))}" style="color: red;">已经注册？点我登录</a>
+		</div>
+	</div>
+</body>
+<script>
+//到计时控件
+var time = 60;
+var sendcode = document.getElementById("sendcode");
+$(document).ready(function(){
+ 	$("#sendcode").click(function(){
+ 		if($("input[name='info[phone]']").val() == ""){
+ 			alert('请输入您的手机号');
+ 		}else{
+ 			var phone = $("input[name='info[phone]']").val();
+ 	 		$.ajax({
+ 				type:"POST",
+ 				url:"{:U('Weixin/message_verify')}",
+ 				data:{'phone':phone},
+ 				datatype:'json',
+ 				success:function(data){
+ 					if(data == '短信发送成功'){
+ 						alert(data);
+ 						function timedown() {
+ 			 	            if (time == 0) {
+ 			 	            	sendcode.removeAttribute('disabled');
+ 			 	                $("#sendcode").text("获取验证码");
+ 			 	                time = 60;
+ 			 	                clearTimeout(clicktime);
+ 			 	            }else{
+ 			 	                $("#sendcode").text("重新发送(" + time + ")");
+ 			 	                sendcode.setAttribute("disabled", true);
+ 			 	                time--;
+ 			 	                clicktime = setTimeout(timedown, 1000);
+ 			 	            }
+ 			 	        }
+ 			 	        timedown();
+ 					}else{
+ 						alert('短信发送失败，手机号码不正确');
+ 					}
+ 				}
+ 			});
+ 		}
+	});
+});
+sendcode.removeAttribute('disabled');
+//点击按钮显示和隐藏密码 
+$(document).ready(function(){
+	$('#password').click(function(){
+		if($('#pwd').attr('type') == 'password'){
+			$('#pwd').attr('type','text');
+			$(this).html('隐藏密码');
+		}else{
+			$('#pwd').attr('type','password');
+			$(this).html('显示密码');
+		}
+	});
+});  
+//输入框非空方法 
+function checkText(){
+	return $("#register").validate({
+		errorPlacement: function(error, element) {  
+		    error.appendTo(element.parent());  
+		},
+		errorElement: "div",
+		rules:{
+			"info[phone]":{
+				required:true,
+				isMobile:true
+			},
+			"info[message_verify]":{
+				required:true
+			},
+			"info[pwd]":{
+				required:true,
+				minlength:6
+			},
+			"agree":{
+				required:true
+			}
+		},
+		messages:{
+			"info[phone]":{
+				required:'请输入您的手机号',
+				isMobile:'请输入正确的手机号码'
+			},
+			"info[message_verify]":{
+				required:'请输入短信验证码'
+			},
+			"info[pwd]":{
+				required:'请输入密码',
+				minlength:"密码长度不能小于6个字母"
+			},
+			"agree":{
+				required:'请同意我们的协议'
+			}
+		}
+	})
+}
+//提交用户注册信息到后台
+function user_register(){
+	if(!checkText().form())return;
+	$('.class').css('display','block');
+	$('#register').ajaxSubmit({
+		type:"POST",
+		url:$('#register').attr('action'),
+		datatype:'json',
+		success:function(data){
+			if(data == '注册成功'){
+				var phone = $("input[name='info[phone]']").val();
+				var openid = $("input[name='info[openid]']").val();
+				setTimeout(function(){window.location.href="/index.php/Weixin/register_success?phone="+phone+"&openid="+openid},1000);
+			}else{
+				alert(data);
+				$('.class').css('display','none');
+			}
+		}
+	})
+}
+</script>
+</html>

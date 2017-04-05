@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>任务管理</title>
+
+<!-- header binge -->
+<include file="Public/header" />
+
+<!-- header end -->
+
+<script type="text/javascript" src="{$Think.config.URL}js/new/unify.js"></script>
+</head>
+
+
+<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="js/excanvas.min.js"></script><![endif]-->
+</head>
+<body >
+
+<!-- header binge -->
+<include file="Public/head" />
+
+<!-- header end -->
+    
+    <div class="rightpanel">
+        
+        <!-- head binge -->
+        
+			<include file="Public/nav" name='任务管理'/>
+		
+		<!-- head end -->
+                
+        <div class="maincontent">
+            <div class="maincontentinner">
+                <div class="row-fluid">
+                        <div>
+                            
+                                <div class="widgetbox personal-information">
+                                    <h4 class="widgettitle">审核备注</h4>
+                                    <div class="widgetcontent">
+                                    	<div style="padding:15px 40px;">
+                                    	<if condition="$list[is_renewal] gt 0">
+                                    		<form action="{:U('Task/no_xuqi')}" id="form">
+                                    			<p style="margin:0 0;">
+		                                            <label style="float:left;margin-top: 5px;">手机号：</label>
+		                                            <input type="text" class="input-xlarge" name="phone" value="{$phone}"/>
+		                                        </p>
+		                                        <p style="margin:0 0;">
+		                                        	<label style="float:left;margin-top: 5px;">审核备注：</label>
+		                                        	<textarea rows="3" name="content"></textarea>
+		                                        </p>
+		                                     </form>
+                                    	<else/>
+	                                    	<form action="{:U('Task/on_adopt')}" id="form">
+		                                    	<p style="margin:0 0;">
+		                                            <label style="float:left;margin-top: 5px;">手机号：</label>
+		                                            <input type="text" class="input-xlarge" name="phone" value="{$phone}"/>
+		                                        </p>
+		                                        <p style="margin:0 0;">
+		                                        	<label style="float:left;margin-top: 5px;">审核备注：</label>
+		                                        	<textarea rows="3" name="content"></textarea>
+		                                        </p>
+		                                    </form>
+		                                 </if>
+                                            <p>
+	                                        	<button class="btn btn-primary" onclick="submit_loan()">提交审核</button>
+			                                </p>
+                                    	</div>
+                                    </div>
+                                </div>
+                            
+                        </div><!--span8-->
+                    </div><!--row-fluid-->
+                   <div style="height:292px;"></div>
+                  
+        		 <!-- footer binge -->
+				<include file="Public/footer" />
+				
+				<!-- footer end -->
+                
+                
+                
+            </div><!--maincontentinner-->
+        </div><!--maincontent-->
+        
+    </div><!--rightpanel-->
+    
+</div><!--mainwrapper-->
+<script>
+function submit_loan(){
+	$('#form').ajaxSubmit({
+		type:"POST",
+		url:$('#form').attr('action'),
+		datatype:"json",
+		success:function(data){
+			alert(data);
+			setTimeout(function(){window.location.href="{:U('Task/loan_task')}"},1000);
+		}
+	})
+}
+</script>
+</body>
+</html>

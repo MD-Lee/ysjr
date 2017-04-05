@@ -1,0 +1,123 @@
+@CHARSET "UTF-8";
+ /*html,body {
+  min-width: 320px;
+  max-width: 640px;
+  margin: 0 auto;
+  font-family: "Microsoft YaHei UI Light";	
+}*/
+.header{
+	height:40px;
+	text-align:center;
+}
+img{
+	float: left;
+}
+.container{
+	margin-top: 70px;
+}
+.form-control{
+	height: 50px;
+}
+.btn.btn-primary{
+	width:100%;
+	background-color: #00B4FF;
+	border-color: #00B4FF;
+	height: 50px;
+}
+#register{
+	margin-top: 40px;
+	border-radius: 30px;
+}
+/*返回*/
+.top-head {
+  position: fixed;
+  /*min-width: 320px;
+  max-width: 640px;*/
+  height: 40px;
+  width: 100%;
+  top: 0;
+  background-color: #fff;
+}
+.top-head .title {
+  position: relative;
+  display: block;
+  margin: 0 auto;
+  text-align: center;
+  vertical-align: middle;
+  font-size: 18px;
+  line-height: 40px;
+  font-weight: bold;
+}
+.title .back {
+  position: absolute;
+  left: 0;
+  top: 3px;
+}
+.top-head i.icon-back {
+  background-image: url("../../img/left.png");
+  height: 25px;
+  width: 25px;
+  margin-top: 5px;
+}
+i.icon {
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: 100% auto;
+  display: inline-block;
+  font-style: normal;
+  position: relative;
+  vertical-align: middle;
+  height: 30px;
+  width: 30px;
+}
+.top-head:after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 40px;
+  bottom: auto;
+  right: auto;
+  height: 1px;
+  width: 100%;
+  background-color: #c8c7cc;
+  display: block;
+  z-index: 15;
+  -webkit-transform-origin: 50% 0%;
+  transform-origin: 50% 0%;
+}
+input[name="code"] {
+	border-radius: 5px 0 0 5px;
+}
+#sendcode {
+	border-radius: 0 5px 5px 0;
+}
+/*错误提示信息*/
+.testing {
+  position: relative;
+}
+.testing .error {
+  display: none;
+  position: absolute;
+  top: 30%;
+  right: 5px;
+  background-color: #e57819;
+  color: #fff;
+  padding: 2px;
+  font-size: 12px;
+  border-radius: 5px;
+  line-height: 16px;
+}
+.testing .true {
+  display: none;
+  position: absolute;
+  top: 35%;
+  right: 0;
+  width: 15px;
+  height: 15px;
+  background: url("../../img/true.svg") no-repeat;
+  background-size: 100% 100%;
+}
+.testing .reset {
+  position: absolute;
+  right: 42%;
+}

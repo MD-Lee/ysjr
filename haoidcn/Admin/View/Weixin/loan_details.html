@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>e借款</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+		<link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+		<link href="{$Think.config.URL}/css/loan_details.css" rel="stylesheet">
+		<script type="text/javascript" src="{$Think.config.URL}js/jquery-1.9.1.min.js"></script>
+	</head>
+
+	<body>
+		<div class="wrap" style=" margin-top: 40px;">
+			<div class="tab-tit clearfix" id="tabTit">
+				<span class="sel fl data">我要还款</span>
+				<span class="fl loan">我想续期</span>
+			</div>
+			<div class="tab-con" id="tabCon">
+			<if condition="$days gt 0">
+				<div class="block lan">
+					<p class="overdue">提前还款信用增值！</p>
+					<p class="dataing">
+						<span class="days sigh">
+							<span id="span">距离还款日</span>
+						</span>
+						<span class="days font">{$days}天</span>
+					</p>
+					<div class="table">
+						<table>
+							<thead>
+								<tr>
+									<td>到期日</td>
+									<td>{$list['appoint_time']}</td>
+									<td></td>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>到期还款</td>
+									<td><span>{$list['sum']}</span>元</td>
+									<td><a href="javascript:;" class="what affirm">借款详情</a></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<button class="sure" id="regNow">立即还款</button>
+				</div>
+			<elseif condition="$days lt 0"/>
+				<div class="block lan">
+					<p class="yuqi">您已逾期，请珍惜您的个人信用！</p>
+					<p class="yuqiing">
+						<span class="days sigh">
+							<strong>!</strong>
+						</span>
+						<span class="days font">
+						<php>
+							$tian = str_replace("-","",$days);
+						</php>
+							逾期已达{$tian}天
+						</span>
+					</p>
+					<div class="table">
+						<table>
+							<thead>
+								<tr>
+									<td>到期日</td>
+									<td>{$list['appoint_time']}</td>
+									<td></td>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>到期还款</td>
+									<td><span>{$list['sum']}</span>元</td>
+									<td><a href="javascript:;" class="what affirm">借款详情</a></td>
+								</tr>
+								<tr>
+									<td>逾期罚金</td>
+									<td>
+									<span>
+									<php>
+										$yuqi = $tian * $overdue
+									</php>
+									{$yuqi}
+									</span>元</td>
+									<td><a href="javascript:;" id="2"  class="what service">？这是什么</a></td>
+								</tr>
+								<tr>
+									<td>需还</td>
+									<td>
+										<span id="sum3">
+										<php>
+										$sum1 = $sum + $yuqi;
+										</php>
+										{$sum1}
+										</span>元
+									</td>
+									<td></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<button class="sure" id="regNow">立即还款</button>
+				</div>
+			</if>
+				
+				<div class="lan ">
+					<div class="renewal">
+						<p class="prompt">
+							<span></span>
+						</p>
+						<div class="list">
+							<p class="txt">您必须现在结清本期息费，及续期服务费，扣款成功后自助续期方可生效！</p>
+							<div class="table" style="margin-bottom:0!important;border:0;padding: 0;margin-top: 10px;">
+								<table>
+									<thead>
+									<if condition="$days lt 0">
+										<tr>
+											<td>续期罚金</td>
+											<td><span id="yuqi">{$yuqi}</span>元</td>
+											<td>&nbsp;</td>
+										</tr>
+									</if>
+										<!-- <tr>
+											<td>本期息费</td>
+											<td><span>{$list['interest']}</span>元</td>
+											<td>&nbsp;</td>
+										</tr> -->
+									</thead>
+									<tbody>
+										<tr>
+											<td>续期服务费</td>
+											<td><span id="xuqi">
+											{$money}
+											</span>元</td>
+											<td>
+												<a href="javascript:;" id="3" class="what service">？这是什么</a>
+											</td>
+										</tr>
+										<tr style="border-bottom: 0;">
+											<td>应还总额</td>
+											<td>
+											<php>$sum2 = $money + $yuqi</php>
+											<span id="sum2">{$sum2}</span>元</td>
+											<td>
+												<a href="javascript:;" class="what affirm">借款详情</a>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+						<!--现在就扣-->
+						<div class="deduct">
+							<!--<img src="/cashbus/img/yes2.svg">-->
+							<img src="{$Think.config.URL}/images/xianjinbashi/circle.svg" class="img" />
+							<span id="">
+								现在就扣
+							</span>
+						</div>
+					</div>
+					<!--选择续期-->
+					<div class="choice">
+						<p class="select">您选择了续期，请选择续期天数</p>
+						<ul class="list-data clearfix">
+							<li class="itme fl">
+								<p class="itme-data change"><span>7</span>天</p>
+								<p class="moeny fund">￥<span class="list">{$loan_money[0]['money_num']}</span><em style="display:none">{$day1}</em></p>
+								<input type="hidden" value="{$money}">
+							</li>
+							<li class="itme fr">
+								<p class="itme-data "><span>14</span>天</p>
+								<p class="moeny ">￥<span class="list">
+								{$loan_money[1]['money_num']}
+								</span><em style="display:none">{$day2}</em></p>
+								<input type="hidden" value="{$money2}">
+							</li>
+						</ul>
+						<p class="rollover-data">
+							续期还款日: 
+							<span class="span">
+								{$day1}
+							</span>
+						</p>
+						<p class="total">
+							到期还款总额: <span class="sum">
+								{$loan_money[0]['money_num']}
+							</span>元
+						</p>
+						<button class="sure" id="account">确定</button>
+						<!--遮盖层-->
+						<div class="over"></div>
+					</div>
+				</div>
+			</div>
+			<!-- 续期弹窗 -->
+			<div class="rollover" id="rollover">
+				<div class="repay">
+					<form action="">
+						<p class="cue">续期服务必须<strong>现在</strong>结清本期息费，及续期服务费（<span>123</span>元）请确保您的您的余额充足，扣款失败将严重影响您的个人信用。</p>
+						<p class="amount">扣款总额：<span class="amounts b_amounts" id="kou"></span>元</p>
+						<p class="pay">支付方式：</p>
+						<div class="select-bank">
+							<select name="" id="testSelect2">
+								<!-- <option value="1">建设银行(尾号{$bank})</option> -->
+								<option value="2">支付宝付款</option>
+							</select>
+							<span class="select-icon"></span>
+						</div>
+						<input type="hidden" value="{$list['phone']}" id="phone">
+						<input type="hidden" value="{$list['openid']}" id="openid">
+						<button type="button" class="sure button link2">确认</button>
+						<button type="button" class="cancel sure button" id="cancel" type="button">取消</button>
+					</form>
+				</div>
+			</div>
+			
+			<!--立即还款-->
+			<div class="rollover" id="validity">
+				<div class="repay">
+					<form action="">
+						<p class="cue">提前还款可提高个人信用，还款时请确保您的您的余额充足，扣款失败将严重影响您的个人信用。</p>
+						<p class="amount">扣款总额：
+						<span class="amounts a_amounts">
+						<if condition="$days lt 0">
+						{$sum1}
+						<else/>
+						{$list['sum']}
+						</if>
+						</span>
+						元</p>
+						<p class="pay">支付方式：</p>
+						<div class="select-bank">
+							<select name="" id="testSelect">
+								<!-- <option value="3">建设银行(尾号{$bank})</option> -->
+								<option value="2">支付宝付款</option>
+							</select>
+							<span class="select-icon"></span>
+						</div>
+						<button type="button" class="sure button link">确认</button>
+						<button type="button" class="cancel sure button" id="abolish" type="button">取消</button>
+					</form>
+				</div>
+			</div>
+			
+			<!--借款详情-->
+			<div class="details">
+				<div class="info">
+					<p class="this">本次借款明细</p>
+					<div class="borrow">
+						<table>
+							<tbody>
+								<tr>
+									<td>借款金额:</td>
+									<td style="width: 100px;">&nbsp;</td>
+									<td class="right">
+										<span>{$list['money_num']}</span>元
+									</td>
+								</tr>
+								<tr>
+									<td>期限:</td>
+									<td style="width: 100px;">&nbsp;</td>
+									<td class="right">
+										<span>{$list['time_length']}</span>天
+									</td>
+								</tr>
+								<tr>
+									<td>快速信审费:</td>
+									<td style="width: 100px;">&nbsp;</td>
+									<td class="right">
+										<span>{$list['letter']}</span>元
+									</td>
+								</tr>
+								<tr>
+									<td>账户管理费:</td>
+									<td style="width: 100px;">&nbsp;</td>
+									<td class="right">
+										<span>{$list['account_money']}</span>元
+									</td>
+								</tr>
+								<tr>
+									<td>息费:</td>
+									<td style="width: 100px;">&nbsp;</td>
+									<td class="right">
+										<span>{$list['interest']}</span>元
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+
+					<button class="sure confirm">确认</button>
+				</div>
+			</div>
+			
+			<!--什么是续期服务费弹窗-->
+			<div class="xuqi">
+				<div class="text">
+					<p>啊大大</p>
+					<button class="sure confirm got">明白了</button>
+				</div>
+				
+			</div>
+		</div>
+
+	</body>
+	<script type="text/javascript">
+	
+		//功能描述：点击tab格，改变当前的样式，并且显示对应到内容
+		var titBtn = $("#tabTit span");
+		var tabMain = $("#tabCon div");
+
+		titBtn.click(function() {
+
+			$(this).addClass("sel").siblings().removeClass("sel").parent().siblings().children().eq($(this).index()).addClass("block").siblings().removeClass("block");
+		})
+			//		续期选择
+		$(".deduct").click(function() {
+				if($(this).children("img").hasClass("img")) {
+					$(this).children("img").attr({
+						src: "{$Think.config.URL}/images/xianjinbashi/yes2.svg"
+					});
+					$(this).children("img").removeClass("img");
+					$(".over").hide();
+				} else {
+					$(this).children("img").attr({
+						src: "{$Think.config.URL}/images/xianjinbashi/circle.svg"
+					});
+					$(this).children("img").addClass("img");
+					$(".over").show();
+				}
+			})
+			//	续期选择切换  
+		$(".itme").click(function() {
+
+				$(this).children(".itme-data").addClass("change").parent().siblings(".itme").children(".itme-data").removeClass("change")
+				$(this).children(".moeny").addClass("fund").parent().siblings(".itme").children(".moeny").removeClass("fund")
+				var length = $(this).children(".change").children("span").text();
+				var money = $(this).children(".fund").children("span").text();
+				var date = $(this).children(".fund").children("em").text();
+				var xuqi = $(this).children("input").val();
+				var yuqi = $("#yuqi").text();
+				var num = Number(xuqi) + Number(yuqi);
+				$("#sum2").text(num);
+				$("#xuqi").text(xuqi);
+				$(".span").text(date);
+				$(".sum").text(money);	
+		})
+		 
+			//		续期弹窗出现
+		$("#account").click(function() {
+				var sum2 = $("#sum2").text();
+				$('#kou').text(sum2);
+				$("#rollover").show();
+				$("body").css({
+					"overflow-x": "hidden",
+					"overflow-y": "hidden"
+				});
+			})
+			// 		续期弹窗小时
+		$("#cancel").click(function() {
+			$("#rollover").hide();
+			$("body").css({
+				"overflow-x": "auto",
+				"overflow-y": "auto"
+			});
+		})
+//		立即还款弹窗
+		$("#regNow").click(function() {
+				$("#validity").show();
+				$("body").css({
+					"overflow-x": "hidden",
+					"overflow-y": "hidden"
+				});
+			})
+			// 		续期弹窗小时
+		$("#abolish").click(function() {
+			$("#validity").hide();
+			$("body").css({
+				"overflow-x": "auto",
+				"overflow-y": "auto"
+			});
+		})
+					//		点击借款详情
+		$(".affirm").click(function() {
+			$(".details").show();
+		})
+		$(".confirm").click(function() {
+			$(".details").hide()
+		})
+//		这是什么?
+		$(".service").click(function(){
+			var aa = $(this).attr("id");
+			console.log(aa);
+			$(".xuqi").show()
+			if(aa == 3) {
+				$(".text p").text("续期服务费是指在续期过程中所产生的包括信用复审，合同修改及技术支持等在内的人工服务费用");
+			} else if(aa == 2) {
+				$(".text p").text("逾期罚款说明待定");
+			} else if(aa == 1) {
+				$(".text p").text("针对不按纳税期限缴纳税款或者不按还款期限归还贷款，按滞纳天数加收滞纳款项一定比例的金额");
+			}
+		})
+		$(".got").click(function() {
+			$(".xuqi").hide()
+		})
+		
+		//续期 
+		$(".link2").click(function() {
+			var aa= $('#testSelect2 option:selected').val();//选中的值
+			if(aa == 1){
+				var phone = $("#phone").val();
+				var money = $(".b_amounts").text();
+				var phone = $("#phone").val();
+				var openid = $("#openid").val();
+				var time_length = $(".change").find("span").text();
+				var sum = $(".sum").text();
+				var appoint_time = $(".span").text();
+				$.ajax({
+					type:"POST",
+					url:"{:U('Weixin/yes_ok2')}",
+					data:{
+						'money':money,
+						'phone':phone,
+						'time_length':time_length,
+						'sum':sum,
+						'appoint_time':appoint_time
+					},
+					datatype:"json",
+					success:function(data){
+						setTimeout(function(){WeixinJSBridge.call('closeWindow')},1000);
+					}
+				})
+			}else if(aa==2) {
+				var phone = $("#phone").val();
+				var money = $(".b_amounts").text();
+				var openid = $("#openid").val();
+				var time_length = $(".change").find("span").text();
+				var sum = $(".sum").text();
+				var appoint_time = $(".span").text();
+				var type = 2;
+				window.location.href="/index.php/Weixin/bring?phone="+phone+"&money="+money+"&openid="+openid+"&time_length="+time_length+"&sum="+sum+"&appoint_time="+appoint_time+"&type="+type;
+			}
+		})
+		
+		
+		$(".link").click(function() {
+			var aa= $('#testSelect option:selected').val();//选中的值
+			if(aa == 3){
+				var money = $(".a_amounts").text();
+				var phone = $("#phone").val();
+				$.ajax({
+					type:"POST",
+					url:"{:U('Weixin/yes_ok')}",
+					data:{
+						'money':money,
+						'phone':phone
+					},
+					datatype:"json",
+					success:function(data){
+						setTimeout(function(){WeixinJSBridge.call('closeWindow')},1000);
+					}
+				})
+			}else if(aa==2) {
+				var phone = $("#phone").val();
+				var money = $(".a_amounts").text();
+				var type = 1;
+				window.location.href="/index.php/Weixin/bring?phone="+phone+"&money="+money+"&type="+type;
+			}
+		})
+	</script>
+
+</html>

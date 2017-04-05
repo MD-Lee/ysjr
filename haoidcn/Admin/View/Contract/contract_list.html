@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>合同管理</title>
+
+<!-- header binge -->
+<include file="Public/header" />
+
+<!-- header end -->
+
+<script type="text/javascript" src="{$Think.config.URL}js/new/unify.js"></script>
+
+<script type="text/javascript">
+jQuery(document).ready(function(){
+
+	
+	jQuery('.taglist .close').click(function(){
+		jQuery(this).parent().remove();
+		return false;
+	});
+	
+});
+</script>
+
+</head>
+
+
+<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="js/excanvas.min.js"></script><![endif]-->
+</head>
+<body>
+
+<!-- header binge -->
+<include file="Public/head" />
+
+<!-- header end -->
+    
+    <div class="rightpanel">
+        <!-- head binge -->
+        
+			<include file="Public/nav" name='合同管理'/>
+		
+		<!-- head end -->
+        
+        <div class="maincontent">
+            <div class="maincontentinner">
+                <div class="row-fluid">
+                   <div>
+                        <div class="widgetbox personal-information">
+                            <h4 class="widgettitle">合同列表</h4>
+                            <div class="widgetcontent">
+                            	<form id="form" action="{:U('Transaction/loan_list')}" method="post">
+	                            	<input type="hidden" value="{$type}" id="type">
+	                            	<select name="type" style="width: 80px;" id="select1">
+	                            		<option value="1">手机号</option>
+	                            		<option value="2">姓名</option>
+	                            	</select>
+	                            	<input type="text" class="input-xlarge" name="content" placeholder="请输入要搜索的手机号码或姓名" style="width:200px;" value="{$content}">
+	                            	<input type="submit" class="btn btn-primary" value="搜索" name="submit">
+	                            </form>
+                            	<table class="table table-bordered">
+                            		<tr>
+                            			<th width="150px;">手机号</th>
+                            			<th width="250px;">姓名</th>
+                            			<th width="100px;">审核人员</th>
+                            		</tr>
+                            		<volist name="list" id="vo">
+                            			<tr>
+                            				<td><a href="{:U('Transaction/contract',array('phone'=>$vo['phone']))}">{$vo.phone}</a></td>
+                            				<td>{$vo.name}</td>
+                            				<td>{$vo.loan_people}</td>
+                            			</tr>
+                            		</volist>
+                            	</table> 
+								{$page}
+                            </div>
+                                      
+                        </div>
+
+                    </div><!--row-fluid-->
+                  
+                  
+        		 <!-- footer binge -->
+				<include file="Public/footer" />
+				
+				<!-- footer end -->
+                
+                
+                
+            </div><!--maincontentinner-->
+        </div><!--maincontent-->
+        
+    </div><!--rightpanel-->
+    
+</div><!--mainwrapper-->
+
+</body>
+</html>

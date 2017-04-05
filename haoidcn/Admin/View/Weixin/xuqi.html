@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>继续续期</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	<link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+	<link href="{$Think.config.URL}/css/lend_success.css" rel="stylesheet">
+	<script type="text/javascript" src="{$Think.config.URL}js/jquery-1.9.1.min.js"></script>
+	<script type="text/javascript" src="{$Think.config.URL}js/common.js"></script>
+</head>
+<body>
+	<div class="center-block img-responsive">
+		<img src="{$Think.config.URL}/images/xianjinbashi/home.png" class="img-responsive">
+	</div>
+		<a href="{:U('Weixin/verify_mobile',array('phone'=>$phone,'openid'=>$openid))}" class="center-block keep">继续续期</a>
+		<input type="hidden" value="{$phone}" id="phone">
+		<input type="hidden" value="{$openid}" id="openid">
+	<div class="pos">
+		<div class="sure">
+			<p>是否需要更改服务密码，需要按确定，不需要就按续期</p>
+			<div style="margin-top: 40px;">
+				<button onclick="window.location.href='{:U('Weixin/fuwu',array('phone'=>$phone,'openid'=>$openid))}'" class="btn btn-primary" style="float: left;">确定</button>
+				<button onclick="is_xuqi()"style="float: right;">续期</button>
+			</div>
+		</div>
+	</div>
+</body>
+<script>
+function is_xuqi(){
+	var phone = $("#phone").val();
+	var openid = $("#openid").val();
+	$.ajax({
+		type:"POST",
+		url:"{:U('Weixin/is_xuqi')}",
+		data:{
+			'openid':openid,
+			'phone':phone
+		},
+		datatype:"json",
+	    success:function(data){
+	    	if(data == '续期成功'){
+	    		setTimeout(function(){WeixinJSBridge.call('closeWindow')},1000);
+	    	}
+	    }
+	})
+}
+</script>
+</html>

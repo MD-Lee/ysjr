@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>支付宝转账</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+		<link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+		<link href="{$Think.config.URL}/css/bring.css" rel="stylesheet">
+		<style>
+		.btn.btn-primary{
+			    width: 82%;
+			    background-color: #00B4FF;
+			    border-color: #00B4FF;
+			    height: 50px;
+			    border-radius: 5px 5px 5px 5px;
+			    margin-left: 35px;
+		}
+		</style>
+	</head>
+	<body>
+		<div class="wrap">
+			<table>
+				<tbody>
+					<tr>
+						<td class="color">官方账号:</td>
+						<td></td>
+						<td>{$account_num}</td>
+					</tr>
+					<tr>
+						<td class="color">转账金额:</td>
+						<td></td>
+						<td><span>{$money}</span>元</td>
+					</tr>
+					<tr>
+						<td>转账备注:</td>
+						<td></td>
+						<td>{$list[0]['name']}{$list[0]['phone']}</td>
+					</tr>
+					<tr>
+						<td>例子如下:</td>
+						<td></td>
+					</tr>
+				</tbody>
+			</table>
+			<img src="{$Think.config.URL}/images/xianjinbashi/bank.svg"/ class="img">
+		</div>
+		<input type="hidden" value="{$phone}" name="phone">
+		<input type="hidden" value="{$money}" name="money">
+		<input type="hidden" value="{$openid}" name="openid">
+		<input type="hidden" value="{$time_length}" name="time_length">
+		<input type="hidden" value="{$sum}" name="sum">
+		<input type="hidden" value="{$appoint_time}" name="appoint_time">
+		<input type="hidden" value="{$type}" name="type">
+		<button type="button" class="btn btn-primary" id="frame" onclick="zfb()">确定支付宝付款</button>
+	</body>	
+	<script type="text/javascript" src="{$Think.config.URL}js/jquery-1.9.1.min.js"></script>
+	<script>
+	function zfb(){
+		var type = $("input[name='type']").val();
+		var phone = $("input[name='phone']").val();
+		var openid = $("input[name='openid']").val();
+		var time_length = $("input[name='time_length']").val();
+		var sum = $("input[name='sum']").val();
+		var appoint_time = $("input[name='appoint_time']").val();
+		var money = $("input[name='money']").val();
+		if(type == 1){
+			 $.ajax({
+				type:"POST",
+				url:"{:U('Weixin/zfb_jy2')}",
+				data:{
+					'phone':phone,
+					'money':money
+				},
+				datatype:"json",
+				success:function(){
+					alert('您已经确定支付宝付款，请向往支付宝转账');
+					setTimeout(function(){WeixinJSBridge.call('closeWindow')},1000);
+				}
+			 })
+		}else{
+			$.ajax({
+				type:"POST",
+				url:"{:U('Weixin/zfb_jy')}",
+				data:{
+					'phone':phone,
+					'money':money,
+					'openid':openid,
+					'time_length':time_length,
+					'sum':sum,
+					'appoint_time':appoint_time
+				},
+				datatype:"json",
+				success:function(){
+					alert('您已经确定支付宝付款，请向往支付宝转账');
+					setTimeout(function(){WeixinJSBridge.call('closeWindow')},1000);
+				}
+			 })
+		}
+	}
+	</script>
+</html>

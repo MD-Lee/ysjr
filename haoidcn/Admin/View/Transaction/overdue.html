@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>放款管理</title>
+
+<!-- header binge -->
+<include file="Public/header" />
+
+<!-- header end -->
+
+<script type="text/javascript" src="{$Think.config.URL}js/new/unify.js"></script>
+
+<script type="text/javascript">
+jQuery(document).ready(function(){
+
+	
+	jQuery('.taglist .close').click(function(){
+		jQuery(this).parent().remove();
+		return false;
+	});
+	
+});
+</script>
+
+</head>
+
+
+<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="js/excanvas.min.js"></script><![endif]-->
+</head>
+<body>
+
+<!-- header binge -->
+<include file="Public/head" />
+
+<!-- header end -->
+    
+    <div class="rightpanel">
+        <!-- head binge -->
+        
+			<include file="Public/nav" name='放款管理'/>
+		
+		<!-- head end -->
+        
+        <div class="maincontent">
+            <div class="maincontentinner">
+                <div class="row-fluid">
+                   <div>
+                        <div class="widgetbox personal-information">
+                            <h4 class="widgettitle">逾期名单</h4>
+                            <div class="widgetcontent">
+                            	<form id="form" action="{:U('Transaction/overdue')}" method="post">
+	                            	<input type="hidden" value="{$type}" id="type">
+	                            	<select name="type" style="width: 80px;" id="select1">
+	                            		<option value="1">手机号</option>
+	                            		<option value="2">姓名</option>
+	                            	</select>
+	                            	<input type="text" class="input-xlarge" name="content" placeholder="请输入要搜索的手机号码或姓名" style="width:200px;" value="{$content}">
+	                            	<input type="submit" class="btn btn-primary" value="搜索" name="submit">
+	                            </form>
+                            	<table class="table table-bordered">
+                            		<tr>
+                            			<th width="150px;">手机号</th>
+                            			<th width="150px;">姓名</th>
+                            			<th width="100px;">金额</th>
+                            			<th width="100px;">期限</th>
+                            			<th width="200px;">约定还款日期</th>
+                            			<th width="200px;">逾期天数</th>
+                            			<th width="200px;">逾期罚金</th>
+                            			<th width="200px;">审核人员</th>
+                            		</tr>
+                            		
+                            		<volist name="list" id="vo">
+                            			<tr>
+	                            			<td width="150px;">{$vo.phone}</td>
+	                            			<td width="150px;">{$vo.name}</td>
+	                            			<td width="100px;">{$vo.money_num}元</td>
+	                            			<td width="100px;">{$vo.time_length}天</td>
+	                            			<td width="200px;">{$vo.appoint_time}</td>
+	                            			<td width="200px;">{$vo.yuqi_time}天</td>
+	                            			<td width="200px;">{$vo.money}元</td>
+	                            			<td width="200px;">{$vo.loan_people}</td>
+                            			</tr>
+                            		</volist>
+                            	</table> 
+								
+                            </div>
+                                      
+                        </div>
+
+                    </div><!--row-fluid-->
+                  
+                  
+        		 <!-- footer binge -->
+				<include file="Public/footer" />
+				
+				<!-- footer end -->
+                
+                
+                
+            </div><!--maincontentinner-->
+        </div><!--maincontent-->
+        
+    </div><!--rightpanel-->
+    
+</div><!--mainwrapper-->
+
+</body>
+</html>

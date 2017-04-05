@@ -1,0 +1,132 @@
+@CHARSET "UTF-8";
+.clear {
+	clear:both;
+	height:0px;
+	overflow:hidden;
+	} 
+.clearfix:after {
+	content: "\200B";
+	display: block;
+	height: 0;
+	clear: both;
+}
+.clearfix{
+	*zoom: 1;
+}
+.fl {
+	float: left;
+}
+.fr {
+	float: right;
+}
+ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+.wrap {
+	width: 90%;
+	margin: 30px auto 0;
+}
+.tab-tit span {
+	width: 50%;
+	height: 35px;
+	line-height: 35px;
+	text-align: center;
+	border: 2px solid #00B4FF;
+}
+.tab-tit .data {
+	border-radius: 20px 0 0 20px;
+}
+.tab-tit .loan {
+	border-radius: 0 20px 20px 0;
+}
+/*表格*/
+.tab-con .table-list,
+.tab-con  .record {
+	border-radius: 10px;
+	border: 1px solid #eee;	
+	margin-top: 10px;
+	overflow: hidden;
+}
+.tab-con table {
+	width: 100%;
+}
+.tab-con table td {
+	padding: 5px;
+	word-break:break-all;
+}
+.tab-tit .sel {
+	background-color: #00B4FF;
+	color: #fff;
+}
+.tab-con .color {
+	background-color: #fbfbfb;
+}
+.tab-con a {
+	color: #b2b2b3;
+	font-size: 12px;
+	line-height: 20px;
+}
+/*银行卡*/
+.identity {
+	background: url("/haoidcn/Admin/Public/images/xianjinbashi/pen.svg") center center no-repeat;
+	background-size: 100% 100%;
+}
+.bank {
+	background: url("/haoidcn/Admin/Public/images/xianjinbashi/bank2.svg") center center no-repeat;
+	background-size: 100% 100%;	
+}
+.tab-con table td .tu {
+	margin-top: 4px;
+	width: 12px;
+	height: 12px;
+	background: url("/haoidcn/Admin/Public/images/xianjinbashi/right2.svg") center center no-repeat;
+	background-size: 100% 100%;		
+}
+.tab-con .lan {
+	display: none;
+}
+.tab-con .block {
+	display: block;
+}
+/*取消申请*/
+.tab-con table td .cancel {
+	margin: 4px auto 0;
+	width: 50px;
+	height: 50px;
+	background: url("/haoidcn/Admin/Public/images/xianjinbashi/cancel.svg") center center no-repeat;
+	background-size: 100% 100%;		
+}
+.tab-con table td .continue {
+	margin: 4px auto 0;
+	width: 50px;
+	height: 50px;
+	background: url("/haoidcn/Admin/Public/images/xianjinbashi/continue.svg") center center no-repeat;
+	background-size: 100% 100%;		
+}
+.tab-con table td p {
+	text-align: center;
+	color: #4ba058;
+	font-size: 14px;
+}
+.modal-body {
+	text-align: center;
+	padding-bottom: 0;
+}
+.on {
+	display: block;
+	width: 100%;
+	margin-bottom: 10px;
+	border-radius: 30px;
+}
+.yans {
+	background-color: #00B4FF;
+	color: #fff;
+}
+.modal-header {
+	border-bottom: 0;
+}
+.modal-content {
+	top: 10rem;
+}

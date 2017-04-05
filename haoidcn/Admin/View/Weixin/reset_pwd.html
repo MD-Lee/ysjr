@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+<link href="{$Think.config.URL}/css/Weixin.reset_pwd.css" rel="stylesheet">
+<script type="text/javascript" src="{$Think.config.URL}js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="{$Think.config.URL}js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="{$Think.config.URL}js/validate-methods.js"></script>
+<script type="text/javascript" src="{$Think.config.URL}js/jquery.form-3.51.0.js"></script>
+</head>
+<body>
+	<div class="header top-head">
+		<h4 class="title">重置密码
+			<a class="back" href="JavaScript:history.go(-1)">
+				<i class="icon icon-back pull-left"></i>
+			</a>
+		</h4>
+	</div>
+	<div class="container">
+		<form id="form" action="{:U('Weixin/user_reset_pwd')}">
+		  <div class="form-group">
+		    <input type="text" class="form-control" name="info[phone]" placeholder="请输入您的手机号">
+		  </div>
+		  <div class="form-group">
+		    <input type="text" class="form-control" name="info[name]" placeholder="请输入您的真实姓名">
+		  </div>
+		  <div class="form-group">
+		    <input type="text" class="form-control" name="info[uid]" placeholder="请输入您的身份证号">
+		  </div>
+		  <div class="form-group">
+		    <input type="text" class="form-control" name="info[verify]" placeholder="请输入短信验证码" style="width:70%;float:left;">
+		    <button type="button" class="btn btn-primary" style="width:30%" id="sendcode">获取验证码</button>
+		  </div>
+		  <button type="button" class="btn btn-primary" id="register" onclick="user_reset_pwd()">重置密码</button>
+		</form>
+	</div>
+</body>
+<script>
+//到计时控件
+var time = 60;
+var sendcode = document.getElementById("sendcode");
+$(document).ready(function(){
+ 	$("#sendcode").click(function(){
+ 		if($("input[name='info[phone]']").val() == ""){
+ 			alert('请输入您的手机号');
+ 		}else{
+ 			var phone = $("input[name='info[phone]']").val();
+ 	 		$.ajax({
+ 				type:"POST",
+ 				url:"{:U('Weixin/message_verify')}",
+ 				data:{'phone':phone},
+ 				datatype:'json',
+ 				success:function(data){
+ 					if(data == '短信发送成功'){
+ 						alert(data);
+ 						function timedown() {
+ 			 	            if (time == 0) {
+ 			 	            	sendcode.removeAttribute('disabled');
+ 			 	                $("#sendcode").text("获取验证码");
+ 			 	                time = 60;
+ 			 	                clearTimeout(clicktime);
+ 			 	            }else{
+ 			 	                $("#sendcode").text("重新发送(" + time + ")");
+ 			 	                sendcode.setAttribute("disabled", true);
+ 			 	                time--;
+ 			 	                clicktime = setTimeout(timedown, 1000);
+ 			 	            }
+ 			 	        }
+ 			 	        timedown();
+ 					}else{
+ 						alert('短信发送失败，手机号码不正确');
+ 					}
+ 				}
+ 			});
+ 		}
+	});
+});
+sendcode.removeAttribute('disabled');
+//重置密码输入框验证不能为空的方法 
+function checkText(){
+	return $("#form").validate({
+		errorPlacement: function(error, element) {  
+		    error.appendTo(element.parent());  
+		},
+		errorElement: "div",
+		rules:{
+			"info[phone]":{
+				required:true,
+				isMobile:true
+			},
+			"info[name]":{
+				required:true,
+				isChinese:true
+			},
+			"info[uid]":{
+				required:true,
+				isIdCardNo:true
+			},
+			"info[verify]":{
+				required:true
+			}
+		},
+		messages:{
+			"info[phone]":{
+				required:'请输入您的手机号',
+				isMobile:'请输入正确的手机号'
+			},
+			"info[name]":{
+				required:'请输入您的真实姓名',
+				isChinese:'请输入正确的姓名'
+			},
+			"info[uid]":{
+				required:'请输入您的身份证号',
+				isIdCardNo:'请输入正确的身份证号'
+			},
+			"info[verify]":{
+				required:'请输入短信验证码'
+			}
+		}
+	})
+}
+
+//把输入框的信息到后台验证
+function user_reset_pwd(){
+	if(!checkText().form())return;
+	$("#form").ajaxSubmit({
+		type:"POST",
+		url:$('#form').attr('action'),
+		datatype:"json",
+		success:function(data){
+			if(data == '重置密码'){
+				var phone = $("input[name='info[phone]']").val();
+				setTimeout(function(){window.location.href="/index.php/Weixin/new_pwd.html?phone="+phone},1000);
+			}else{
+				alert(data);
+			}
+		}
+	})
+}
+</script>
+</html>

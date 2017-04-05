@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>应用列表</title>
+
+    <!-- header binge -->
+    <include file="Public/header" />
+
+    <!-- header end -->
+
+    <script type="text/javascript" src="{$Think.config.URL}js/new/unify.js"></script>
+
+    <script type="text/javascript">
+        jQuery(document).ready(function(){
+
+
+            jQuery('.taglist .close').click(function(){
+                jQuery(this).parent().remove();
+                return false;
+            });
+
+        });
+    </script>
+</head>
+
+
+<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="js/excanvas.min.js"></script><![endif]-->
+</head>
+<body >
+
+<!-- header binge -->
+<include file="Public/head" />
+
+<!-- header end -->
+
+<div class="rightpanel">
+
+    <ul class="breadcrumbs">
+        <li><a href="{:U('Console/dashboard')}"><i class="iconfa-home"></i></a> <span class="separator"></span></li>
+        <li><a href="{:U('Console/dashboard')}">后台面板</a> <span class="separator"></span></li>
+        <li>任务管理</li>
+    </ul>
+
+    <div class="maincontent">
+        <div class="maincontentinner">
+            <div class="row-fluid">
+                <div>
+                    <div class="widgetbox personal-information">
+                        <h4 class="widgettitle">应用列表</h4>
+                        <div class="widgetcontent dataTables_wrapper">
+                            <table class="table">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>图标</th>
+                                    <th>链接</th>
+
+                                    <th>&nbsp;</th>
+                                </tr>
+                                <volist name="list" id="vo">
+                                    <tr id="c_manage{$vo.id}">
+                                        <td>{$vo.id}</td>
+                                        <td><img  height="50" width="50" src="/Uploads/{$vo.img}"></td>
+                                        <td>{$vo.link}</td>
+
+                                        <td><a href="/index.php/Admin/edit/id/{$vo.id}"  class="icon-pencil"></a></td
+                                        ></tr>
+                                </volist>
+
+                            </table>
+
+                            {$page}
+
+                        </div>
+                    </div>
+
+
+                </div><!--row-fluid-->
+
+
+                <!-- footer binge -->
+                <include file="Public/footer" />
+
+                <!-- footer end -->
+
+
+            </div><!--maincontent-->
+
+        </div><!--rightpanel-->
+
+    </div><!--mainwrapper-->
+
+</body>
+</html>
