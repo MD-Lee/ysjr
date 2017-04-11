@@ -1,6 +1,7 @@
 <?php
 namespace Admin\Controller;
 use Think\Controller;
+define("TOKEN", "q0I07jGMQZ4S3TjJ3440wJ7q4qQnPW9t");
 class WechatController extends WeixinController{	
 	public function index(){
 		$postStr = $GLOBALS["HTTP_RAW_POST_DATA"];
