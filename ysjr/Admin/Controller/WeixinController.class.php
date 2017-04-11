@@ -5,7 +5,7 @@ class WeixinController extends Controller{
     public function index(){
         $weixins = new \Org\Wechat\Wechat();
         $weixins->valid();
-        $weixin->responseMsg();
+        $weixins->responseMsg();
     }
 	//curl方法
 	public function https_request($url,$data = null){
