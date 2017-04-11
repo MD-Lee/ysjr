@@ -129,8 +129,8 @@ function timer(){
 }
 
 function weixin(){
-	$weixin['appid'] = "appid";
-	$weixin['secret'] = "appsecret";
+	$weixin['appid'] = "wxef4d12ae0a86b2ad";
+	$weixin['secret'] = "b34b07704e430baf2e97f357d519af64";
 	return $weixin;
 }
 
