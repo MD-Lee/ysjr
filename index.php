@@ -11,7 +11,7 @@
 
 //检测文件是否存在
 
-if(!file_exists(dirname(__FILE__)."/haoidcn/Admin/Conf/config.php"))
+if(!file_exists(dirname(__FILE__)."/ysjr/Admin/Conf/config.php"))
 {
 	header('Location:install/index.php');
 	exit();
@@ -24,11 +24,12 @@ if(!file_exists(dirname(__FILE__)."/haoidcn/Admin/Conf/config.php"))
 // 检测PHP环境
 if(version_compare(PHP_VERSION,'5.3.0','<'))  die('require PHP > 5.3.0 !');
 
+
 // 开启调试模式 建议开发阶段开启 部署阶段注释或者设为false
 define('APP_DEBUG',True);
 
 // 定义应用目录
-define('APP_PATH','./haoidcn/');
+define('APP_PATH','./ysjr/');
 
 // 绑定入口文件到Admin模块访问
 define('BIND_MODULE','Admin');
