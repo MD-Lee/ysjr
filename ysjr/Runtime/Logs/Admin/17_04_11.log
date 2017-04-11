@@ -145,3 +145,18 @@ INFO: [ app_end ] --START--
 INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.001000s ]
 INFO: [ app_end ] --END-- [ RunTime:0.001000s ]
 
+[ 2017-04-11T15:47:44+08:00 ] 127.0.0.1 /index.php/Wechat/valid
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.001000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.001000s ]
+NOTIC: [8] Undefined index: echostr C:\xampp\htdocs\ysjr\ysjr\Admin\Controller\WechatController.class.php 第 10 行.
+NOTIC: [8] Undefined index: signature C:\xampp\htdocs\ysjr\ysjr\Admin\Controller\WechatController.class.php 第 355 行.
+NOTIC: [8] Undefined index: timestamp C:\xampp\htdocs\ysjr\ysjr\Admin\Controller\WechatController.class.php 第 356 行.
+NOTIC: [8] Undefined index: nonce C:\xampp\htdocs\ysjr\ysjr\Admin\Controller\WechatController.class.php 第 357 行.
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000000s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000000s ]
+

@@ -6,7 +6,7 @@ class Wechat{
     public function valid()
     {
         $echoStr = $_GET["echostr"];
-        var_dump($echoStr);
+
         //valid signature , option
         if($this->checkSignature()){
             echo $echoStr;
