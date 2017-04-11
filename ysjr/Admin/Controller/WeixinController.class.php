@@ -2,7 +2,11 @@
 namespace Admin\Controller;
 use Think\Controller;
 class WeixinController extends Controller{
-	
+    public function index(){
+        $weixin = new \Org\Wechat\Wechat();
+        $weixin->valid();
+        $weixin->responseMsg();
+    }
 	//curl方法
 	public function https_request($url,$data = null){
 		$curl = curl_init();

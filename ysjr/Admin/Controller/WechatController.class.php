@@ -3,12 +3,12 @@ namespace Admin\Controller;
 use Think\Controller;
 define("TOKEN", "q0I07jGMQZ4S3TjJ3440wJ7q4qQnPW9t");
 
-class WechatController extends WeixinController{
+class WechatController{
 
     public function valid()
     {
         $echoStr = $_GET["echostr"];
-
+        var_dump($echoStr);
         //valid signature , option
         if($this->checkSignature()){
             echo $echoStr;
@@ -357,6 +357,7 @@ json;
 		$nonce = $_GET["nonce"];
 		
 		$token = TOKEN;
+		var_dump($token);
 		$tmpArr = array($token, $timestamp, $nonce);
 		sort($tmpArr);
 		$tmpStr = implode( $tmpArr );
