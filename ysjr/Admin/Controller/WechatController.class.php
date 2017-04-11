@@ -2,8 +2,7 @@
 namespace Admin\Controller;
 use Think\Controller;
 define("TOKEN", "q0I07jGMQZ4S3TjJ3440wJ7q4qQnPW9t");
-$wechatObj = new WechatController();
-$wechatObj->valid();
+
 class WechatController extends WeixinController{
 
     public function valid()
