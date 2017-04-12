@@ -15,6 +15,17 @@ class Wechat{
         if (!empty($postStr)){
             $postObj = simplexml_load_string($postStr, 'SimpleXMLElement', LIBXML_NOCDATA);
             $msgType = trim($postObj->MsgType);
+            $fromUsername = $postObj -> FromUserName;
+            $condition['openid']="$fromUsername";
+            $ret = M('service')->where($condition)->field('openid')->select();
+            if(empty($ret)){
+                if(!empty($fromUsername)){
+                    /*添加基本关注信息*/
+                    $data['openid']="$fromUsername";
+                    $data['subscribe_time']=time();
+                    M('service')->add($data);
+                }
+            }
             switch ($msgType)
             {
                 case "text":
@@ -146,7 +157,8 @@ json;
         switch ($object->Event)
         {
             case "subscribe":
-                $contentStr = "欢迎关注e快金";
+                $this -> update_info($FromUserName);
+                $contentStr = "欢迎关注友顺金融";
                 $tuijian = trim($object->EventKey);
                 if ($tuijian != null){
                     $tuijian = trim($object->EventKey);
@@ -502,6 +514,16 @@ json;
 json;
         $output = $this->https_request($url,$data);
         echo $output;
+    }
+
+    private function update_info($wxid){
+        $access_token = $this->access_token();
+        $url = "https://api.weixin.qq.com/cgi-bin/user/info?access_token=$access_token&openid=$wxid";
+        $res_json = $this->https_request($url);
+        $w_user = json_decode($res_json, TRUE);
+        $w_sql = "UPDATE  `haoidcn_service` SET  `uname` =  '$w_user[nickname]',`headimgurl` =  '$w_user[headimgurl]' WHERE `openid` = '$wxid';";
+        $db=D();
+        $db->execute($w_sql);
     }
 
 
