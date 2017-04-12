@@ -22,7 +22,7 @@ class Wechat{
                 if(!empty($fromUsername)){
                     /*添加基本关注信息*/
                     $data['openid']="$fromUsername";
-                    $data['subscribe_time']=time();
+                    $data['time']=time();
                     M('service')->add($data);
                 }
             }
