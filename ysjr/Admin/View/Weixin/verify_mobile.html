@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>e借款</title>
+<title>{$Think.config.TITLE}</title>
 <link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
 <link href="{$Think.config.URL}/css/Weixin.verify_mobile.css" rel="stylesheet">
 <script type="text/javascript" src="{$Think.config.URL}js/jquery-1.9.1.min.js"></script>
@@ -35,8 +35,8 @@
 	  </div>
 	  <form id="form" action="{:U('Weixin/verify_mobile_method')}">
 		  <div align="center" class="text">
-		  	<p id="phone">您的手机号：<span id="phoneInfo">{$result['retData']['telString']}</span></p>
-		  	<p>所属运营商：<span id="operator">{$result['retData']['carrier']}</span></p>
+		  	<p id="phone">您的手机号：<span id="phoneInfo">{$telString}</span></p>
+		  	<p>所属运营商：<span id="operator">{$carrier}</span></p>
 		  </div>
 		  <div class="form-group">
 		    <input type="text" class="form-control" value="{$list[0]['service_pwd']}" name="info[service_pwd]" placeholder="手机服务密码" style="width:70%;float:left;">
@@ -51,7 +51,7 @@
 		    </p>
 		    <a href="#" onclick="replace_verify()"><p>换一张</p></a>
 		  </div>
-		  <input type="hidden" value="{$openid}" id="openid" name="info[openid]">
+		 
 		  <a href="#" style="display: block;line-height: 45px;border-radius: 30px;" class="btn btn-primary" onclick="verify_mobile_method()">下一步</a>
 	  </form>
 	  <div class="class" style="display:none;width: 50px;height: 50px;position: fixed;left: 45%;top:35%;">
@@ -110,9 +110,8 @@ function verify_mobile_method(){
 		datatype:"json",
 		success:function(data){
 			if(data == '下一步'){
-				var phone = $('#phone').find('span').text();
-				var openid = $('#openid').val();
-				setTimeout(function(){window.location.href="/index.php/Weixin/verify_user_info?phone="+phone+"&openid="+openid},1000);
+				
+				setTimeout(function(){window.location.href="/index.php/Weixin/verify_user_info"},1000);
 			}else{
 				$('.class').css('display','none');
 				alert(data);

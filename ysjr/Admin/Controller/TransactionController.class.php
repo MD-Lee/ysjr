@@ -250,7 +250,7 @@ class TransactionController extends CommonController {
     		$payment_list->where("id='{$shoukuan['id']}'")->setField("is_repayment",1);
     		$payment_list->where("id='{$shoukuan['id']}'")->setField("wait_xuqi",'4');
     		$user_money_info->where("id='{$time['id']}'")->setField("repayment_state",1);;
-    		$access_token = $this->access_token();
+    		$access_token = access_token();
     		$url = "https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=".$access_token;
     		$data = <<<json
     		{
@@ -278,7 +278,7 @@ json;
     		$shoukuan = $payment_list->field("max(id) as id")->where("phone='$phone'")->find();
     		$payment_list->where("id='{$shoukuan['id']}'")->setField('wait_xuqi','2');
     		$user_money_info->where("id='{$time['id']}'")->setInc('is_renewal',1);
-    		$access_token = $this->access_token();
+    		$access_token = access_token();
     		$url = "https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=".$access_token;
     		$data = <<<json
     		{
@@ -289,7 +289,7 @@ json;
 			         {
 			             "title":"交易提醒",
 			             "description":"尊敬的用户您的续期服务费用，我们已收到",
-			    		 "url":"http://www.leeyears.com/index.php/Weixin/xuqi?phone=$phone&openid={$list['openid']}"
+			    		 "url":"http://www.leeyears.com/index.php/Weixin/xuqi?id={$time['id']}"
 			         }
 			         ]
 			    }
@@ -314,7 +314,7 @@ json;
     	$payment_list->where("id='{$shoukuan['id']}'")->setField('trade_mode','');
     	$payment_list->where("id='{$shoukuan['id']}'")->setField('huankuan_type','');
     	if($list['huankuan_type'] == '1'){
-    		$access_token = $this->access_token();
+    		$access_token = access_token();
     		$url = "https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=".$access_token;
     		$data = <<<json
     		{
@@ -332,7 +332,7 @@ json;
 json;
     		$this->https_request($url,$data);
     	}else{
-    		$access_token = $this->access_token();
+    		$access_token = access_token();
     		$url = "https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=".$access_token;
     		$data = <<<json
     		{

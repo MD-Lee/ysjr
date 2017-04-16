@@ -156,13 +156,10 @@ function https_request($url,$data = null){
 }
 //获取access_token的值
 function access_token(){
-	$weixin = weixin();
-	$appid = $weixin['appid'];
-	$secret = $weixin['secret'];
-	$url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=".$appid."&secret=".$secret;
-	$output = https_request($url);
-	$array = json_decode($output,true);
-	$access_token = $array['access_token'];
+	newaccess_token();
+	$condition['id']=1;
+	$ret = M('wxch_config')->where($condition)->find();
+	$access_token = $ret['access_token'];
 	return  $access_token;
 }
 
@@ -178,3 +175,74 @@ json;
 	$array = json_decode($output,true);
 	return $array;
 }
+function newaccess_token(){
+			/*配置信息查询*/
+			$condition['id']=1;
+			$ret=M("wxch_config")->where($condition)->find();
+			
+			$appid = $ret['appid'];
+			$appsecret = $ret['appsecret'];
+			$dateline = $ret['dateline'];
+			$time = time();
+		
+        if(($time - $dateline) > 7200){
+			$url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=$appid&secret=$appsecret";
+			$ret_json = https_request($url);
+			$ret = json_decode($ret_json);
+            if($ret -> access_token){
+			/*更新配置信息*/
+			$data['id']=1;
+			$data['access_token']=$ret->access_token;
+			$data['dateline']=$time;
+			M('wxch_config')->save($data);
+            }
+        }elseif(empty($access_token)){
+			$url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=$appid&secret=$appsecret";
+			$ret_json = https_request($url);
+			$ret = json_decode($ret_json);
+			if($ret->access_token){
+			/*更新配置信息*/
+			$data['id']=1;
+			$data['access_token']=$ret->access_token;
+			$data['dateline']=$time;
+			M('wxch_config')->save($data);
+
+			}
+		}
+		return $access_token;
+    }
+function  new_get_user_info($redirect_uri){
+		    $condition['id']=1;
+			$app=M("wxch_config")->where($condition)->find();
+			$appid= $app['appid'];
+			$appsecret = $app['appsecret'];
+			$state = 'wechat';
+			$scope = 'snsapi_base';
+			// $scope = 'snsapi_userinfo';
+			if($_GET['code']){
+				$code = $_GET['code'];
+				$url = 'https://api.weixin.qq.com/sns/oauth2/access_token?appid=' . $appid . '&secret=' . $appsecret . '&code=' . $code . '&grant_type=authorization_code';
+				$ret_json = https_request($url);
+				$ret = json_decode($ret_json);
+				$openid = $ret->openid;
+				session('openid',$openid);
+			}else{		
+				$oauth_url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=' . $appid . '&redirect_uri=' . $redirect_uri . '&response_type=code&scope=' . $scope . '&state=' . $state . '#wechat_redirect';
+				goheader($oauth_url);
+			}
+		 
+	 }
+
+
+
+ function goheader($oauth_url){
+	    header('Expires: 0');
+	    header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+	    header('Cache-Control: no-store, no-cahe, must-revalidate');
+	    header('Cache-Control: post-chedk=0, pre-check=0', false);
+	    header('Pragma: no-cache');
+	    header("HTTP/1.1 301 Moved Permanently");
+	    header("Location: $oauth_url");
+	    exit;
+	}
+

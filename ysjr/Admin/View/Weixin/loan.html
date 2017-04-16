@@ -49,13 +49,12 @@
 				</div>
 				<div class="deviation all">
 					<span class="text1">账户管理费：<span class="manage"></span>元</span>
-<!--					<span class="text2">免息卷：<span class="free">0</span>元</span>
--->				</div>
-				<div align="center" class="txt">
-					<p>到期应还：<span class="repay">11111</span> <span style="color: #00B4FF;font-size: 20px;">元</span></p>
+					<span class="text2">免息卷：<span class="free">0</span>元</span>
 				</div>
-				<input type="hidden" id="phone" value="{$phone}">
-	  	  		<input type="hidden" id="openid" value="{$openid}" name="info[openid]">
+				<div align="center" class="txt">
+					<p>实际到账：<span class="repay"></span> <span style="color: #00B4FF;font-size: 20px;">元</span></p>
+				</div>
+				
 				<button class="btn" type="button" id="register" onclick="user_money_info()">下一步</button>
 
 			</form>
@@ -181,8 +180,8 @@
 					},
 					datatype:"json",
 					success:function(data){
-						if(data == '下一步'){
-							//setTimeout(function(){window.location.href="/index.php/Weixin/verify_mobile?phone="+phone+"&openid="+openid},1000);
+						if(data == 1){
+							setTimeout(function(){window.location.href="/index.php/Weixin/verify_mobile"},1000);
 						}else{
 							alert(data);
 						}

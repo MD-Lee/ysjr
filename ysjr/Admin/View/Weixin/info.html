@@ -31,7 +31,7 @@
 										<a href="{:U('Weixin/logout',array('phone'=>$user[0]['phone']))}" class="fr">注销</a>
 									</td>
 								</tr>
-								<tr class="color">
+								<!-- <tr class="color">
 									<td>登录密码</td>
 									<td>
 										******
@@ -44,7 +44,7 @@
 										<i class="fr tu"></i>
 										<a href="{:U('Weixin/new_pwd',array('phone'=>$user[0]['phone']))}" class="fr">修改</a>
 									</td>
-								</tr>
+								</tr> -->
 								<tr>
 									<td>职业</td>
 									<if condition="$xuesheng eq null">
@@ -276,7 +276,7 @@
 										</td>
 										<td>&nbsp;</td>
 										<td>
-											<a href="https://open.weixin.qq.com/connect/oauth2/authorize?appid=appid&redirect_uri=http://www.leeyears.com/index.php/Weixin/register&response_type=code&scope=snsapi_base&state=1#wechat_redirect">
+											<a href="loan">
 												<p class="continue"></p>
 												<p>继续借款</p>
 											</a>
@@ -287,7 +287,7 @@
 								<if condition="$fang neq null and $vo['is_adopt'] eq 1">
 									<tr class="color">
 										<td>
-											<a href="{:U('Weixin/jiekuan',array('phone'=>$user[0]['phone']))}">
+											<a href="{:U('Weixin/jiekuan',array('id'=>$vo['id']))}">
 												<p class="continue"></p>
 												<p>查看合同</p>
 											</a>
@@ -295,7 +295,8 @@
 										<td>&nbsp;</td>
 										<if condition="$fang['actual_time'] eq null">
 										<td>
-											<a href="https://open.weixin.qq.com/connect/oauth2/authorize?appid=appid&redirect_uri=http://www.leeyears.com/index.php/Weixin/loan_details&response_type=code&scope=snsapi_base&state=1#wechat_redirect">
+										<a href="{:U('Weixin/loan_details',array('id'=>$vo['id']))}">
+											
 												<p class="continue"></p>
 												<p>我要还款</p>
 											</a>

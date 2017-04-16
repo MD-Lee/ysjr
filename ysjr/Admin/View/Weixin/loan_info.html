@@ -27,10 +27,10 @@
 									<td>&nbsp;</td>
 									<td>
 										<i class="fr tu"></i>
-										<a href="{:U('Weixin/logout',array('phone'=>$user[0]['phone']))}" class="fr">注销</a>
+										<a href="{:U('Weixin/logout')}" class="fr">注销</a>
 									</td>
 								</tr>
-								<tr class="color">
+								<!-- <tr class="color">
 									<td>登录密码</td>
 									<td>
 										******
@@ -43,7 +43,7 @@
 										<i class="fr tu"></i>
 										<a href="{:U('Weixin/new_pwd',array('phone'=>$user[0]['phone']))}" class="fr">修改</a>
 									</td>
-								</tr>
+								</tr> -->
 								<tr>
 									<td>职业</td>
 									<td>
@@ -222,7 +222,7 @@
 										</td>
 										<td>&nbsp;</td>
 										<td>
-											<a href="https://open.weixin.qq.com/connect/oauth2/authorize?appid=appid&redirect_uri=http://www.leeyears.com/index.php/Weixin/register&response_type=code&scope=snsapi_base&state=1#wechat_redirect">
+											<a href="loan">
 												<p class="continue"></p>
 												<p>继续借款</p>
 											</a>
@@ -269,15 +269,15 @@
 		})
 		//用户取消申请
 		function cancel_apply(){
-			var phone = $('#phone').text();
+			var id = {$user_money_info_id};
 			$.ajax({
 				type:"POST",
 				url:"{:U('Weixin/cancel_apply')}",
-				data:{'phone':phone},
+				data:{'id':id},
 				datatype:"json",
 				success:function(data){
 					alert(data);
-					setTimeout(function(){window.location.href="/index.php/Weixin/info?phone="+phone},1000);
+					setTimeout(function(){window.location.href="/index.php/Weixin/info"},1000);
 				}
 			})
 		}

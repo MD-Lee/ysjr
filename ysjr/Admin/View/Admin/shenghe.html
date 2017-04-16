@@ -82,7 +82,7 @@ jQuery(document).ready(function(){
 								    </div>
 								  </div>
 								  
-								  <button type="button" class="btn btn-primary" onclick="is_bank(this)" value="" id="{$phone}">通过</button>
+								  <button type="button" class="btn btn-primary" onclick="is_bank(this)" value="" id="{$id}">通过</button>
 						    	<a type="button" class="btn" href="#myModal" role="button"  data-toggle="modal">不通过</a>
 								</div>
 
@@ -101,7 +101,7 @@ jQuery(document).ready(function(){
 						  </div>
 						  <div class="modal-footer">
 						    <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
-						    <button type="button" class="btn btn-primary" onclick="no_bank(this)" id="{$phone}" aria-hidden="true" data-dismiss="modal">确定</button>
+						    <button type="button" class="btn btn-primary" onclick="no_bank(this)" id="{$id}" aria-hidden="true" data-dismiss="modal">确定</button>
 						  </div>
 						</div>
                     </div><!--row-fluid-->
@@ -125,11 +125,11 @@ jQuery(document).ready(function(){
 <script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
 <script>
 function is_bank(obj){
-	var phone = obj.id;
+	var id = obj.id;
 	$.ajax({
 		type:"POST",
 		url:"{:U('Admin/is_bank')}",
-		data:{'phone':phone},
+		data:{'id':id},
 		datatype:"json",
 		success:function(data){
 			if(data == '验证成功'){
@@ -140,13 +140,13 @@ function is_bank(obj){
 	})
 }
 function no_bank(obj){
-	var phone = obj.id;
+	var id = obj.id;
 	var liyou = $('#liyou').val();
 	$.ajax({
 		type:"POST",
 		url:"{:U('Admin/no_bank')}",
 		data:{
-			'phone':phone,
+			'id':id,
 			'liyou':liyou
 		},
 		datatype:"json",

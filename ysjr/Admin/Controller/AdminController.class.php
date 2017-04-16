@@ -26,7 +26,7 @@ class AdminController extends CommonController {
 		return $output;
 	}
 	//获取access_token的值
-	public function access_token(){
+	/* public function access_token(){
 		$appid = "appid";
 		$secret = "appsecret";
 		$url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=".$appid."&secret=".$secret;
@@ -34,7 +34,7 @@ class AdminController extends CommonController {
 		$array = json_decode($output,true);
 		$access_token = $array['access_token'];
 		return  $access_token;
-	}
+	} */
 	
  	//添加客户
     public function client(){
@@ -313,14 +313,17 @@ class AdminController extends CommonController {
     			$this->assign('apply_time2',$apply_time2);
     		}
     		if($info['limits'] == '1'){
-    			$list = $User->join("haoidcn_user_money_info as b ON haoidcn_service.phone=b.phone")->order("haoidcn_service.id desc")->limit($Page->firstRow. ',' . $Page->listRows)->where("$where")->select();
+    			//$list = $User->join("haoidcn_user_money_info as b ON haoidcn_service.phone=b.phone")->order("haoidcn_service.id desc")->limit($Page->firstRow. ',' . $Page->listRows)->where("$where")->select();
+    			$list = $User->order("id desc")->limit($Page->firstRow. ',' . $Page->listRows)->where("$where")->select();
     		}else if($info['limits'] == '2'){
     			$list = $User->join("haoidcn_user_money_info as b ON haoidcn_service.phone=b.phone")->join("haoidcn_user_work as c ON haoidcn_service.phone=c.phone")->order("haoidcn_service.id desc")->limit($Page->firstRow. ',' . $Page->listRows)->where("b.loan_people='$userid' and $where ")->select();
     		}else if($info['limits'] == '3'){
     			$list = $User->join("haoidcn_user_money_info as b ON haoidcn_service.phone=b.phone")->join("haoidcn_user_work as c ON haoidcn_service.phone=c.phone")->order("haoidcn_service.id desc")->limit($Page->firstRow. ',' . $Page->listRows)->where("city='$city' and $where")->select();
     		}
+			
     		foreach ($list as $key=>$value){
-    			$name = $user_info->where("phone='{$list[$key]['phone']}'")->find();
+    			//$name = $user_info->where("phone='{$list[$key]['phone']}'")->find();
+    			$name = $user_info->where("openid='{$list[$key]['openid']}'")->find();
     			$list[$key]['name'] = $name['name'];
     		}
     		$this->assign('list',$list);
@@ -345,9 +348,11 @@ class AdminController extends CommonController {
     		$Page->setConfig('last', '尾页');
     		$show 	= $Page->show();
     		$this->assign("page",$show); 
-    		$list = $User->join("haoidcn_user_money_info as b ON haoidcn_service.phone=b.phone")->order("haoidcn_service.id desc")->limit($Page->firstRow. ',' . $Page->listRows)->select();
+    		//$list = $User->join("haoidcn_user_money_info as b ON haoidcn_service.phone=b.phone")->order("haoidcn_service.id desc")->limit($Page->firstRow. ',' . $Page->listRows)->select();
+    		$list = $User->order("id desc")->limit($Page->firstRow. ',' . $Page->listRows)->select();
     		foreach ($list as $key=>$value){
-    			$name = $user_info->where("phone='{$list[$key]['phone']}'")->find();
+    			//$name = $user_info->where("phone='{$list[$key]['phone']}'")->find();
+    			$name = $user_info->where("openid='{$list[$key]['openid']}'")->find();
     			$list[$key]['name'] = $name['name'];
     		}
     		$this->assign('list',$list);
@@ -746,7 +751,7 @@ class AdminController extends CommonController {
     		$list = $bank_info->where("loan_people like '$userid%'")->order("id desc")->select();
     	}else if($user_limits['limits'] == '3'){
     		$city = $user_limits['city'];
-    		$list = $bank_info->query("select * from haoidcn_bank_info as a left join haoidcn_user_work as b ON a.phone=b.phone  where b.city='$city' and loan_people like '$userid%'");
+    		$list = $bank_info->query("select * from haoidcn_bank_info as a left join haoidcn_user_work as b ON a.openid=b.openid  where b.city='$city' and loan_people like '$userid%'");
     		$this->assign('list',$list);
     	}
     	$data = array(
@@ -755,9 +760,10 @@ class AdminController extends CommonController {
     			'sh_two07' => " class='active'"
     	);
     	foreach ($list as $key=>$value){
-    		$money = $user_money_info->where("phone='{$list[$key]['phone']}'")->find();
+    		$money = $user_money_info->where("openid='{$list[$key]['openid']}'")->find();
     		$list[$key]['loan_people'] = $money['loan_people'];
     	}
+		
     	$this->assign('list',$list);
     	$card_bank = D('card_bank');
     	$info = $card_bank->select();
@@ -803,25 +809,31 @@ class AdminController extends CommonController {
     
     //审核银行卡界面
     public function shenghe(){
-    	$phone = I('phone');
+    	$id = I('id');
     	$bank_info = D('bank_info');
-    	$list = $bank_info->join("haoidcn_user_money_info as a ON haoidcn_bank_info.phone=a.phone")->where("haoidcn_bank_info.phone='$phone'")->find();
+    	$list = $bank_info->join("haoidcn_user_money_info as a ON haoidcn_bank_info.openid=a.openid")->where("haoidcn_bank_info.id='$id'")->find();
     	$this->assign('list',$list);
-    	$this->assign('phone',$phone);
-    	var_dump($phone);
+    	$this->assign('id',$id);
+    	
+    	
     	$this->display();
     }
     //确定银行卡号
     public function is_bank(){
-     	$phone = I('phone');
+     	$id = I('id');
      	$bank_info = D('bank_info');    //用户银行卡信息表
-     	$bank_info->where("phone='$phone'")->setField('is_payment','1');
+     	$bank_info->where("id='$id'")->setField('is_payment','1');
+		
+		$openid = M('bank_info')->where("id='$id'")->getField('openid');
+		
      	$service = D('service');
-     	$service->where("phone='$phone'")->setField("is_Loan",'0');
-     	$res = $bank_info->field('openid')->where("phone='$phone'")->select();
-     	if($res){
-     		$openid = $res[0]['openid'];
-     		$access_token = $this->access_token();
+		
+     	$service->where("openid='$openid'")->setField("is_Loan",'0');
+		
+  
+     	if($openid){
+     	
+     		$access_token = access_token();
      		$url = "https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=".$access_token;
      		$text = <<<json
 	     	{
@@ -831,7 +843,7 @@ class AdminController extends CommonController {
 			        "articles": [
 			         {
 			             "title":"恭喜您，您的银行卡信息验证成功，我们会尽快致电您，确认是您本人申请后将立即打款到您的银行卡上，请保持手机畅通",
-			             "description":"您的银行卡信息验证成功，我们将尽快致电您，确认是您本人申请后将立即打款到您的银行卡上，请保持手机畅通，感谢您对e快金的支持和信任！",
+			             "description":"您的银行卡信息验证成功，我们将尽快致电您，确认是您本人申请后将立即打款到您的银行卡上，请保持手机畅通，感谢您对学之友微额速达的支持和信任！",
 			         }
 			         ]
 			    }
@@ -854,7 +866,7 @@ json;
     	$res = $bank_info->where("phone='$phone'")->find();
     	if($res){
     		$openid = $res['openid'];
-    		$access_token = $this->access_token();
+			$access_token = access_token();
     		$url = "https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=".$access_token;
     		$text = <<<json
 	     	{
@@ -943,7 +955,7 @@ json;
     	$id = I('id');
     	$weixin_img = D('weixin_img');
     	$weixin_img->where("openid='$id'")->setField('is_adopt','1');
-    	$access_token = $this->access_token();
+    		$access_token = access_token();
     	$url = "https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=".$access_token;
     	$text = <<<json
     	{
@@ -969,7 +981,7 @@ json;
     	$id = I('id');
     	$weixin_img = D('weixin_img');
     	$weixin_img->where("openid='$id'")->setField('is_adopt','2');
-    	$access_token = $this->access_token();
+    		$access_token = access_token();
     	$url = "https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=".$access_token;
     	$text = <<<json
     	{

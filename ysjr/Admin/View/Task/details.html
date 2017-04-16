@@ -177,11 +177,11 @@ jQuery(document).ready(function(){
 								    </div>
 								  </div>
 								  <if condition="$info['wait_xuqi'] eq 2">
-								  		<button type="button" class="btn btn-primary" onclick="ok_xuqi(this)" value="" id="{$phone}">同意续期</button>
-								  		<button type="button" class="btn"  value="" onclick="remark(this)" id="{$phone}">不同意</button>
+								  		<button type="button" class="btn btn-primary" onclick="ok_xuqi(this)" value="" id="{$id}">同意续期</button>
+								  		<button type="button" class="btn"  value="" onclick="remark(this)" id="{$id}">不同意</button>
 								  <else/>
-								  		<button type="button" class="btn btn-primary" onclick="adopt_ok(this)" value="" id="{$phone}">通过</button>
-								  		<button type="button" class="btn"  value="" onclick="remark(this)" id="{$phone}">不通过</button>
+								  		<button type="button" class="btn btn-primary" onclick="adopt_ok(this)" value="" id="{$id}">通过</button>
+								  		<button type="button" class="btn"  value="" onclick="remark(this)" id="{$id}">不通过</button>
 								  </if>
 								</div>
                             	
@@ -198,7 +198,7 @@ jQuery(document).ready(function(){
 						  <div class="modal-body">
 						    <span>芝麻分:</span>
 						    <input type="text" name="integral" id="integral" value="{$list[0]['integral']}">
-						    <input type="hidden" name="phone" value="{$phone}">
+						    <input type="hidden" name="phone" value="{$id}">
 						  </div>
 						  <div class="modal-footer">
 						    <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
@@ -250,8 +250,8 @@ function remark(obj){
 	window.location.href="/index.php/Task/no_adopt?phone="+phone;
 }
 function adopt_ok(obj){
-	var phone = obj.id;
-	window.location.href="/index.php/Task/ok_adopt?phone="+phone;
+	var id = obj.id;
+	window.location.href="/index.php/Task/ok_adopt?id="+id;
 }
 function ok_xuqi(obj){
 	var phone = obj.id;

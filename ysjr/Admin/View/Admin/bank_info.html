@@ -77,7 +77,7 @@ jQuery(document).ready(function(){
 	                            				<td>{$vo.loan_people}</td>
 	                            				<td>
 	                            					<if condition="$vo.is_payment eq  0">
-		                            					<a href="{:U('Admin/shenghe',array('phone'=>$vo['phone']))}">审核</a>
+		                            					<a href="{:U('Admin/shenghe',array('id'=>$vo['id']))}">审核</a>
 										            <elseif condition="$vo.is_payment eq  1"/>
 										            	银行卡审核通过
 										            <elseif condition="$vo.is_payment eq  2"/>

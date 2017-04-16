@@ -11,7 +11,7 @@
 <script src="//apps.bdimg.com/libs/jquery/1.10.2/jquery.min.js"></script>
 <script src="{$Think.config.URL}js/jquery.cookie.js"></script>
 <script src="//apps.bdimg.com/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
-
+<script type="text/javascript" src="{$Think.config.URL}js/jquery.form.min.js"></script>
 <!-- header end -->
 
 <script type="text/javascript" src="{$Think.config.URL}js/new/unify.js"></script>
@@ -85,6 +85,8 @@ jQuery(document).ready(function(){
 										  <option value="10">还款中</option>
 										  <option value="8">未还款</option>
 										  <option value="9">逾期</option>
+										 
+										 
 								  	</select>
 								  	<if condition="$limits eq '1'">
 								  	<select name="loan_people" style="width:100px;">
@@ -106,10 +108,10 @@ jQuery(document).ready(function(){
 	                                   		<th width="150px">个人信用报告协议书</th>
 	                                   		<th width="100px">额度</th>
 	                                   		<th width="100px">期限</th>
-	                                        <th width="150px">服务密码</th>
+	                                       
 	                                        <th width="150px">续期数</th>
 	                                        <th width="150px">已完成期数</th>
-	                                        <th width="100px;">审核人员</th>
+	                                        
 	                                   		<th width="100px">操作</th>   
 	                                   		<th width="100px;">审核状态</th>                                                               		
 	                                   	</tr>
@@ -121,13 +123,13 @@ jQuery(document).ready(function(){
 	                                   			<td><a href="{:U('Task/xieyi',array('phone'=>$vo['phone']))}">协议时间：{$vo.time}</a></td>
 	                                            <td>{$vo.money_num}</td>
 	                                   			<td>{$vo.time_length}</td>
-	                                   			<td>{$vo.service_pwd}</td> 
+	                                   			
 	                                   			<td>{$vo.is_renewal}</td> 
 	                                   			<td>{$vo.complete_renewal}</td>
-	                                   			<td>{$vo.loan_people}</td>
+	                                   		
 	                                   			<if condition="$vo.state eq 0">
 		                                   				<td>
-		                                   					<a href="{:U('Task/details',array('phone'=>$vo[phone]))}">审核</a>
+		                                   					<a href="{:U('Task/details',array('id'=>$vo[id]))}">审核</a>
 		                                   				</td>
 	                                   			<else/>
 	                                   				<td>已审</td>
@@ -189,7 +191,7 @@ jQuery(document).ready(function(){
 </div><!--mainwrapper-->
 
 </body>
-<script src="http://malsup.github.io/jquery.form.js"></script>
+
 <script>
 //日期选择器 
 $(function() {

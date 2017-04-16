@@ -42,10 +42,11 @@
                                     	<div style="padding:15px 40px;">
 	                                    	<form action="{:U('Task/on_adopt')}" id="form">
 		                                    	<p style="margin:0 0;">
-		                                            <div>手机号：{$phone}</div>
+		                                            <div>手机号：{$list['phone']}</div>
 		                                        </p>
 		                                        <p style="margin:0 0;">
 		                                            <div>借款额度：{$list['money_num']}</div>
+													<input type="hidden" name="money_num" value="{$list['money_num']}"/>
 		                                        </p>
 		                                        <p style="margin:0 0;">
 		                                            <div>期限：<span id="time_length">{$list['time_length']}</span></div>
@@ -65,7 +66,7 @@
 				                            			<option value="优秀">优秀</option>
 				                            		</select>
 		                                        </p>
-		                                        <input type="hidden" value="{$phone}" name="phone">
+		                                        <input type="hidden" value="{$id}" name="id">
 		                                    </form>
                                             <p>
 	                                        	<button class="btn btn-primary" onclick="submit_loan()">提交审核</button>
@@ -93,16 +94,18 @@
 </div><!--mainwrapper-->
 <script>
 function submit_loan(){
-	var phone = $("input[name=phone]").val();
+	var id = $("input[name=id]").val();
 	var content = $("input[name=content]").val();
+	var money_num = $("input[name=money_num]").val();
 	var level = $("select[name=level]").val();
 	var time_length = $("#time_length").text();
 	$.ajax({
 		type:"POST",
 		url:"{:U('Task/adopt_ok')}",
 		data:{
-			'phone':phone,
+			'id':id,
 			'content':content,
+			'money_num':money_num,
 			'level':level,
 			'time_length':time_length
 		},

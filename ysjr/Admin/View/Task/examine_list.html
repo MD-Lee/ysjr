@@ -108,7 +108,7 @@ jQuery(document).ready(function(){
 	                                         <td>{$vo.account_opening}</td>
 	                                         <td>{$vo.loan_people}</td>              
 	                                         <td>
-	                                         	<a href="#myModal" role="button"  data-toggle="modal" onclick="loan(this)" id="{$vo.phone}">确定放款</a>
+	                                         	<a href="#myModal" role="button"  data-toggle="modal" onclick="loan(this)" id="{$vo.id}">确定放款</a>
 	                                         </td>
                                         </tr>
                                    	</volist>
@@ -128,7 +128,7 @@ jQuery(document).ready(function(){
 						    <p>确定是否放款</p>
 						  </div>
 						  <div class="modal-footer">
-						  <input type="hidden" value="" id="phone">
+						  <input type="hidden" value="" id="user_money_info_id">
 						    <button class="btn" data-dismiss="modal" aria-hidden="true">取消</button>
 						    <button class="btn btn-primary" onclick="is_loan()">确定</button>
 						    <button class="btn btn-primary" onclick="loan_fail()">放款失败</button>
@@ -155,15 +155,15 @@ jQuery(document).ready(function(){
 <script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
 <script>
 function loan(obj){
-	var phone = obj.id;
-	$('#phone').val(phone);
+	var id = obj.id;
+	$('#user_money_info_id').val(id);
 }
 function is_loan(){
-	var phone = $('#phone').val();
+	var id = $('#user_money_info_id').val();
 	$.ajax({
 		type:"POST",
 		url:"{:U('Task/loan_success')}",
-		data:{'phone':phone},
+		data:{'id':id},
 		success:function(data){
 			if(data == "放款失败"){
 				alert(data);
@@ -174,8 +174,8 @@ function is_loan(){
 	})
 }
 function loan_fail(){
-	var phone = $('#phone').val();
-	window.location.href="/index.php/Task/fangkuanshibai?phone="+phone;
+	var id = $('#user_money_info_id').val();
+	window.location.href="/index.php/Task/fangkuanshibai?id="+id;
 }
 </script>
 </html>

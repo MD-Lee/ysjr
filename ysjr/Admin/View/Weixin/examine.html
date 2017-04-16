@@ -3,14 +3,14 @@
 
 	<head>
 		<meta charset="UTF-8">
-		<title>e快金</title>
+		<title>{$Think.config.TITLE}</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 		<link href="{$Think.config.URL}/css/examine.css" rel="stylesheet">
 	</head>
 
 	<body>
 		<div class="header top-head">
-			<h4 class="title">e借款
+			<h4 class="title">{$Think.config.TITLE}
 				<a class="back">
 					<i class="icon icon-back pull-left"></i>
 				</a>
@@ -47,7 +47,7 @@
 					<em class="next"></em>
 				</li>
 				
-				<if condition="$data eq 1 or $data eq 3">
+				<if condition="$data eq 9">
 					<li class="list-item" id="two">
 						<i class="icons"></i>
 						绑定银行卡
@@ -71,7 +71,7 @@
 					<em class="next"></em>
 				</li>
 				
-				<if condition="$data eq 1 or $data eq 2 or $data eq 5  or $data eq 3">
+				<if condition="$data eq 1 or $data eq 2 or $data eq 5  or $data eq 3 or $data eq 9">
 					<li class="list-item" id="five">
 						<i class="icons"></i>
 						开始放款

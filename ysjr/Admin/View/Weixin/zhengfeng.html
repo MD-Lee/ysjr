@@ -121,8 +121,7 @@
 		<div style="margin-top:20px;">
 			<a href="uid_anli.html" style="color:red; font-weight: bold; font-size: 15px;">点击查看自拍身份证示意图，请按标准上传，保证照片头像及身份证清晰，否则无法通过审核</a>
 		</div>
-		<input type="hidden" value="{$openid}" name="info[openid]">
-		<input type="hidden" value="{$phone}" name="info[phone]">
+		
 		<button onclick="upload_img()" type="button"  class="btn btn-primary" style="margin-top:21px;">提交</button>
 	</form>
 	<div class="biger">
@@ -184,16 +183,15 @@ function upload_img(){
 	//var img2 = document.getElementById("images2").value;
 	//var img3 = document.getElementById("images3").value;
 	$('.class').css('display','block');
-	var phone = $("input[name='info[phone]']").val();
-	var openid = $("input[name='info[openid]']").val();
+	
 	$('#form').ajaxSubmit({
 		type:"POST",
 		url:$('#form').attr("action"),
-		data:{'phone':phone},
+		
 		datatype:"json",
 		success:function(data){
 			if(data == '提交成功'){
-				setTimeout(function(){window.location.href="/index.php/Weixin/alipay?phone="+phone+"&openid="+openid},1000);
+				setTimeout(function(){window.location.href="/index.php/Weixin/alipay"},1000);
 			}else{
 				$('.class').css('display','none');
 				alert(data);

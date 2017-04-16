@@ -95,7 +95,7 @@
 			<img src="{$Think.config.URL}/images/xianjinbashi/lend-4.png"/>
 	  </div>
 	  <div class="center-block look">
-	  		<a href="{:U('Weixin/lend_details',array('phone'=>$phone))}" class="center-block bowling" id="jiazai"><span class="pull-left tubiao"></span> <span>点击查看借款详情</span></a>
+	  		<a href="{:U('Weixin/lend_details')}" class="center-block bowling" id="jiazai"><span class="pull-left tubiao"></span> <span>点击查看借款详情</span></a>
 	  </div>
 	  <form class="list" id="form" action="{:U('Weixin/bank_card')}">
 	  		<div class="form-group select">
@@ -136,7 +136,7 @@
 					<a href="bank_anli.html">截图案例</a>
 				</div>
 			</div>
-			<input type="hidden" value="{$phone}"  name="info[phone]">
+			
 		  <button class="btn btn-primary" type="button" id="register" onclick="bank_card()">确认绑定</button>
 	  </form>
 	</div>

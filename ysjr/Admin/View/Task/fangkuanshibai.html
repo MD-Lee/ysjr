@@ -41,10 +41,9 @@
                                     <div class="widgetcontent">
                                     	<div style="padding:15px 40px;">
                                     		<form action="{:U('Task/loan_fail')}" id="form">
-                                    			<p style="margin:0 0;">
-		                                            <label style="float:left;margin-top: 5px;">手机号：</label>
-		                                            <input type="text" class="input-xlarge" name="phone" value="{$phone}"/>
-		                                        </p>
+                                    			
+		                                            <input type="hidden"  name="id" value="{$id}"/>
+		                                       
 		                                        <p style="margin:0 0;">
 		                                        	<label style="float:left;margin-top: 5px;">失败原因备注：</label>
 		                                        	<textarea rows="3" name="content"></textarea>

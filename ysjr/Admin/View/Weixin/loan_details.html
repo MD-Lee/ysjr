@@ -3,7 +3,7 @@
 
 	<head>
 		<meta charset="UTF-8">
-		<title>e借款</title>
+		<title>{$Think.config.TITLE}</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 		<link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
 		<link href="{$Think.config.URL}/css/loan_details.css" rel="stylesheet">
@@ -208,8 +208,8 @@
 							</select>
 							<span class="select-icon"></span>
 						</div>
-						<input type="hidden" value="{$list['phone']}" id="phone">
-						<input type="hidden" value="{$list['openid']}" id="openid">
+						
+						<input type="hidden" value="{$id}" id="user_money_id">
 						<button type="button" class="sure button link2">确认</button>
 						<button type="button" class="cancel sure button" id="cancel" type="button">取消</button>
 					</form>
@@ -410,10 +410,10 @@
 		$(".link2").click(function() {
 			var aa= $('#testSelect2 option:selected').val();//选中的值
 			if(aa == 1){
-				var phone = $("#phone").val();
+				var id = $("#user_money_id").val();
 				var money = $(".b_amounts").text();
 				var phone = $("#phone").val();
-				var openid = $("#openid").val();
+				
 				var time_length = $(".change").find("span").text();
 				var sum = $(".sum").text();
 				var appoint_time = $(".span").text();
@@ -422,7 +422,7 @@
 					url:"{:U('Weixin/yes_ok2')}",
 					data:{
 						'money':money,
-						'phone':phone,
+						'id':id,
 						'time_length':time_length,
 						'sum':sum,
 						'appoint_time':appoint_time
@@ -433,14 +433,14 @@
 					}
 				})
 			}else if(aa==2) {
-				var phone = $("#phone").val();
+				var id = $("#user_money_id").val();
 				var money = $(".b_amounts").text();
-				var openid = $("#openid").val();
+			
 				var time_length = $(".change").find("span").text();
 				var sum = $(".sum").text();
 				var appoint_time = $(".span").text();
 				var type = 2;
-				window.location.href="/index.php/Weixin/bring?phone="+phone+"&money="+money+"&openid="+openid+"&time_length="+time_length+"&sum="+sum+"&appoint_time="+appoint_time+"&type="+type;
+				window.location.href="/index.php/Weixin/bring?id="+id+"&money="+money+"&time_length="+time_length+"&sum="+sum+"&appoint_time="+appoint_time+"&type="+type;
 			}
 		})
 		
@@ -449,13 +449,13 @@
 			var aa= $('#testSelect option:selected').val();//选中的值
 			if(aa == 3){
 				var money = $(".a_amounts").text();
-				var phone = $("#phone").val();
+				var id = $("#user_money_id").val();
 				$.ajax({
 					type:"POST",
 					url:"{:U('Weixin/yes_ok')}",
 					data:{
 						'money':money,
-						'phone':phone
+						'id':id
 					},
 					datatype:"json",
 					success:function(data){
@@ -463,10 +463,10 @@
 					}
 				})
 			}else if(aa==2) {
-				var phone = $("#phone").val();
+				var id = $("#user_money_id").val();
 				var money = $(".a_amounts").text();
 				var type = 1;
-				window.location.href="/index.php/Weixin/bring?phone="+phone+"&money="+money+"&type="+type;
+				window.location.href="/index.php/Weixin/bring?id="+id+"&money="+money+"&type="+type;
 			}
 		})
 	</script>

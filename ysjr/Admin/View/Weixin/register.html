@@ -43,20 +43,20 @@
 		  <div class="class" style="display:none;width: 50px;height: 50px;position: fixed;left: 45%;top:35%;">
 				<img src="{$Think.config.URL}/images/xianjinbashi/jiazai.png" width="50px" height="50px">
 			</div>
-		  <div class="form-group">
+		 <!--  <div class="form-group">
 		    <input type="password" class="form-control" name="info[pwd]" id="pwd" placeholder="请设置登录密码" style="width:70%;float:left;">
 		    <button type="button" class="btn btn-primary" style="width:30%" id="password">显示密码</button>
-		  </div>
+		  </div> -->
 		  <div class="form-group">
-		    <input type="text" class="form-control" name="info[recommend_code]" value="{$tuijian}" placeholder="推荐码（可选）">
+		    <input type="text" class="form-control" name="info[recommend_code]" value="" placeholder="推荐码（可选）">
 		  </div>
 		  <div class="checkbox">
 		    <label>
 		      <input type="checkbox" name="agree"> 我同意<a class="span" href="{:U('Weixin/agreement')}">《服务与隐私协议》</a>
 		    </label>
 		  </div>
-		  <input type="hidden" value="{$openid}" name="info[openid]">
-		  <input type="hidden" value="{$nickname}" name="info[uname]">
+		
+		  
 		  <button type="button" class="btn btn-primary" id="frame" onclick="user_register()">提交注册</button>
 		</form>
 		<!--<div class="text">
@@ -132,10 +132,10 @@ function checkText(){
 			"info[message_verify]":{
 				required:true
 			},
-			"info[pwd]":{
+			/*"info[pwd]":{
 				required:true,
 				minlength:6
-			},
+			},*/
 			"agree":{
 				required:true
 			}
@@ -148,10 +148,10 @@ function checkText(){
 			"info[message_verify]":{
 				required:'请输入短信验证码'
 			},
-			"info[pwd]":{
+			/*"info[pwd]":{
 				required:'请输入密码',
 				minlength:"密码长度不能小于6个字母"
-			},
+			},*/
 			"agree":{
 				required:'请同意我们的协议'
 			}
@@ -168,9 +168,9 @@ function user_register(){
 		datatype:'json',
 		success:function(data){
 			if(data == '注册成功'){
-				var phone = $("input[name='info[phone]']").val();
-				var openid = $("input[name='info[openid]']").val();
-				setTimeout(function(){window.location.href="/index.php/Weixin/register_success?phone="+phone+"&openid="+openid},1000);
+			/* var phone = $("input[name='info[phone]']").val();
+				var openid = $("input[name='info[openid]']").val(); */
+				setTimeout(function(){window.location.href="/index.php/Weixin/register_success"},1000);
 			}else{
 				alert(data);
 				$('.class').css('display','none');

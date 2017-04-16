@@ -15,15 +15,16 @@ class Wechat{
         if (!empty($postStr)){
             $postObj = simplexml_load_string($postStr, 'SimpleXMLElement', LIBXML_NOCDATA);
             $msgType = trim($postObj->MsgType);
-            $fromUsername = $postObj -> FromUserName;
-            $condition['openid']="$fromUsername";
-            $ret = M('service')->where($condition)->field('openid')->select();
-            if(empty($ret)){
+			$fromUsername = $postObj -> FromUserName;
+			$condition['openid']="$fromUsername";
+		    $ret = M('service')->where($condition)->field('openid')->select();
+			if(empty($ret)){
                 if(!empty($fromUsername)){
-                    /*添加基本关注信息*/
-                    $data['openid']="$fromUsername";
-                    $data['time']=time();
+					/*添加基本关注信息*/
+				    $data['openid']="$fromUsername";
+					$data['time']=time();
                     M('service')->add($data);
+                 
                 }
             }
             switch ($msgType)
@@ -141,24 +142,32 @@ json;
     function receiveEvent($object)
     {
         $FromUserName = $object->FromUserName;
-        $user = D('service');
-        $user_id = $user->where("openid='$FromUserName'")->find();
-        $phone = $user_id['phone'];
-        $user_money_info = D('user_money_info');
-        $result = $user_money_info->where("openid='$FromUserName'")->order("id desc")->select();
-        $user_mobile = D('user_mobile');
-        $pwd = $user_mobile->where("phone='$phone'")->select();
-        $user_info = D('user_info');
-        $info = $user_info->where("openid='$FromUserName'")->select();
-        $user_work = D('user_work');
-        $work = $user_work->where("openid='$FromUserName'")->select();
-        $user_gam = D('user_gam');
-        $gam = $user_gam->where("openid='$FromUserName'")->select();
+		
+        
+        $service_info = D('service')->where("openid='$FromUserName'")->field('phone,uname')->find();
+		$phone= $service_info['phone'];
+		
+	
+		$is_adopt =  D('user_money_info')->where("openid='$FromUserName'")->field('is_adopt')->order("id desc")->limit(1)->find();
+		
+		
+        $pwd = D('user_mobile')->where("openid='$FromUserName'")->find();
+		
+       
+        $info = D('user_info')->where("openid='$FromUserName'")->find();
+		
+       
+        $work = D('user_work')->where("openid='$FromUserName'")->find();
+		
+       
+        $gam = D('user_gam')->where("openid='$FromUserName'")->find();
+		
+		$http_url="http://".$_SERVER['HTTP_HOST'];
         switch ($object->Event)
         {
             case "subscribe":
-                $this -> update_info($FromUserName);
-                $contentStr = "欢迎关注友顺金融";
+				$this -> update_info($FromUserName);
+                $contentStr = "欢迎关注学之友微额速达";
                 $tuijian = trim($object->EventKey);
                 if ($tuijian != null){
                     $tuijian = trim($object->EventKey);
@@ -199,49 +208,54 @@ json;
                 switch ($object->EventKey)
                 {
                     case "V01":
-                        if($user_id == null){
+                        if(empty($phone)){
                             $contentStr[] = array(
                                 "Title" =>"注册",
-                                "Description" =>"尊敬的用户，您尚未注册，无法使用本功能,点击<查看全文>进行注册",
-                                "Url" =>"https://open.weixin.qq.com/connect/oauth2/authorize?appid=appid&redirect_uri=http://www.leeyears.com/index.php/Weixin/register&response_type=code&scope=snsapi_base&state=1#wechat_redirect"
+                                "Description" =>"尊敬的用户:".$service_info['uname']."，您尚未注册，无法使用本功能,点击<查看全文>进行注册",
+								"Url" =>"$http_url/index.php/Weixin/register"
                             );
-                        }else if($pwd  == null){
+                        }else if(empty($pwd)){
                             $contentStr[] = array(
                                 "Title" =>"尚未验证",
-                                "Description" =>"您尚未进行手机认证，点击<查看全文>开始手机认证",
-                                "Url" =>"http://www.leeyears.com/index.php/Weixin/mobile?phone=$phone&openid=$FromUserName"
+                                "Description" =>"您尚未进行手机实名认证，点击<查看全文>开始手机实名认证",
+                                "Url" =>"$http_url/index.php/Weixin/mobile"
                             );
-                        }else if($result[0]['is_adopt'] == '1'){
+                        }else{
                             $contentStr[] = array(
                                 "Title" =>"手机已认证",
-                                "Description" =>"尊敬的用户，您已经完成手机认证"
+                                "Description" =>"尊敬的用户：".$service_info['uname']."，您已经完成手机认证"
+                            );
+                        }/* else if($is_adopt == '1'){
+                            $contentStr[] = array(
+                                "Title" =>"手机已认证",
+                                "Description" =>"尊敬的用户：".$service_info['uname']."，您已经完成手机认证"
                             );
                         }else{
                             $contentStr[] = array(
                                 "Title" =>"数据验证中",
                                 "Description" =>"我们正在马不停蹄的验证您的手机数据，请您的稍等片刻"
                             );
-                        }
+                        } */
                         break;
                     case "V02":
-                        if($user_id == null){
+                        if(empty($phone)){
                             $contentStr[] = array(
                                 "Title" =>"注册",
-                                "Description" =>"尊敬的用户，您尚未注册，无法使用本功能,点击<查看全文>进行注册",
-                                "Url" =>"https://open.weixin.qq.com/connect/oauth2/authorize?appid=appid&redirect_uri=http://www.leeyears.com/index.php/Weixin/register&response_type=code&scope=snsapi_base&state=1#wechat_redirect"
+                                "Description" =>"尊敬的用户:".$service_info['uname']."，您尚未注册，无法使用本功能,点击<查看全文>进行注册",
+								"Url" =>"$http_url/index.php/Weixin/register"
                             );
                         }else if(empty($info) or empty($gam)){
                             $contentStr[] = array(
                                 "Title" =>"尚未认证",
                                 "Description" =>"您的身份尚未认证,点击<查看全文>开始身份认证",
-                                "Url" =>"http://www.leeyears.com/index.php/Weixin/user_info?phone=$phone&openid=$FromUserName"
+                                "Url" =>"$http_url/index.php/Weixin/user_info"
                             );
-                        }else if($result[0]['is_adopt'] == '0'){
+                        }else if($is_adopt == '0'){
                             $contentStr[] = array(
                                 "Title" =>"身份认证中",
                                 "Description" =>"我们正在马不停蹄的验证您的身份资料，请您的稍等片刻"
                             );
-                        }else if($result[0]['is_adopt'] == '1'){
+                        }else if($is_adopt == '1'){
                             $contentStr[] = array(
                                 "Title" =>"身份已认证",
                                 "Description" =>"尊敬的用户您好，您的身份已经认证成功"
@@ -249,16 +263,17 @@ json;
                         }else if($info and $gam){
                             $contentStr[] = array(
                                 "Title" =>"已提交",
-                                "Description" =>"姓名：{$info[0]['name']}
-身份证号：
-{$info[0]['uid']}
-职业：{$work[0]['work']}
-薪资：{$work[0]['wages']}
+                                "Description" =>"姓名：{$info['name']}
+身份证号：{$info['uid']}
+职业：{$work['work']}
+薪资：{$work['wages']}
+
 联系人手机号
-{$gam[0]['family']}：{$gam[0]['family_mobile']}
-{$gam[0]['gam']}:{$gam[0]['gam_mobile']}
+{$gam['family']}：{$gam['family_mobile']}
+{$gam['gam']}:{$gam['gam_mobile']}
+
 点击查看详细信息",
-                                "Url" =>"http://www.leeyears.com/index.php/Weixin/user_info?phone=$phone&openid=$FromUserName"
+                                "Url" =>"$http_url/index.php/Weixin/user_info"
                             );
                         }
                         break;
@@ -266,7 +281,7 @@ json;
                         $contentStr[] = array(
                             "Title" =>"有奖调研",
                             "Description" =>"尊敬的用户，完成本次调研您可以获得再次申请的机会！点击<查看全文>开始调研",
-                            "Url" =>"http://www.leeyears.com/index.php/Weixin/survey"
+                            "Url" =>"$http_url/index.php/Weixin/survey"
                         );
                         break;
                     case "V05":
@@ -279,22 +294,31 @@ json;
                         $contentStr[] = array(
                             "Title" =>"我是CEO，任何客服解决不了的问题可以给我留言",
                             "Description" =>"尊敬的用户您有任何问题都可以直接微信留言，我们的客服将第一时间回复您，若仍不能完美解决您的问题，请点击我给CEO吐槽",
-                            "Url" =>"http://www.leeyears.com/index.php/Weixin/message?openid=$FromUserName"
+                            "Url" =>"$http_url/index.php/Weixin/message"
                         );
                         break;
                     case "V08":
-                        if($user_id == null){
+                        if(empty($phone)){
                             $contentStr[] = array(
                                 "Title" =>"注册",
-                                "Description" =>"尊敬的用户，您尚未注册，无法使用本功能,点击<查看全文>进行注册",
-                                "Url" =>"https://open.weixin.qq.com/connect/oauth2/authorize?appid=appid&redirect_uri=http://www.leeyears.com/index.php/Weixin/register&response_type=code&scope=snsapi_base&state=1#wechat_redirect"
+                                "Description" =>"尊敬的用户:".$service_info['uname']."，您尚未注册，无法使用本功能,点击<查看全文>进行注册",
+								"Url" =>"$http_url/index.php/Weixin/register"
+                            );
+                        }else if(empty($info) or empty($gam)){
+                            $contentStr[] = array(
+                                "Title" =>"尚未认证",
+                                "Description" =>"您的身份尚未认证,点击<查看全文>开始身份认证",
+                                "Url" =>"$http_url/index.php/Weixin/user_info"
                             );
                         }else{
                             $contentStr[] = array(
                                 "Title" =>"个人资料",
-                                "Description" =>"手机号：{$user_id['phone']}
+                                "Description" =>"姓名：{$info['name']}
+手机号：{$phone}
+身份证号：{$info['uid']}
+								
 点击<查看全文>了解详情",
-                                "Url" =>"http://www.leeyears.com/index.php/Weixin/info?phone=$phone&openid=$FromUserName"
+                                "Url" =>"$http_url/index.php/Weixin/info"
                             );
                         }
                         break;
@@ -426,106 +450,53 @@ json;
 
     //获取access_token的值
     public function access_token(){
-        $weixin = weixin();
-        $appid = $weixin['appid'];
-        $secret = $weixin['secret'];
-        $url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=".$appid."&secret=".$secret;
-        $output = $this->https_request($url);
-        $array = json_decode($output,true);
-        $access_token = $array['access_token'];
+        $this->access_tokens();
+		$condition['id']=1;
+		$ret = M('wxch_config')->where($condition)->find();
+		$access_token = $ret['access_token'];
         return  $access_token;
     }
-
-    //自定义菜单
-    public function menu(){
-        $access_token = $this->access_token();
-        $url = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token=".$access_token;
-        $data = <<<json
-		 {
-			"button":[
-			{
-	           "name":"测试中",
-			   "sub_button":[
-			   {
-					"type":"view",
-					"name":"e借款",
-					"url":"https://open.weixin.qq.com/connect/oauth2/authorize?appid=appid&redirect_uri=http://www.leeyears.com/index.php/Weixin/register&response_type=code&scope=snsapi_base&state=1#wechat_redirect"
-				},
-				{
-					"type":"click",
-					"name":"手机认证",
-					"key":"V01"
-				},
-				{
-					"type":"click",
-					"name":"身份认证",
-					"key":"V02"
-				},
-				{
-					"type":"view",
-					"name":"法律责任",
-					"url":"http://www.leeyears.com/index.php/Weixin/agreement1"
-				}]
-		    },
-			{
-	           "name":"测试中",
-			   "sub_button":[
-				{
-					"name":"个人资料",
-					"type":"click",
-	           		"key":"V08"
-				},
-				{
-					"name":"我要还款",
-					"type":"view",
-	           		"url":"https://open.weixin.qq.com/connect/oauth2/authorize?appid=appid&redirect_uri=http://www.leeyears.com/index.php/Weixin/loan_details&response_type=code&scope=snsapi_base&state=1#wechat_redirect"
-				},
-				{
-	               "type":"view",
-	               "name":"我要推广",
-	               "url":"https://open.weixin.qq.com/connect/oauth2/authorize?appid=appid&redirect_uri=http://www.leeyears.com/index.php/Weixin/code&response_type=code&scope=snsapi_base&state=1#wechat_redirect"
-	            }]
-		    },
-			{
-	           "name":"测试中",
-	           "sub_button":[
-	           {	
-	               "type":"click",
-	               "name":"有奖调研",
-	               "key":"V04"
-	            },
-	            {
-	               "type":"view",
-	               "name":"常见问题",
-	               "url":"http://www.leeyears.com/index.php/Weixin/problem"
-	            },
-	            {
-	               "type":"click",
-	               "name":"联系客服",
-	               "key":"V05"
-	            },
-	            {
-	               "type":"click",
-	               "name":"留言给CEO",
-	               "key":"V06"
-	            }]
-		    }]
-		 }
-json;
-        $output = $this->https_request($url,$data);
-        echo $output;
+	public function access_tokens(){
+			/*配置信息查询*/
+			$condition['id']=1;
+			$ret=M("wxch_config")->where($condition)->find();
+			$appid = $ret['appid'];
+			$appsecret = $ret['appsecret'];
+			$dateline = $ret['dateline'];
+			$time = time();
+		
+        if(($time - $dateline) > 7200){
+			$url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=$appid&secret=$appsecret";
+			$ret_json = $this->https_request($url);
+			$ret = json_decode($ret_json);
+            if($ret -> access_token){
+				/*更新配置信息*/
+				$data['id']=1;
+				$data['access_token']=$ret->access_token;
+				$data['dateline']=$time;
+				M('wxch_config')->save($data);
+            }
+        }elseif(empty($access_token)){
+			$url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=$appid&secret=$appsecret";
+			$ret_json = $this->https_request($url);
+			$ret = json_decode($ret_json);
+			if($ret->access_token){
+				/*更新配置信息*/
+				$data['id']=1;
+				$data['access_token']=$ret->access_token;
+				$data['dateline']=$time;
+				M('wxch_config')->save($data);
+			}
+		}
     }
-
-    private function update_info($wxid){
-        $access_token = $this->access_token();
-        $url = "https://api.weixin.qq.com/cgi-bin/user/info?access_token=$access_token&openid=$wxid";
-        $res_json = $this->https_request($url);
-        $w_user = json_decode($res_json, TRUE);
-        $w_sql = "UPDATE  `haoidcn_service` SET  `uname` =  '$w_user[nickname]',`headimgurl` =  '$w_user[headimgurl]' WHERE `openid` = '$wxid';";
-        $db=D();
-        $db->execute($w_sql);
+  private function update_info($wxid){
+            $access_token =  $this->access_token();
+			$url = "https://api.weixin.qq.com/cgi-bin/user/info?access_token=$access_token&openid=$wxid";
+			$res_json = $this->https_request($url);
+		    $w_user = json_decode($res_json, TRUE);
+			$w_sql = "UPDATE  `haoidcn_service` SET  `uname` =  '$w_user[nickname]',`headimgurl` =  '$w_user[headimgurl]'  WHERE `openid` = '$wxid';";
+			$db=D();
+			$db->execute($w_sql);
     }
-
-
 
 }

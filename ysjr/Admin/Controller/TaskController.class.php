@@ -4,12 +4,11 @@ namespace Admin\Controller;
 use Think\Controller;
 
 class TaskController extends CommonController {
-	
 	public function __construct(){
 		parent::__construct();
 		$this->assign("data",array('task' => " style='display:block';"));
 	}
-		
+
     public function index(){
 		$Task = D("card_task");		
 		
@@ -88,6 +87,7 @@ class TaskController extends CommonController {
     }
     //审核用户管理界面
     public function loan_task(){
+		
     	$userid = strtolower(I("session.userid"));
     	$user = D('user');
     	$loan_money = D('loan_money');
@@ -97,7 +97,8 @@ class TaskController extends CommonController {
     	$user_money_info = D('user_money_info');
     	$is_renewal = $user_money_info->select();
     	if($info['limits'] == '1'){
-    		$count = $user_money_info->where("is_adopt=0")->count();
+    		//$count = $user_money_info->where("is_adopt=0")->count();
+    		$count = $user_money_info->count();
     		$Page = new \Think\Page($count,10);
     		$Page->setConfig('prev',"上一页");
     		$Page->setConfig('next',"下一页");
@@ -105,8 +106,16 @@ class TaskController extends CommonController {
     		$Page->setConfig('last',"尾页");
     		$show = $Page->show();
     		$this->assign('page',$show);
-    		$list = $user_money_info->join("haoidcn_user_mobile ON haoidcn_user_money_info.phone=haoidcn_user_mobile.phone")->join("haoidcn_weixin_img ON haoidcn_user_money_info.openid=haoidcn_weixin_img.openid")->join("haoidcn_user_info as a ON haoidcn_user_money_info.phone=a.phone")->limit($Page->firstRow. ',' . $Page->listRows)->where("haoidcn_user_money_info.is_adopt=0")->order('is_renewal desc,apply_time')->select();
-    		$this->assign('list',$list);
+    		//$list = $user_money_info->join("haoidcn_user_mobile ON haoidcn_user_money_info.phone=haoidcn_user_mobile.phone")->join("haoidcn_weixin_img ON haoidcn_user_money_info.openid=haoidcn_weixin_img.openid")->join("haoidcn_user_info as a ON haoidcn_user_money_info.phone=a.phone")->limit($Page->firstRow. ',' . $Page->listRows)->where("haoidcn_user_money_info.is_adopt=0")->order('is_renewal desc,apply_time')->select();
+    		$list = $user_money_info->join("haoidcn_user_info as a ON haoidcn_user_money_info.openid=a.openid",'LEFT')
+					->field('haoidcn_user_money_info.*,a.name,a.time')
+					->limit($Page->firstRow. ',' . $Page->listRows)
+					/* ->where("haoidcn_user_money_info.is_adopt=0")  */
+					->order('is_renewal desc,apply_time')
+					->select();
+			 //echo D('user_money_info')->getLastSql();
+			 
+			$this->assign('list',$list);
     	}else if($info['limits'] == '2'){
     		$count = $user_money_info->count();
     		$Page = new \Think\Page($count,10);
@@ -418,7 +427,7 @@ class TaskController extends CommonController {
     	return $output;
     }
     //获取access_token的值
-    public function access_token(){
+   /*  public function access_token(){
     	$appid = "appid";
     	$secret = "appsecret";
     	$url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=".$appid."&secret=".$secret;
@@ -426,7 +435,7 @@ class TaskController extends CommonController {
     	$array = json_decode($output,true);
     	$access_token = $array['access_token'];
     	return  $access_token;
-    }
+    } */
     //审核把状态改成通过的方法
     public function adopt_ok(){
     	$userid = strtolower(I("session.userid"));
@@ -439,34 +448,36 @@ class TaskController extends CommonController {
     	}else if($dengji['limits'] == '3'){
     		$loan_people = $userid.'(代)';
     	}
-    	$phone = I('phone');
-    	$content = I('content');
+    	$id = I('id');
+		$content = I('content');
+		$money_num = I('money_num');
     	$level = I('level');
-    	$service = D('service');
-    	$service->where("phone='$phone'")->setField('level',$level);
-    	$user_money_info = D('user_money_info');
-    	$shengqing = $user_money_info->where("phone='$phone'")->order("id desc")->select();
-    	$loan_money = D('loan_money');
+		
+		$user_money_info=D('user_money_info')->where("id='$id'")->find();
+		$openid=$user_money_info['openid'];
+    	D('service')->where("openid='$openid'")->setField('level',$level);
+		
     	$time_length = I('time_length');
-    	$date = $loan_money->where("money_num='$content' and time_length='$time_length'")->find();
+    	//$date =D('loan_money')->where("money_num='$money_num' and time_length='$time_length'")->find();
+		
     	$info = array(
     			'state'=>'1',
     			'is_adopt'=>'1',
-    			'money_num'=>$content,
-    			'time_length'=>$date['time_length'],
+    			/* 'money_num'=>$money_num,
+    			'time_length'=>$time_length,
     			'letter'=>$date['letter'],
     			'interest'=>$date['interest'],
     			'account_money'=>$date['account_money'],
     			'sum'=>$content,
-    			'daozhang'=>$date['sum'],
+    			'daozhang'=>$date['sum'], */
     			'loan_people'=>$loan_people
     	);
-    	$time = $user_money_info->field("max(id) as id")->where("phone='$phone'")->find();
-    	$result = $user_money_info->where("id='{$time['id']}'")->save($info);
+    	
+    	$result = D('user_money_info')->where("id='$id'")->save($info);
+		
     	if($result){
-    		$res = $user_money_info->where("phone=$phone")->order("id desc")->select();
-    		$openid = $res[0]['openid'];
-    		$access_token = $this->access_token();
+    		$access_token = access_token();
+			$http_url="http://".$_SERVER['HTTP_HOST'];	
     		$url = "https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=".$access_token;
     		$data = <<<json
     		{
@@ -477,11 +488,11 @@ class TaskController extends CommonController {
 			         {
 			             "title":"恭喜您，初审通过!",
 			             "description":"
-申请额度：{$shengqing[0]['money_num']}元
+申请额度：{$user_money_info['money_num']}元
 平台审批额度：{$content}元
-实际到账金额：{$res[0]['daozhang']}元
-您的申请已通过初审，请点击<阅读全文>完成绑定/确认放款银行卡操作，感谢您对e快金的信任与支持",
-			    		 "url":"http://www.leeyears.com/index.php/Weixin/queren_loan?phone=$phone"
+实际到账金额：{$user_money_info['daozhang']}元
+您的申请已通过初审，请点击<阅读全文>完成绑定/确认放款银行卡操作，感谢您对学之友微额速达的信任与支持",
+			    		 "url":"$http_url/index.php/Weixin/queren_loan"
 			         }
 			         ]
 			    }
@@ -492,7 +503,7 @@ json;
     		$this->ajaxReturn($data);
     	}
     }
-    
+  
     public function no_adopt(){
     	$phone = I('phone');
     	$user_money_info = D('user_money_info');
@@ -519,7 +530,7 @@ json;
     	if($result){
     		$res = $user_money_info->where("phone=$phone")->order("id desc")->select();
     		$openid = $res[0]['openid'];
-    		$access_token = $this->access_token();
+    			$access_token = access_token();
     		$url = "https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=".$access_token;
     		$data = <<<json
     		{
@@ -564,7 +575,7 @@ json;
     	if($result){
     		$res = $user_money_info->where("id='{$time['id']}'")->find();
     		$openid = $res['openid'];
-    		$access_token = $this->access_token();
+    			$access_token = access_token();
     		$url = "https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=".$access_token;
     		$data = <<<json
     		{
@@ -632,20 +643,22 @@ json;
     	
     	if($info['limits'] == '1'){
     		$service = D('service');
-    		$count = $user_money_info->join("haoidcn_bank_info as a ON haoidcn_user_money_info.phone=a.phone")->join("haoidcn_service as b ON haoidcn_user_money_info.phone=b.phone")->where('is_adopt=1  and is_payment=1 and repayment_state=0')->count();
-    		$Page = new \Think\Page($count,10);
+    		$count = $user_money_info->join("haoidcn_bank_info as a ON haoidcn_user_money_info.openid=a.openid")->join("haoidcn_service as b ON haoidcn_user_money_info.openid=b.openid")->where('is_adopt=1 and is_success=0 and is_payment=1 and repayment_state=0')->count();
+    		
+			$Page = new \Think\Page($count,10);
     		$Page->setConfig('prev',"上一页");
     		$Page->setConfig('next',"下一页");
     		$Page->setConfig('first',"首页");
     		$Page->setConfig('last',"尾页");
     		$show = $Page->show();
-    		$list = $user_money_info->query("select a.phone,apply_time,money_num,time_length,state,b.is_payment,d.is_Loan,loan_people,is_adopt,daozhang,bank_num,account_opening,name,b.condition from haoidcn_user_money_info as a left join haoidcn_bank_info as b ON a.openid = b.openid left join haoidcn_weixin_img as c ON a.openid=c.openid left join haoidcn_service as d ON a.openid=d.openid where is_Loan=0 and state=1 and is_adopt=1 and is_payment=1 and b.condition=0 and repayment_state=0 order by apply_time desc");
-    		$this->assign('page',$show);
+    		$list = $user_money_info->query("select a.phone,a.id,apply_time,money_num,time_length,state,b.is_payment,d.is_Loan,loan_people,is_adopt,daozhang,bank_num,account_opening,name,b.condition from haoidcn_user_money_info as a left join haoidcn_bank_info as b ON a.openid = b.openid left join haoidcn_weixin_img as c ON a.openid=c.openid left join haoidcn_service as d ON a.openid=d.openid where  is_success=0 and state=1 and is_adopt=1 and is_payment=1 and b.condition=0 and repayment_state=0 order by apply_time desc");
+    		
+			$this->assign('page',$show);
     		$this->assign('list',$list);
     	}else if($info['limits'] == '3'){
     		$province = $info['province'];
     		$city = $info['city'];
-    		$list = $user_money_info->query("select a.phone,apply_time,money_num,time_length,state,b.is_payment,d.is_Loan,loan_people,daozhang,bank_num,account_opening,b.name,b.condition from haoidcn_user_money_info as a left join haoidcn_bank_info as b ON a.openid = b.openid left join haoidcn_weixin_img as c ON a.openid=c.openid left join haoidcn_service as d ON a.openid=d.openid left join haoidcn_user_work as e ON a.openid=e.openid where is_Loan=0 and  is_adopt=1 and state=1 and is_payment=1 and b.condition=0 and repayment_state=0 and e.province='$province' and e.city='$city' and a.loan_people like '$userid%' order by apply_time desc");
+    		$list = $user_money_info->query("select a.phone,a.id,apply_time,money_num,time_length,state,b.is_payment,d.is_Loan,loan_people,daozhang,bank_num,account_opening,b.name,b.condition from haoidcn_user_money_info as a left join haoidcn_bank_info as b ON a.openid = b.openid left join haoidcn_weixin_img as c ON a.openid=c.openid left join haoidcn_service as d ON a.openid=d.openid left join haoidcn_user_work as e ON a.openid=e.openid where  is_success=0 and  is_adopt=1 and state=1 and is_payment=1 and b.condition=0 and repayment_state=0 and e.province='$province' and e.city='$city' and a.loan_people like '$userid%' order by apply_time desc");
     		$this->assign('list',$list);
     	}
     	$data = array(
@@ -660,13 +673,20 @@ json;
     
     //放款
     public function loan_success(){
-    	$phone = I('phone');
+    	$id = I('id');
+		$user_money_info = D('user_money_info');
+		
+    	$loan_info = $user_money_info->where("id='$id'")->find();
+		
+		$openid = $loan_info['openid'];
+		$phone = $loan_info['phone'];
+		
     	$service = D('service');
-    	$service->where("phone='$phone'")->setField('is_Loan','1');
-    	$list = $service->where("phone='$phone'")->select();
-    	$id = $list[0]['openid'];
-    	$user_money_info = D('user_money_info');
-    	$loan_info = $user_money_info->where("phone='$phone'")->order("id desc")->select();
+    	$service->where("openid='$openid'")->setField('is_Loan','1');
+		
+    	$user_money_info->where("id='$id'")->setField('is_success','1');
+		
+    	
     	$bank_info = D('bank_info');
     	$bank = $bank_info->where("phone='$phone'")->select();
     	if(empty($bank)){
@@ -675,18 +695,19 @@ json;
     	}
     	$time = date('Y-m-d H:i:s',time());
     	$info = array(
-    			'openid'=>$id,
+				'user_money_info'=>$id,
+    			'openid'=>$openid,
     			'phone'=>$phone,
     			'bank_num'=>$bank[0]['bank_num'],
-    			'money_num'=>$loan_info[0]['money_num'],
-    			'time_length'=>$loan_info[0]['time_length'],
-    			'letter'=>$loan_info[0]['letter'],
-    			'account_money'=>$loan_info[0]['account_money'],
-    			'interest'=>$loan_info[0]['interest'],
-    			'sum'=>$loan_info[0]['sum'],
-    			'actual_money'=>$loan_info[0]['daozhang'],
+    			'money_num'=>$loan_info['money_num'],
+    			'time_length'=>$loan_info['time_length'],
+    			'letter'=>$loan_info['letter'],
+    			'account_money'=>$loan_info['account_money'],
+    			'interest'=>$loan_info['interest'],
+    			'sum'=>$loan_info['sum'],
+    			'actual_money'=>$loan_info['daozhang'],
     			'payment_time'=>$time,
-    			'appoint_time'=>date('Y-m-d',strtotime("{$time} +{$loan_info[0]['time_length']} day")),
+    			'appoint_time'=>date('Y-m-d',strtotime("{$time} +{$loan_info['time_length']} day")),
     			'actual_time'=>'',
     			'trade_mode'=>"",
     			'wait_xuqi'=>'',
@@ -695,22 +716,22 @@ json;
     	$payment_list = D('payment_list');
     	$result = $payment_list->add($info);
     	if($result){
-    		$access_token = $this->access_token();
+    			$access_token = access_token();
     		$url = "https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=".$access_token;
     		$data = <<<json
     		{
-			    "touser":"$id",
+			    "touser":"$openid",
 			    "msgtype":"news",
 			    "news":{
 			        "articles": [
 			         {
 			             "title":"交易提醒",
 			             "description":"尊敬的用户，您好
-您在{$loan_info[0]['apply_time']}期间申请的借款{$loan_info[0]['money_num']}元已成功汇到您的银行卡！
+您在{$loan_info['apply_time']}期间申请的借款{$loan_info['money_num']}元已成功汇到您的银行卡！
 交易时间：{$time}
 交易类型：收款
 交易金额：{$info['actual_money']}元,已扣除相关费用
-备注：如有疑问，请给e快金微信号留言",
+备注：如有疑问，请给学之友微额速达微信号留言",
 			         }
 			         ]
 			    }
@@ -724,15 +745,28 @@ json;
     
     
     public function loan_fail(){
-    	$phone = I('phone');
+    	$id = I('id');
+		
     	$content = I('content');
+		
     	$service = D('service');
-    	$service->where("phone='$phone'")->setField("is_Loan",2);
-    	$info = $service->where("phone='$phone'")->find();
-    	$openid = $info['openid'];
+		
+		$user_money_info = M('user_money_info')->where("id='$id'")->find();
+		
+		$openid = $user_money_info['openid'];
+		
+    	$service->where("openid='$openid'")->setField("is_Loan",2);
+		
+    	
+		$save_data['is_success'] = 2;
+		$save_data['fail_content'] = $content;
+		$save_data['is_adopt'] = 2;
+    	M('user_money_info')->where("id='$id'")->save($save_data);
+		
     	$bank_info = D('bank_info');
-    	$bank_info->where("phone='$phone'")->setField("condition",1);
-    	$access_token = $this->access_token();
+		
+    	$bank_info->where("openid='$openid'")->setField("condition",1);
+    	$access_token = access_token();
     	$url = "https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=".$access_token;
     	$text = <<<json
     		{
@@ -754,8 +788,8 @@ json;
     }
     
     public function fangkuanshibai(){
-    	$phone = I('phone');
-    	$this->assign('phone',$phone);
+    	$id = I('id');
+    	$this->assign('id',$id);
     	$this->display();
     }
     
@@ -767,31 +801,44 @@ json;
     }
     
     public function details(){
-    	$phone = I('phone');
+    	$id = I('id');
+		
+		$map['id'] = $id;
+		$openid = D("user_money_info")->where($map)->getField('openid');
+		$this->assign('id',$id);
+		
     	$user = D('service');
     	$xuesheng = D('xuesheng');
     	$user_money_info = D("user_money_info");
-    	$list = $user->query("select * from haoidcn_service as a left join haoidcn_user_info as b ON a.phone=b.phone  left join haoidcn_user_gam as d ON a.phone=d.phone left join haoidcn_user_mobile as e ON a.phone=e.phone left join haoidcn_bank_info as f ON a.phone=f.phone left join haoidcn_weixin_img as g ON a.openid=g.openid left join haoidcn_user_money_info as h ON a.phone=h.phone left join haoidcn_user_mobile as y ON a.phone=y.phone where a.phone='$phone'");
+    	$list = $user->query("
+		select * from haoidcn_service as a 
+		left join haoidcn_user_info as b ON a.openid=b.openid 
+		left join haoidcn_user_gam as d ON a.openid=d.openid 
+		left join haoidcn_user_mobile as e ON a.openid=e.openid
+		left join haoidcn_bank_info as f ON a.openid=f.openid 
+		left join haoidcn_weixin_img as g ON a.openid=g.openid 
+		left join haoidcn_user_money_info as h ON a.openid=h.openid
+		left join haoidcn_user_mobile as y ON a.openid=y.openid where a.openid='$openid'");
+		
     	$this->assign('list',$list);
-    	$this->assign('phone',$phone);
+    
     	$user_work = D('user_work');
-    	$work = $user_work->where("phone='$phone'")->find();
+    	$work = $user_work->where("openid='$openid'")->find();
     	$this->assign('work',$work);
     	$payment_list = D('payment_list');
-    	$info = $payment_list->where("phone='$phone' and is_repayment=0")->find();
+    	$info = $payment_list->where("openid='$openid' and is_repayment=0")->find();
     	$this->assign('info',$info);
-    	$xs = $xuesheng->where("phone='$phone'")->find();
-    	$res = $user_money_info->where("phone='$phone'")->order("id desc")->select();
+    	$xs = $xuesheng->where("openid='$openid'")->find();
+    	$res = $user_money_info->where("openid='$openid'")->order("id desc")->select();
     	$this->assign('xuesheng',$xs);
     	$this->assign('res',$res);
     	$this->display();
     }
     public function ok_adopt(){
-    	$phone = I('phone');
-    	$user_money_info = D('user_money_info');
-    	$time = $user_money_info->field("max(id) as id")->where("phone='$phone'")->find();
-    	$list = $user_money_info->where("id='{$time['id']}'")->find();
-    	$this->assign('phone',$phone);
+		$id = I('id');
+		$map['id'] = $id;
+    	$list = D('user_money_info')->where($map)->find();
+    	$this->assign('id',$id);
     	$this->assign('list',$list);
     	$this->display();
     }
@@ -817,7 +864,7 @@ json;
     	}
     	$payment_list = D('payment_list');
     	$res = $payment_list->where("phone='$phone'")->select();
-    	$access_token = $this->access_token();
+    		$access_token = access_token();
     		$url = "https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=".$access_token;
     		$data = <<<json
     		{
@@ -832,7 +879,7 @@ json;
 申请时间：{$list['apply_time']}
 到期时间:{$res[0]['appoint_time']}
 续期金额：{$list['money_num']}元
-备注：如有疑问，请给e快金微信号留言",
+备注：如有疑问，请给学之友微额速达微信号留言",
 			         }
 			         ]
 			    }

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>e借款</title>
+<title>{$Think.config.TITLE}</title>
 <link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
 <link href="{$Think.config.URL}/css/Weixin.verify_user_info.css" rel="stylesheet">
 <script type="text/javascript" src="{$Think.config.URL}js/jquery-1.9.1.min.js"></script>
@@ -174,8 +174,7 @@ div.error
 			    </label>
 			  </div>
 			  
-			  <input type="hidden" value="{$phone}"  name="info[phone]">
-			  <input type="hidden" value="{$openid}"  name="info[openid]">
+			 
 			  <button style="width: 100%;" type="button" class="btn btn-primary" id="next" onclick="add_user_info()">下一页</button>
 			</form>
 	      </div>
@@ -245,8 +244,7 @@ div.error
 			    <input type="text" class="form-control" name="info[zip_code]" value="{$list2[0]['zip_code']}" placeholder="请输入单位固定号码(选填):区号-电话">
 			  </div>
 			  <div class="or">
-			  		<input type="hidden" value="{$openid}"  name="info[openid]">
-				  	<input type="hidden" value="{$phone}"  name="info[phone]">
+			  		
 				  	<input type="hidden" value=""  name="info[name]" id="user_name">
 				   	<button type="button" class="pull-left btn btn-primary" id="last">上一页</button>
 			  		<button type="button" class="pull-right btn btn-primary" id="lower" onclick="add_user_work()">下一页</button>		  	
@@ -319,8 +317,7 @@ div.error
 					<a href="{:U('Weixin/xuexin')}" style="color:red;">截图案例</a>
 				</div>
 				<div class="or">
-			  		<input type="hidden" value="{$openid}"  name="info[openid]">
-				  	<input type="hidden" value="{$phone}"  name="info[phone]">
+			  		
 				  	<input type="hidden" value=""  name="info[name]" id="xue_name">
 			  		<button type="button" class="pull-right btn btn-primary" id="lower" onclick="add_xuesheng()">下一页</button>		  	
 			  </div>
@@ -387,7 +384,7 @@ div.error
 			    <input type="text" class="form-control" name="info[gam_mobile2]" value="{$list3[0]['gam_mobile2']}" placeholder="请输入社交联系人的手机号码">
 			  </div>
 			  <div class="or clearfix">
-			  	<input type="hidden" value="{$phone}"  name="info[phone]">
+			  	
 			  	<input type="hidden" value=""  name="info[name]" id="name1">
 			  	<input type="hidden" value="{$openid}" name="info[openid]">
 			  	<button type="button" style="width: 45%" class="btn pull-left btn-primary" id="upper">上一页</button>
@@ -861,9 +858,8 @@ function add_user_gam(){
 		datatype:"json",
 		success:function(data){
 			if(data == '提交'){
-				var phone = $("input[name='info[phone]']").val();
-				var openid = $("input[name='info[openid]']").val();
-				setTimeout(function(){window.location.href="/index.php/Weixin/zhengfeng?phone="+phone+"&openid="+openid},1000);
+				
+				setTimeout(function(){window.location.href="/index.php/Weixin/zhengfeng"},1000);
 			}else if(data == '信息填写不完整'){
 				$('.class').css('display','none');
 				alert(data);
