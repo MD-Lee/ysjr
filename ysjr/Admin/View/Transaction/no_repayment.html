@@ -67,6 +67,7 @@ jQuery(document).ready(function(){
                             			<th width="100px;">金额</th>
                             			<th width="100px;">期限</th>
                             			<th width="100px;">续期数</th>
+                            			<th width="100px;">容时期</th>
                             			<th width="100px;">到期还款额</th>
                             			<th width="100px;">放款日期</th>
                             			<th width="100px;">约定还款日期</th>
@@ -84,6 +85,7 @@ jQuery(document).ready(function(){
                             				<td>{$vo.money_num}</td>
                             				<td>{$vo.time_length}</td>
                             				<td>{$vo.is_renewal}</td>
+                            				<td>{$vo.volume_time}</td>
                             				<td>{$vo.sum}</td>
                             				<td>{$vo.payment_time}</td>
                             				<td>{$vo.appoint_time}</td>
@@ -107,17 +109,19 @@ jQuery(document).ready(function(){
                             				<if condition="$vo.huankuan_type eq 1">
                             					全额还款
                             				<elseif condition="$vo.huankuan_type eq 2"/>
+											
                             					续期费付款
                             				<else/>
                             					
                             				</if>
+											<!-- <input type="hidden" id="huankuan_type" value="{$vo['huankuan_type']}"> -->
                             				</td>
                             				<td>{$vo.loan_people}</td>
                             				<td>
                             				<if condition="$vo.wait_xuqi eq 2">
                             					已收款
                             				<elseif condition="$vo.is_repayment eq 0"/>
-                           						<a href="#myModal" role="button" class="btn btn-default" data-toggle="modal" onclick="loan(this)" id="{$vo.phone}">审核</a>
+                           						<a href="#myModal" role="button" class="btn btn-default" data-toggle="modal" onclick="loan({$vo.id},{$vo['huankuan_type']})" id="{$vo.id}">审核</a>
                             				<elseif condition="$vo.is_repayment eq 1"/>
                             					已还款
                             				</if>
@@ -138,8 +142,11 @@ jQuery(document).ready(function(){
 						  <div class="modal-body">
 						    <p>是否已经确定还款</p>
 						  </div>
+						  <div id="showtype" style="display:none">
+						  信用度<input type="text" value="" id="credit"/>
+						  </div>
 						  <div class="modal-footer">
-						  <input type="hidden" value="" id="phone">
+						  <input type="hidden" value="" id="pid">
 						    <button class="btn" data-dismiss="modal" aria-hidden="true">取消</button>
 						    <button class="btn btn-primary" onclick="is_Loan()">确定收款</button>
 						    <button class="btn btn-primary" onclick="no_Loan()">未收款</button>
@@ -165,16 +172,23 @@ jQuery(document).ready(function(){
 </body>
 <script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
 <script>
-function loan(obj){
-	var phone = obj.id;
-	$('#phone').val(phone);
+function loan(id,huankuan_type){
+	var id = id;
+	var type = huankuan_type;
+	$('#pid').val(id);
+	
+	if(type == 1){
+	$("#showtype").show();
+	}
 }
 function is_Loan(){
-	var phone = $('#phone').val();
+	var pid = $('#pid').val();
+	var credit = $('#credit').val();
+	
 	$.ajax({
 		type:"POST",
 		url:"{:U('Transaction/is_loan')}",
-		data:{'phone':phone},
+		data:{'pid':pid,'credit':credit},
 		datatype:"jaon",
 		success:function(data){
 			setTimeout(function(){window.location.reload()},1000);
@@ -182,11 +196,11 @@ function is_Loan(){
 	})
 }
 function no_Loan(){
-	var phone = $('#phone').val();
+	var pid = $('#pid').val();
 	$.ajax({
 		type:"POST",
 		url:"{:U('Transaction/no_loan')}",
-		data:{'phone':phone},
+		data:{'pid':pid},
 		datatype:"jaon",
 		success:function(data){
 			setTimeout(function(){window.location.reload()},1000);

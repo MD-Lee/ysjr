@@ -14,9 +14,12 @@
 		<div class="wrap" style=" margin-top: 40px;">
 			<div class="tab-tit clearfix" id="tabTit">
 				<span class="sel fl data">我要还款</span>
+				
 				<span class="fl loan">我想续期</span>
+				
 			</div>
 			<div class="tab-con" id="tabCon">
+			
 			<if condition="$days gt 0">
 				<div class="block lan">
 					<p class="overdue">提前还款信用增值！</p>
@@ -44,20 +47,39 @@
 							</tbody>
 						</table>
 					</div>
+						<php>
+							$rongshi = 0
+						</php>
+						<input type="hidden" value="{$rongshi}">	
 					<button class="sure" id="regNow">立即还款</button>
 				</div>
 			<elseif condition="$days lt 0"/>
+			
+				
+				
 				<div class="block lan">
+				<if condition="$is_volume eq 0">
+					<p class="yuqi">您已在容时期，请珍惜您的个人信用！</p>
+				<else/>	
 					<p class="yuqi">您已逾期，请珍惜您的个人信用！</p>
+				</if>
 					<p class="yuqiing">
 						<span class="days sigh">
 							<strong>!</strong>
 						</span>
 						<span class="days font">
-						<php>
+						<if condition="$is_volume eq 0">
+							<php>
+								$tian = str_replace("-","",$days);
+							</php>
+								容时已达{$tian}天
+						<else/>
+							<php>
 							$tian = str_replace("-","",$days);
-						</php>
+							</php>
 							逾期已达{$tian}天
+						</if>							
+						
 						</span>
 					</p>
 					<div class="table">
@@ -75,25 +97,58 @@
 									<td><span>{$list['sum']}</span>元</td>
 									<td><a href="javascript:;" class="what affirm">借款详情</a></td>
 								</tr>
-								<tr>
-									<td>逾期罚金</td>
-									<td>
-									<span>
-									<php>
-										$yuqi = $tian * $overdue
-									</php>
-									{$yuqi}
-									</span>元</td>
-									<td><a href="javascript:;" id="2"  class="what service">？这是什么</a></td>
-								</tr>
+									<if condition="$is_volume eq 0">
+									<tr>
+										<td>容时罚金</td>
+										<td>
+										<span>
+										<php>
+											$rongshi = $tian * $volume_interest
+										</php>
+										{$rongshi}
+										</span>元</td>
+										<td><a href="javascript:;" id="2"  class="what service">？这是什么</a></td>
+									</tr>
+									<else/>
+										<tr>
+											<td>逾期罚金</td>
+											<td>
+											<span>
+											<php>
+												$yuqi = $tian * $overdue
+											</php>
+											{$yuqi}
+											</span>元</td>
+											<td><a href="javascript:;" id="2"  class="what service">？这是什么</a></td>
+										</tr>
+									<tr>
+										<td>容时罚金</td>
+										<td>
+										<span>
+										<php>
+											$rongshi = $tian * $volume_interest
+										</php>
+										{$rongshi}
+										</span>元</td>
+										<td><a href="javascript:;" id="5"  class="what service">？这是什么</a></td>
+									</tr>
+									</if>		
+								
 								<tr>
 									<td>需还</td>
 									<td>
 										<span id="sum3">
-										<php>
-										$sum1 = $sum + $yuqi;
-										</php>
-										{$sum1}
+										<if condition="$is_volume eq 0">
+											<php>
+												$sum1 = $sum  +$rongshi;
+												</php>
+											{$sum1}
+										<else/>
+											<php>
+											$sum1 = $sum +$yuqi +$rongshi;
+											</php>
+											{$sum1}
+										</if>
 										</span>元
 									</td>
 									<td></td>
@@ -106,21 +161,28 @@
 			</if>
 				
 				<div class="lan ">
+				<if condition="$is_volume eq 0">
 					<div class="renewal">
 						<p class="prompt">
 							<span></span>
 						</p>
 						<div class="list">
-							<p class="txt">您必须现在结清本期息费，及续期服务费，扣款成功后自助续期方可生效！</p>
+							<p class="txt">您必须现在结清本期息费，及续期服务费，扣款成功后自助续期方可生效</p>
 							<div class="table" style="margin-bottom:0!important;border:0;padding: 0;margin-top: 10px;">
 								<table>
 									<thead>
-									<if condition="$days lt 0">
+									<if condition="$days lt 0 ">
+										
 										<tr>
-											<td>续期罚金</td>
-											<td><span id="yuqi">{$yuqi}</span>元</td>
+											<td>容时罚金</td>
+											<td><span id="yuqi">{$rongshi}</span>元</td>
 											<td>&nbsp;</td>
 										</tr>
+										<else/>
+										<php>
+											$rongshi = 0
+										</php>
+										<input type="hidden" value="{$rongshi}">	
 									</if>
 										<!-- <tr>
 											<td>本期息费</td>
@@ -138,10 +200,11 @@
 												<a href="javascript:;" id="3" class="what service">？这是什么</a>
 											</td>
 										</tr>
+										
 										<tr style="border-bottom: 0;">
 											<td>应还总额</td>
 											<td>
-											<php>$sum2 = $money + $yuqi</php>
+											<php>$sum2 = $money + $rongshi</php>
 											<span id="sum2">{$sum2}</span>元</td>
 											<td>
 												<a href="javascript:;" class="what affirm">借款详情</a>
@@ -192,18 +255,21 @@
 						<!--遮盖层-->
 						<div class="over"></div>
 					</div>
+					<else/>
+					您已逾期，不能续期
+					</if>
 				</div>
 			</div>
 			<!-- 续期弹窗 -->
 			<div class="rollover" id="rollover">
 				<div class="repay">
 					<form action="">
-						<p class="cue">续期服务必须<strong>现在</strong>结清本期息费，及续期服务费（<span>123</span>元）请确保您的您的余额充足，扣款失败将严重影响您的个人信用。</p>
+						<p class="cue">续期服务必须<strong>现在</strong>结清本期息费，<!-- 及续期服务费（<span>123</span>元） -->请确保您的您的余额充足，扣款失败将严重影响您的个人信用。</p>
 						<p class="amount">扣款总额：<span class="amounts b_amounts" id="kou"></span>元</p>
 						<p class="pay">支付方式：</p>
 						<div class="select-bank">
 							<select name="" id="testSelect2">
-								<!-- <option value="1">建设银行(尾号{$bank})</option> -->
+								<option value="1">银行卡</option>
 								<option value="2">支付宝付款</option>
 							</select>
 							<span class="select-icon"></span>
@@ -233,11 +299,11 @@
 						<p class="pay">支付方式：</p>
 						<div class="select-bank">
 							<select name="" id="testSelect">
-								<!-- <option value="3">建设银行(尾号{$bank})</option> -->
+								<option value="3">银行卡</option> 
 								<option value="2">支付宝付款</option>
 							</select>
 							<span class="select-icon"></span>
-						</div>
+						</div> 
 						<button type="button" class="sure button link">确认</button>
 						<button type="button" class="cancel sure button" id="abolish" type="button">取消</button>
 					</form>
@@ -401,6 +467,9 @@
 			} else if(aa == 1) {
 				$(".text p").text("针对不按纳税期限缴纳税款或者不按还款期限归还贷款，按滞纳天数加收滞纳款项一定比例的金额");
 			}
+			else if(aa == 5) {
+				$(".text p").text("容时罚款说明待定");
+			}
 		})
 		$(".got").click(function() {
 			$(".xuqi").hide()
@@ -409,8 +478,22 @@
 		//续期 
 		$(".link2").click(function() {
 			var aa= $('#testSelect2 option:selected').val();//选中的值
+		
+			var volume_money = {$rongshi};
+			
+			
 			if(aa == 1){
 				var id = $("#user_money_id").val();
+				var money = $(".b_amounts").text();
+			
+				var time_length = $(".change").find("span").text();
+				var sum = $(".sum").text();
+				var appoint_time = $(".span").text();
+				var type = 2;
+				var aa =2;
+				window.location.href="/index.php/Weixin/bring?id="+id+"&money="+money+"&time_length="+time_length+"&sum="+sum+"&appoint_time="+appoint_time+"&type="+type+"&aa="+aa+"&volume_money="+volume_money;
+		
+				/*var id = $("#user_money_id").val();
 				var money = $(".b_amounts").text();
 				var phone = $("#phone").val();
 				
@@ -431,7 +514,7 @@
 					success:function(data){
 						setTimeout(function(){WeixinJSBridge.call('closeWindow')},1000);
 					}
-				})
+				})*/
 			}else if(aa==2) {
 				var id = $("#user_money_id").val();
 				var money = $(".b_amounts").text();
@@ -440,15 +523,25 @@
 				var sum = $(".sum").text();
 				var appoint_time = $(".span").text();
 				var type = 2;
-				window.location.href="/index.php/Weixin/bring?id="+id+"&money="+money+"&time_length="+time_length+"&sum="+sum+"&appoint_time="+appoint_time+"&type="+type;
+				var aa =1;
+				window.location.href="/index.php/Weixin/bring?id="+id+"&money="+money+"&time_length="+time_length+"&sum="+sum+"&appoint_time="+appoint_time+"&type="+type+"&aa="+aa+"&volume_money="+volume_money;
 			}
 		})
 		
 		
 		$(".link").click(function() {
+		
 			var aa= $('#testSelect option:selected').val();//选中的值
+			
+			var volume_money = {$rongshi};
+			
 			if(aa == 3){
+				var id = $("#user_money_id").val();
 				var money = $(".a_amounts").text();
+				var type = 1;
+				var aa =2;//银行卡还款
+				window.location.href="/index.php/Weixin/bring?id="+id+"&money="+money+"&type="+type+"&aa="+aa+"&volume_money="+volume_money;
+				/*var money = $(".a_amounts").text();
 				var id = $("#user_money_id").val();
 				$.ajax({
 					type:"POST",
@@ -461,12 +554,13 @@
 					success:function(data){
 						setTimeout(function(){WeixinJSBridge.call('closeWindow')},1000);
 					}
-				})
+				})*/
 			}else if(aa==2) {
 				var id = $("#user_money_id").val();
 				var money = $(".a_amounts").text();
 				var type = 1;
-				window.location.href="/index.php/Weixin/bring?id="+id+"&money="+money+"&type="+type;
+				var aa =1;
+				window.location.href="/index.php/Weixin/bring?id="+id+"&money="+money+"&type="+type+"&aa="+aa+"&volume_money="+volume_money;
 			}
 		})
 	</script>

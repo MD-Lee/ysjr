@@ -9,20 +9,44 @@
 <script type="text/javascript" src="{$Think.config.URL}js/jquery-1.9.1.min.js"></script>
 <script type="text/javascript" src="{$Think.config.URL}js/jquery.validate.min.js"></script>
 <script type="text/javascript" src="{$Think.config.URL}js/jquery.form-3.51.0.js"></script>
+<style>
+.class {
+	-webkit-animation:rotage-change 2s linear 0.5s infinite ;
+}
+@-webkit-keyframes rotage-change {
+             /*起始*/
+         from {         
+              -webkit-transform: rotate(0deg);
+         }
+         /*结束*/
+         to {
+              -webkit-transform: rotate(360deg);
+         }
+      }
+
+</style>
 </head>
 <body>
 	<div class="container">
+	
 	  <form id="form" action="{:U('Weixin/verify_mobile_method')}">
 		  <div align="center" class="text">
 		  	<p id="phone">您的手机号：<span id="phoneInfo">{$telString}</span></p>
 		  	<p>所属运营商：<span id="operator">{$carrier}</span></p>
 		  </div>
-		  <div class="form-group">
-		    <input type="text" class="form-control" name="info[service_pwd]" placeholder="手机服务密码" style="width:70%;float:left;">
+		 <div class="form-group">
+		    <input type="text" class="form-control" value="{$list['name']}" name="info[name]" placeholder="真实姓名" >
+		  </div> 
+		   <div class="form-group">
+		    <input type="text" class="form-control" value="{$list['idcard']}" name="info[idcard]" placeholder="证件号码" >
+		  </div> 
+		 
+		  <!-- <div class="form-group">
+		    <input type="text" class="form-control" value="{$list['service_pwd']}" name="info[service_pwd]" placeholder="手机服务密码" style="width:70%;float:left;">
 		    <button type="button" class="btn btn-primary what" style="width:30%">
 		    	<a href="{:U('Weixin/guide')}">忘记密码？</a>
 		    </button>
-		  </div>
+		  </div> -->
 		  <div class="form-group clearfix" >
 		    <input type="text" class="form-control" name="info[verify]" placeholder="请输入图片验证码" style="width:70%;float:left;">
 		    <p class="pull-left drawing" >
@@ -30,9 +54,12 @@
 		    </p>
 		    <a href="#" onclick="replace_verify()"><p>换一张</p></a>
 		  </div>
-
+		 
 		  <a href="#" style="display: block;line-height: 45px;border-radius: 30px;" class="btn btn-primary" onclick="verify_mobile_method()">下一步</a>
 	  </form>
+	  <div class="class" style="display:none;width: 50px;height: 50px;position: fixed;left: 45%;top:35%;">
+		<img src="{$Think.config.URL}/images/xianjinbashi/jiazai.png" width="50px" height="50px">
+	</div>
 	</div>
 </body>
 <script>
@@ -53,20 +80,40 @@ function checkText(){
 		},
 		errorElement: "div",
 		rules:{
-			"info[service_pwd]":{
+			/*"info[service_pwd]":{
 				required:true,
 				number:true,
 				maxlength:6
+			},*/
+			"info[name]":{
+				required:true,
+				
+				maxlength:12
+			},
+			"info[idcard]":{
+				required:true,
+				number:true,
+				maxlength:18
 			},
 			"info[verify]":{
 				required:true
 			}
 		},
 		messages:{
-			"info[service_pwd]":{
+			/*"info[service_pwd]":{
 				required:'请输入您的运营商服务密码',
 				number:"请输入正确的服务密码",
 				maxlength:"请输入正确的服务密码"
+			},*/
+			"info[name]":{
+				required:'请输入您的真实姓名',
+				
+				maxlength:"请输入正确的真实姓名"
+			},
+			"info[idcard]":{
+				required:'请输入您的证件号码',
+				number:"请输入正确的证件号码",
+				maxlength:"请输入正确的证件号码"
 			},
 			"info[verify]":{
 				required:'请输入图形验证码'
@@ -77,6 +124,7 @@ function checkText(){
 //把信息传到后台验证
 function verify_mobile_method(){
 	if(!checkText().form())return;
+	$('.class').css('display','block');
 	var phone = $('#phone').find('span').text();
 	$('#form').ajaxSubmit({
 		type:"POST",
@@ -85,11 +133,22 @@ function verify_mobile_method(){
 		datatype:"json",
 		success:function(data){
 			if(data == '下一步'){
-				var phone = $('#phone').find('span').text();
-				var openid = $('#openid').val();
-				setTimeout(function(){window.location.href="/index.php/Weixin/info?phone="+phone},1000);
+				alert("验证成功");
+				WeixinJSBridge.call('closeWindow');
+				
 			}else{
-				alert(data);
+				$('.class').css('display','none');
+				//alert(data);
+				if(data == "1"){
+					alert("亲，验证码不正确");
+				}else if(data == "2"){
+					alert("亲，信息不正确！请检查填写的是否正确");
+				}else if(data == "3"){
+					alert("亲,运营商正忙,请稍后再试!");
+				}else{
+					alert("请求信息正在路上");
+				}
+				//alert(data);
 			}
 		}
 	})

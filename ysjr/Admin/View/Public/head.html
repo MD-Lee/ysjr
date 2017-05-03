@@ -48,7 +48,7 @@
 	                        		</if>
 	                        	</a>
 	                        </li>
-	                        <li {$data.sh_two07}>
+	                        <!-- <li {$data.sh_two07}>
 	                        	<a href="{:U('Admin/bank_info')}">
 		                        	<if condition="$bank_list eq 0">
 		                        		银行卡绑定信息
@@ -56,7 +56,7 @@
 		                        		银行卡绑定信息<span style="color:red;margin-left:10px;">({$bank_list})</span>
 		                        	</if>
 	                        	</a>
-	                        </li>
+	                        </li> -->
 	                        <li  {$data.sh_two09}>
 	                        	<a href="{:U('Task/examine_list')}">
 	                        		<if condition="$fangkuang eq 0">
@@ -135,6 +135,7 @@
                 		<li {$data.sh_two23}><a href="{:U('Admin/money_manage')}">借款套餐配置</a></li>
                 		<li {$data.sh_two24}><a href="{:U('Admin/overdue')}">逾期配置</a></li>
                 		<li {$data.sh_two28}><a href="{:U('Admin/xuqi')}">续期配置</a></li>
+                		<li {$data.sh_two33}><a href="{:U('Admin/volume')}">容时配置</a></li>
                 		<li {$data.sh_two29}><a href="{:U('Admin/admin_data')}">资料配置</a></li>
                         <li {$data.sh_two26}><a href="{:U('Index/editprofile')}">修改密码</a></li>
                         <li {$data.sh_two27}><a href="{:U('Daoqi/daoqi')}">到期提醒配置</a></li>

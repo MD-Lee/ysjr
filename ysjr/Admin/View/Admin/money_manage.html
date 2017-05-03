@@ -9,7 +9,12 @@
 <include file="Public/header" />
 
 <!-- header end -->
-
+<link rel="stylesheet" href="//apps.bdimg.com/libs/jqueryui/1.10.4/css/jquery-ui.min.css">
+<script src="//apps.bdimg.com/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="{$Think.config.URL}js/jquery.cookie.js"></script>
+<script src="//apps.bdimg.com/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+<!-- header end -->
+<script type="text/javascript" src="{$Think.config.URL}js/jquery.form.min.js"></script>
 <script type="text/javascript" src="{$Think.config.URL}js/new/unify.js"></script>
 
 <script type="text/javascript">
@@ -49,15 +54,20 @@ jQuery(document).ready(function(){
                    <div>
                         <div class="widgetbox personal-information" id="info">
                             <h4 class="widgettitle">借款套餐配置列表</h4>
+							<a href="#" onclick="edit(this)">添加借款套餐</a>
                             <div class="widgetcontent">
                             	<table class="table table-bordered">
                             		<tr>
                             			<th width="250px;">借款金额</th>
-                            			<th width="250px;">期限</th>
-                            			<th width="300px;">快速信审费</th>
-                            			<th width="300px;">账户管理费</th>
+                            			<th width="100px;">期限</th>
+                            			<th width="100px;">快速信审费</th>
+                            			<th width="100px;">账户管理费</th>
                             			<th width="200px;">利息</th>
-                            			<th width="200px;">实际到账总额</th>
+                            			<th width="200px;">实际还款总额</th>
+                            			<th width="200px;">所需信用额度</th>
+                            			<th width="100px;">赠送代金券金额</th>
+                            			<th width="200px;">使用开始时间</th>
+                            			<th width="200px;">使用结束时间</th>
                             			<th width="200px;">操作</th>
                             		</tr>
                             		<volist name="list" id="vo">
@@ -68,6 +78,10 @@ jQuery(document).ready(function(){
                             				<td>{$vo.account_money}元</td>
                             				<td>{$vo.interest}元</td>
                             				<td>{$vo.sum}元</td>
+											<td>{$vo.credit}</td>
+                            				<td>{$vo.cash_coupon}元</td>
+                            				<td>{$vo.time_start}</td>
+                            				<td>{$vo.time_end}</td>
                             				<td>
                             					<a href="#" onclick="edit(this)" id="{$vo.id}">更新配置</a>
                             					<!-- <a href="#" onclick="delete_money_manage(this)" id="{$vo.id}">删除</a> -->
@@ -86,7 +100,7 @@ jQuery(document).ready(function(){
                              	<form action="{:U('Admin/edit_money_manage')}" class="editprofileform" id="form">
                              		<p style="margin:0 0;">
                                       <label style="width:150px;">借款金额：</label>
-                                      <input type="text" class="input-xlarge" name="info[money_num]" readonly="readonly" id="money_num"/>
+                                      <input type="text" class="input-xlarge" name="info[money_num]"  id="money_num"/>
                                   	</p>
                                   	<p style="margin:0 0;">
                                   	  <label style="width:150px;">期限：</label>
@@ -108,6 +122,22 @@ jQuery(document).ready(function(){
                                       <input type="text" class="input-xlarge" name="info[interest]" id="interest"/>
                                       <input type="hidden"  name="info[id]" id="info_id"/>
                                   	</p>
+									<p style="margin:0 0;">
+                                      <label style="width:150px;">所需信用额度</label>
+                                      <input type="text" class="input-xlarge" name="info[credit]" id="credit"/>
+                                  	</p>
+									<p style="margin:0 0;">
+                                      <label style="width:150px;">赠送代金券金额</label>
+                                      <input type="text" class="input-xlarge" name="info[cash_coupon]" id="cash_coupon"/>
+                                  	</p>
+									<p style="margin:0 0;">
+	                                    <label style="width:150px;">活动开始：</label>
+	                                    <input type="text" id="datepicker1" name="info[time_start]" />
+	                                </p>
+	                                <p style="margin:0 0;">
+	                                    <label style="width:150px;">活动结束：</label>
+	                                    <input type="text" id="datepicker2" name="info[time_end]" />
+	                                </p>
                               	</form>
                                     <p>
                                  	<button class="btn btn-primary" onclick="edit_money()">修改配置</button>
@@ -141,17 +171,29 @@ function edit(obj){
 		data:{'id':id},
 		datetype:'json',
 		success:function(list){
-			$('#money_num').val(list[0]['money_num']);
-			$('#letter').val(list[0]['letter']);
-			$('#account_money').val(list[0]['account_money']);
-			$('#interest').val(list[0]['interest']);
-			$('#info_id').val(list[0]['id']);
+			if(list){
+				$('#money_num').attr("readonly","readonly");//去除input元素的readonly属性 　　 
+				$('#money_num').val(list[0]['money_num']);
+				$('#letter').val(list[0]['letter']);
+				$('#account_money').val(list[0]['account_money']);
+				$('#interest').val(list[0]['interest']);
+				$('#info_id').val(list[0]['id']);
+				$('#credit').val(list[0]['credit']);
+				$('#cash_coupon').val(list[0]['cash_coupon']);
+				$('#datepicker1').val(list[0]['time_start']);
+				$('#datepicker2').val(list[0]['time_end']);
+			}
+			
 			$('#info').css('display','none');
 			$('#edit').css('display','block');
 		}
 	})
 }
-
+//日期选择器 
+$(function() {
+  $( "#datepicker1" ).datepicker({ dateFormat:"yy-mm-dd" });
+  $( "#datepicker2" ).datepicker({ dateFormat:"yy-mm-dd" });
+});
 //修改借款配置的方法 
 function edit_money(){
 	$('#form').ajaxSubmit({
@@ -161,8 +203,12 @@ function edit_money(){
 		success:function(data){
 			if(data == '修改配置成功'){
 				alert(data);
-				setTimeout(function(){window.location.href='money_manage.html'},1000);
+				setTimeout(function(){window.location.href='money_manage.html'},100);
+			}else{
+				alert("添加配置成功");
+				setTimeout(function(){window.location.href='money_manage.html'},100);
 			}
+			
 		}
 	})
 }

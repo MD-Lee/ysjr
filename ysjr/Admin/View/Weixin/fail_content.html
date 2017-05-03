@@ -1,22 +1,32 @@
-<!DOCTYPE html>
-<html>
-	<head>
-		<meta charset="UTF-8">
-		<title>十万火急借款</title>
-		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-		<link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
-		<link href="{$Think.config.URL}/css/guide.css" rel="stylesheet">
-		<script type="text/javascript" src="{$Think.config.URL}js/jquery-1.9.1.min.js"></script>
-		<script type="text/javascript" src="{$Think.config.URL}js/common.js"></script>
-	</head>
-	<body>
-		您的审核未通过，无法解开，原因：
-		{$fail_content}
-		
-		{$Think.config.TITLE}审核采用大数据分析，涉及公司机密，无法进一步告知您审核未通过的原因。
-		
-		短期内再次申请无效，请至少3天以后再来，推荐等待一个月
-		
-		
-	</body>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<title>及时雨</title>
+<style>
+body{ margin:0; padding:0; font-family:"微软雅黑";}
+.wrapper{ width:300px; margin:auto;}
+.top_img{ text-align:center; margin:15px 0 0 0;}
+.top_title{ font-weight:normal; font-size:16px; color:#333;}
+.reason{ border:1px solid #ddd; border-radius:8px; min-height:70px; padding:8px 10px; color:#feab22; font-size:14px;}
+.reason_tips{ font-size:16px; color:#666; margin:12px 0 0 0;}
+.apply_btn{ background:#36cb53; padding:15px 0; text-align:center; color:#fff; font-size:16px; border-radius:30px; width:100%;
+border:none; margin:12px 0 0 0; font-family:"微软雅黑";}
+</style>
+</head>
+
+<body>
+	<div class="wrapper">
+        <div class="top_img"><img src="{$Think.config.URL}/images/wtg.png"/></div>
+        <h3 class="top_title">您的审核未通过，无法借款，原因：</h3>
+        <div class="reason">{$fail_content}</div>
+        <div class="reason_tips">{$Think.config.TITLE}审核采用大数据分析，涉及公司机密，无法进一步告知您审核未通过的原因。</div>
+       <!--  <input class="apply_btn" type="button" value="重新申请"/> -->
+    </div>
+
+</body>
 </html>

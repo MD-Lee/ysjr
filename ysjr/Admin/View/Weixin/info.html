@@ -10,15 +10,28 @@
 		<script type="text/javascript" src="{$Think.config.URL}js/jquery-1.9.1.min.js"></script>
 		<script type="text/javascript" src="{$Think.config.URL}js/bootstrap.min.js"></script>
 	</head>
-
+<style>
+body,ul,li,p{ margin:0; padding:0; font-family:"微软雅黑";}
+.coupon_list{ overflow:hidden;}
+.coupon_list li{ background:#4dbc44; border-radius:8px; list-style:none; margin:10px; overflow:hidden; padding:12px 0; position:relative;}
+.cp_money{ color:#fff; float:left; width:30%; text-align:center;}
+.unit{ font-size:12px;}
+.cp_sum{ font-size:26px; font-family:Arial;}
+.yh_txt{ font-size:16px; margin:6px 0 0 0;}
+.cp_con{ border-left:1px dashed #fff; float:left; font-size:16px; height:58px; padding:6px 0 0 12px;}
+.cp_con p{ color:#fff; overflow:hidden;line-height:24px; vertical-align:middle;}
+.cp_con p span.cp_dot{ display:inline-block; height:8px; width:8px; background:#fff; border-radius:100%; float:left; margin:9px 5px 0 0;}
+.fl{ float:left;}
+</style>
 	<body>
 		<div class="wrap">
 			<div class="tab-tit clearfix" id="tabTit">
-				<span class="sel fl data">个人资料</span>
-				<span class="fl loan">我的借款</span>
+				<span class="fl data     <if condition="$t eq 3"> sel</if>">个人资料</span>
+				<span class="fl loan     <if condition="$t eq 1"> sel</if>">我的借款</span>
+				<span class="fl discount <if condition="$t eq 2"> sel</if>">我的优惠券</span>
 			</div>
 			<div class="tab-con" id="tabCon">
-				<div class="block lan">
+				<div class="lan <if condition="$t eq 3"> block</if>">
 					<div class="table-list">
 						<table>
 							<tbody>
@@ -26,10 +39,10 @@
 									<td>手机号码</td>
 									<td>{$user[0]['phone']}</td>
 									<td>&nbsp;</td>
-									<td>
+								<!-- 	<td>
 										<i class="fr tu"></i>
 										<a href="{:U('Weixin/logout',array('phone'=>$user[0]['phone']))}" class="fr">注销</a>
-									</td>
+									</td> -->
 								</tr>
 								<!-- <tr class="color">
 									<td>登录密码</td>
@@ -155,7 +168,8 @@
 					</div>
 
 				</div>
-				<div class="lan ">
+				
+				<div class="lan <if condition="$t eq 1"> block</if>"">
 				<if condition="$user_money_info eq null ">
 					<div class="record" style="text-align: center;">您尚未借款</div>
 				<else/>
@@ -185,19 +199,19 @@
 								</tr>
 								<tr>
 									<td>打款日</td>
-									<if condition="$fang['is_repayment'] eq 0 or $vo['is_adopt'] neq 1">
+									<if condition="$vo['is_repayment'] eq 0 or $vo['is_adopt'] neq 1">
 									<td>---</td>
-									<elseif condition="$vo['is_adopt'] eq 1 and $fang['is_repayment'] eq 0"/>
-									<td>{$fang['payment_time']}</td>
+									<elseif condition="$vo['is_adopt'] eq 1 and $vo['is_repayment'] eq 1"/>
+									<td>{$vo['payment_time']}</td>
 									</if>
 									<td>&nbsp;</td>
 								</tr>
 								<tr class="color">
 									<td>约定还款日</td>
-									<if condition="$fang['appoint_time'] eq null  or $vo['is_adopt'] neq 1">
+									<if condition="$vo['appoint_time'] eq null  or $vo['is_adopt'] neq 1">
 									<td>---</td>
-									<elseif condition="$vo['is_adopt'] eq 1 and $fang['is_repayment'] eq 0"/>
-									<td>{$fang['appoint_time']}</td>
+									<elseif condition="$vo['is_adopt'] eq 1 and $vo['is_repayment'] eq 0"/>
+									<td>{$vo['appoint_time']}</td>
 									</if>
 									<td>&nbsp;</td>
 								</tr>
@@ -206,20 +220,20 @@
 									<td>
 										<php>
 											if($vo['is_adopt'] == -1){
-												if($fang == null){
+												if($vo == null){
 													echo "未完善个人资料";
-												}else if($fang['wait_xuqi'] == 1){
+												}else if($vo['wait_xuqi'] == 1){
 													echo "续期中";
-												}else if($fang['wait_xuqi'] == 2){
-													if($fang['actual_time'] != null){
+												}else if($vo['wait_xuqi'] == 2){
+													if($vo['actual_time'] != null){
 														echo "未完善个人资料";
 													}
-												}else if($fang['wait_xuqi'] == 3){
-													if($fang['is_repayment'] == 1){
+												}else if($vo['wait_xuqi'] == 3){
+													if($vo['is_repayment'] == 1){
 														echo "未完善个人资料";
 													}
-												}else if($fang['wait_xuqi'] == 4){
-													if($fang['is_repayment'] == 1){
+												}else if($vo['wait_xuqi'] == 4){
+													if($vo['is_repayment'] == 1){
 														echo "未完善个人资料";
 													}
 												}
@@ -230,21 +244,21 @@
 													if($bank_info[is_payment] == 0){
 														echo '银行卡验证中';
 													}else if($bank_info[is_payment] == 1){
-														if($fang['is_repayment'] == null){
+														if($vo['is_repayment'] == null){
 															if($user[0]['is_loan'] == 2){
 																echo '放款失败，请再次确定银行卡信息是否正确';
 															}else{
 																echo '等待放款中';
 															}
-														}else if($fang['is_repayment'] == 0){
-															if($fang['huankuan_type'] == 1){
+														}else if($vo['is_repayment'] == 0){
+															if($vo['huankuan_type'] == 1){
 																echo "还款中";
-															}else if($fang['wait_xuqi'] == 1){
+															}else if($vo['wait_xuqi'] == 1){
 																echo '续期中';
 															}else{
-																if($fang){
+																
 																	echo "放款成功";
-																}
+																
 															}
 														}else{
 															if($vo['repayment_state'] == 1){
@@ -271,7 +285,7 @@
 								<if condition="$vo['is_adopt'] eq -1">
 									<tr class="color">
 										<td>
-											<p class="cancel" data-toggle="modal" data-target=".bs-example-modal-m"></p>
+											<p class="cancel" onclick="lee({$vo['id']})"data-toggle="modal" data-target=".bs-example-modal-m"></p>
 											<p>取消申请</p>
 										</td>
 										<td>&nbsp;</td>
@@ -284,7 +298,7 @@
 										</td>
 									</tr>
 								</if>
-								<if condition="$fang neq null and $vo['is_adopt'] eq 1">
+								<if condition="$vo['is_adopt'] eq 1">
 									<tr class="color">
 										<td>
 											<a href="{:U('Weixin/jiekuan',array('id'=>$vo['id']))}">
@@ -293,7 +307,7 @@
 											</a>
 										</td>
 										<td>&nbsp;</td>
-										<if condition="$fang['actual_time'] eq null">
+										<if condition="$vo['actual_time'] eq null">
 										<td>
 										<a href="{:U('Weixin/loan_details',array('id'=>$vo['id']))}">
 											
@@ -311,6 +325,27 @@
 					</volist>
 					</if>
 				</div>
+				<div class="lan discount <if condition="$t eq 2"> block</if>"">
+				<if condition="$cash_coupon eq null ">
+					<div class="record" style="text-align: center;">您尚未拥有优惠券</div>
+				<else/>
+					<ul class="coupon_list">
+						<volist name="cash_coupon" id="vo">
+							<li <if condition="$vo['status'] eq 1">style="background:#CCC;"</if>>
+								<div class="cp_money">
+									<span class="unit">￥</span>
+									<span class="cp_sum">{$vo['money_num']}</span>
+									<p class="yh_txt">优惠券</p>
+								</div>
+								<div class="cp_con">
+									<p><span class="cp_dot">&nbsp;</span><span class="fl"><if condition="$vo['status'] eq 1">已使用<else/>未使用</if></span></p>
+									<p><span class="cp_dot">&nbsp;</span><span class="fl">截止日期{$vo['time_end']|date="Y-m-d",###}</span></p>
+								</div>
+							</li>
+						</volist>
+					</ul>
+				</if>
+				</div>
 			</div>
 		</div>
 		<!--弹窗-->
@@ -323,7 +358,7 @@
 					<div class="modal-header clearfix">
 						<div class="call">
 							<button id="regNow " type="button" class="btn on yans btn-default u-btn-default nonumber registerednow" data-dismiss="modal" data-toggle="modal" data-target=".bs-example-modal-lgs">
-                            <span class="caching" style="display:block">确认</span>
+                            <span class="caching" onclick="cancel_apply()" style="display:block">确认</span>
                         </button>
 							<button id="regNow" type="button" class="btn on  btn-default u-btn-default nonumber registerednow" data-dismiss="modal" data-toggle="modal" data-target=".bs-example-modal-lgs">
                             <span class="color">取消</span>
@@ -333,15 +368,32 @@
 				</div>
 			</div>
 		</div>
-
+<input type="hidden" id="lee" value="">
 	</body>
 	<script type="text/javascript">
+	function lee(id){
+	$("#lee").val(id);
+	}
 		//功能描述：点击tab格，改变当前的样式，并且显示对应到内容
 		$(".tab-tit span").click(function() {
 			var index = $(this).index();
 			$(this).addClass("sel").siblings().removeClass("sel");
 			$(".tab-con>div").eq(index).addClass("block ").siblings().removeClass("block ");
 		})
+		//用户取消申请
+		function cancel_apply(){
+			var id = $('#lee').val();
+			$.ajax({
+				type:"POST",
+				url:"{:U('Weixin/cancel_apply')}",
+				data:{'id':id},
+				datatype:"json",
+				success:function(data){
+					alert(data);
+					setTimeout(function(){window.location.href="/index.php/Weixin/info?t=1"},1000);
+				}
+			})
+		}
 	</script>
 
 </html>

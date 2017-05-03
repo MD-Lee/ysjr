@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="UTF-8">
-		<title>支付宝转账</title>
+		<title>转账</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 		<link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
 		<link href="{$Think.config.URL}/css/bring.css" rel="stylesheet">
@@ -18,7 +18,7 @@
 		</style>
 	</head>
 	<body>
-		<div class="wrap">
+		<div class="wrap" style="margin-top:0px">
 			<table>
 				<tbody>
 					<tr>
@@ -36,13 +36,13 @@
 						<td></td>
 						<td>{$list[0]['name']}{$list[0]['phone']}</td>
 					</tr>
-					<tr>
-						<td>例子如下:</td>
-						<td></td>
-					</tr>
+					<!-- <tr> -->
+						<!-- <td>例子如下:</td> -->
+						<!-- <td></td> -->
+					<!-- </tr> -->
 				</tbody>
 			</table>
-			<img src="{$Think.config.URL}/images/xianjinbashi/bank.svg"/ class="img">
+			<!-- <img src="{$Think.config.URL}/images/xianjinbashi/bank.svg"/ class="img"> -->
 		</div>
 		
 		<input type="hidden" value="{$money}" name="money">
@@ -52,12 +52,16 @@
 		<input type="hidden" value="{$sum}" name="sum">
 		<input type="hidden" value="{$appoint_time}" name="appoint_time">
 		<input type="hidden" value="{$type}" name="type">
-		<button type="button" class="btn btn-primary" id="frame" onclick="zfb()">确定支付宝付款</button>
+		<input type="hidden" value="{$aa}" name="aa">
+		<input type="hidden" value="{$volume_money}" name="volume_money">
+		<button type="button" class="btn btn-primary" id="frame" onclick="zfb()">确定付款</button>
 	</body>	
 	<script type="text/javascript" src="{$Think.config.URL}js/jquery-1.9.1.min.js"></script>
 	<script>
 	function zfb(){
 		var type = $("input[name='type']").val();
+		var aa = $("input[name='aa']").val();
+		var volume_money = $("input[name='volume_money']").val();
 	
 		var id = $("input[name='id']").val();
 		var time_length = $("input[name='time_length']").val();
@@ -70,11 +74,13 @@
 				url:"{:U('Weixin/zfb_jy2')}",
 				data:{
 					'id':id,
-					'money':money
+					'money':money,
+					'aa':aa,
+					'volume_money':volume_money
 				},
 				datatype:"json",
 				success:function(){
-					alert('您已经确定支付宝付款，请向往支付宝转账');
+					alert('您已经确定付款，请向往转账');
 					setTimeout(function(){WeixinJSBridge.call('closeWindow')},1000);
 				}
 			 })
@@ -88,11 +94,13 @@
 					
 					'time_length':time_length,
 					'sum':sum,
-					'appoint_time':appoint_time
+					'appoint_time':appoint_time,
+					'aa':aa,
+					'volume_money':volume_money
 				},
 				datatype:"json",
 				success:function(){
-					alert('您已经确定支付宝付款，请向往支付宝转账');
+					alert('您已经确付款，请向往转账');
 					setTimeout(function(){WeixinJSBridge.call('closeWindow')},1000);
 				}
 			 })

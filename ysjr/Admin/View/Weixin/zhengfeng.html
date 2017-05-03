@@ -82,15 +82,16 @@
 </head>
 <body>
 	<form action="{:U('Weixin/upload_img')}" id="form">
-		<div class="control-group js_uploadBox" style="margin-top: 50px;">
+		 <div class="control-group js_uploadBox" style="margin-top: 50px;">
 			<p>上传身份证正面</p>
 			<div class="btn-upload" style="overflow: hidden;">
 			 	<label for="images1" style="float:left">
 			 		<img src="{$Think.config.URL}/images/xianjinbashi/jia.png" alt="" />
 			 	</label>
-				 <input class="js_upFile"type="file" name="img1" id="images1">
+				 <input class="js_upFile"type="button" name="img1" id="images1">
 				 <div class="js_showBox con"  style="float:left">
-						<img class="js_logoBox" width="100px" src="{$res['img1']}"/>
+						<img class="js_logoBox" id="i1" width="100px" src="{$res['img1']}"/>
+						<input type="hidden" value="" id="media_id1" name="media_id1">
 				</div>
 			</div>
 		</div>
@@ -100,21 +101,25 @@
 			 	<label for="images2" style="float:left">
 			 		<img src="{$Think.config.URL}/images/xianjinbashi/jia.png" alt="" />
 			 	</label>
-				 <input class="js_upFile"type="file" name="img2" id="images2">
+				 <input class="js_upFile"type="button" name="img2" id="images2">
 				 <div class="js_showBox con" style="float:left">
-						<img class="js_logoBox" width="100px" src="{$res['img2']}"/>
+						<img class="js_logoBox" id="i2" width="100px" src="{$res['img2']}"/>
+						<input type="hidden" value="" id="media_id2" name="media_id2">
 				</div>
 			</div>
-		</div>
+		</div> 
 		<div class="control-group js_uploadBox">
 			<p>上传持证自拍</p>
 			<div class="btn-upload" style="overflow: hidden;">
 			 	<label for="images3" style="float:left">
 			 		<img src="{$Think.config.URL}/images/xianjinbashi/jia.png" alt="" />
 			 	</label>
-				 <input class="js_upFile"type="file" name="img3" id="images3">
+				 <input class="js_upFile"type="button" name="img3" id="images3">
 				 <div class="js_showBox con" style="float:left">
-						<img class="js_logoBox" width="100px" src="{$res['img3']}"/>
+						<img class="js_logoBox" id="i3" width="100px" src="{$res['img_url']}"/>
+					
+						<input type="hidden" value="" id="media_id3" name="media_id3">
+						<input type="hidden" value="" id="is_new" name="is_new">
 				</div>
 			</div>
 		</div>
@@ -136,9 +141,108 @@
 		<img src="{$Think.config.URL}/images/xianjinbashi/jiazai.png" width="50px" height="50px">
 	</div>
 </body>
-<script  type="text/javascript"  src="{$Think.config.URL}js/jquery.uploadView.js"></script>
+<!-- <script  type="text/javascript"  src="{$Think.config.URL}js/jquery.uploadView.js"></script> -->
+<script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
 <script>
-$(".js_upFile").uploadView({
+  wx.config({
+      debug: true,
+      appId: '{$signPackage[appId]}',
+	  timestamp: '{$signPackage[timestamp]}',
+      nonceStr: '{$signPackage[nonceStr]}',
+	  signature: '{$signPackage[signature]}',
+      jsApiList: [
+        'chooseImage',
+		'uploadImage'
+      ]
+  });
+  wx.ready(function(){
+  
+   var images1 = {
+    localId: [],
+    serverId: []
+	};
+  document.querySelector('#images1').onclick = function () {
+	   wx.chooseImage({
+		count: 1, // 默认9
+		sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+		sourceType: [ 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+		success: function (res) {
+			images1.localId = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+			$("#i1").attr('src',images1.localId[0]); 
+			
+			wx.uploadImage({
+				localId: images1.localId[0], // 需要上传的图片的本地ID，由chooseImage接口获得
+				isShowProgressTips: 1, // 默认为1，显示进度提示
+				success: function (res) {
+					var serverId = res.serverId; // 返回图片的服务器端ID
+					$("#media_id1").val(serverId);
+					$("#is_new").val('1');
+				}
+			});
+			
+		}
+		});
+  }
+  var images2 = {
+    localId: [],
+    serverId: []
+  };
+    document.querySelector('#images2').onclick = function () {
+	   wx.chooseImage({
+		count: 1, // 默认9
+		sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+		sourceType: [ 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+		success: function (res) {
+			images2.localId = res.localIds;// 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+			$("#i2").attr('src',images2.localId[0]);
+			wx.uploadImage({
+				localId: images2.localId[0],  // 需要上传的图片的本地ID，由chooseImage接口获得
+				isShowProgressTips: 1, // 默认为1，显示进度提示
+				success: function (res) {
+					var serverId = res.serverId; // 返回图片的服务器端ID
+					$("#media_id2").val(serverId);
+					$("#is_new").val('1');
+				}
+			});
+			
+		}
+		});
+  }
+  var images = {
+    localId: [],
+    serverId: []
+  };
+    document.querySelector('#images3').onclick = function () {
+	   wx.chooseImage({
+		count: 1, // 默认9
+		sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+		sourceType: [ 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+		success: function (res) {
+		
+			images.localId = res.localIds;// 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+			$("#i3").attr('src',images.localId[0]); 
+	
+			
+			wx.uploadImage({
+				localId: images.localId[0],// 需要上传的图片的本地ID，由chooseImage接口获得
+				isShowProgressTips: 1, // 默认为1，显示进度提示
+				success: function (res) {
+					var serverId = res.serverId; // 返回图片的服务器端ID
+					$("#media_id3").val(serverId);
+					$("#is_new").val('1');
+				}
+			});
+		}
+		});
+  }
+
+  
+ 
+});
+
+</script>
+<script>
+/*$(".js_upFile").uploadView({
 	uploadBox: '.js_uploadBox',//设置上传框容器
 	showBox : '.js_showBox',//设置显示预览图片的容器
 	width : 80, //预览图片的宽度，单位px
@@ -150,7 +254,7 @@ $(".js_upFile").uploadView({
 		alert('图片上传成功');
 	}
 });
-
+*/
 //功能描述：点击图片，从中间展开幕布，当幕布完全展开时，放大图片出现，点击叉图片关闭，然后幕布关闭
 // 点击图片，展开幕布
 $(".con").on("click", function() {
@@ -179,25 +283,40 @@ $(".biger-pic span").on("click", function() {
 	});
 })
 function upload_img(){
-	//var img1 = document.getElementById("images1").value;
+	
+	$('.class').css('display','block');
+	var media_id3 = $("#media_id3").val();
+	var i3 = $("#i3")[0].src;
+	//alert(i3);
+	var media_id1 = $("#media_id1").val();
+	var media_id2 = $("#media_id2").val();
+	//alert(media_id1);
+	//alert(media_id2);
+	//alert(media_id3);
+	if( (media_id3 && media_id1 && media_id2 )|| (i3 && i2 && i1)){
+		$('#form').ajaxSubmit({
+			type:"POST",
+			url:$('#form').attr("action"),
+			
+			datatype:"json",
+			success:function(data){
+				if(data == '提交成功'){
+					setTimeout(function(){window.location.href="/index.php/Weixin/queren_loan"},1000);
+				}else{
+					$('.class').css('display','none');
+					alert(data);
+				}
+			}
+		});
+	}else{
+		alert("图片上传不完整");
+		return false;
+	}
 	//var img2 = document.getElementById("images2").value;
 	//var img3 = document.getElementById("images3").value;
-	$('.class').css('display','block');
 	
-	$('#form').ajaxSubmit({
-		type:"POST",
-		url:$('#form').attr("action"),
+	
 		
-		datatype:"json",
-		success:function(data){
-			if(data == '提交成功'){
-				setTimeout(function(){window.location.href="/index.php/Weixin/alipay"},1000);
-			}else{
-				$('.class').css('display','none');
-				alert(data);
-			}
-		}
-	})	
 }
 </script>
 </html>

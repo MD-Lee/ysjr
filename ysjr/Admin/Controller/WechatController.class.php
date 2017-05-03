@@ -9,7 +9,8 @@ class WechatController extends Controller{
     }	
 	//自定义菜单
 	public function menu(){
-		$access_token = $this->access_token();
+		$redirect_uri='http://'.$_SERVER['HTTP_HOST'];
+		$access_token = access_token();
 		$url = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token=".$access_token;
 		
 		$data = <<<json
@@ -20,8 +21,8 @@ class WechatController extends Controller{
 			   "sub_button":[
 			   {
 					"type":"view",
-					"name":"十万火急借款",
-					"url":"http://ysjr.9xgk.com/index.php/Weixin/loan"
+					"name":"及时雨",
+					"url":"$redirect_uri/index.php/Weixin/choice_money"
 			
 				},
 				{
@@ -37,7 +38,7 @@ class WechatController extends Controller{
 				{
 					"type":"view",
 					"name":"法律责任",
-					"url":"http://ysjr.9xgk.com/index.php/Weixin/agreement1"
+					"url":"$redirect_uri/index.php/Weixin/agreement1"
 				}]
 		    },
 			{
@@ -51,13 +52,25 @@ class WechatController extends Controller{
 				{
 					"name":"我要还款",
 					"type":"view",
-	           		"url":"https://open.weixin.qq.com/connect/oauth2/authorize?appid=appid&redirect_uri=http://ysjr.9xgk.com/index.php/Weixin/loan_details&response_type=code&scope=snsapi_base&state=1#wechat_redirect"
+	           		"url":"$redirect_uri/index.php/Weixin/loan_details"
 				},
 				{
 	               "type":"view",
-	               "name":"我要推广",
-	               "url":"https://open.weixin.qq.com/connect/oauth2/authorize?appid=appid&redirect_uri=http://ysjr.9xgk.com/index.php/Weixin/code&response_type=code&scope=snsapi_base&state=1#wechat_redirect"
-	            }]
+	               "name":"我的借款",
+	               "url":"$redirect_uri/index.php/Weixin/info/t/1"
+	            },
+				{
+	               "type":"view",
+	               "name":"优惠券",
+	               "url":"$redirect_uri/index.php/Weixin/info/t/2"
+	            },
+				 {
+                    "type": "pic_sysphoto", 
+                    "name": "持证自拍", 
+                    "key": "rselfmenu_1_0", 
+                   "sub_button": [ ]
+                 }
+				]
 		    },
 			{
 	           "name":"更多服务",
@@ -70,7 +83,7 @@ class WechatController extends Controller{
 	            {
 	               "type":"view",
 	               "name":"常见问题",
-	               "url":"http://ysjr.9xgk.com/index.php/Weixin/problem"
+	               "url":"$redirect_uri/index.php/Weixin/problem"
 	            },
 	            {
 	               "type":"click",
@@ -85,7 +98,7 @@ class WechatController extends Controller{
 		    }]
 		 }
 json;
-		$output = $this->https_request($url,$data);
+		$output = https_request($url,$data);
 		echo $output;
 	}
 	

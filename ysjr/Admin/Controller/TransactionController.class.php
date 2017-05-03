@@ -114,7 +114,12 @@ class TransactionController extends CommonController {
     	$Page->setConfig('last',"尾页");
     	$show = $Page->show();
     	$this->assign('page',$show);
-    	$list = $payment_list->join("haoidcn_bank_info as b ON haoidcn_payment_list.phone=b.phone")->join("haoidcn_service ON haoidcn_payment_list.phone=haoidcn_service.phone")->limit($Page->firstRow. ',' . $Page->listRows)->select();
+    	$list = $payment_list
+				->join("haoidcn_bank_info as b ON haoidcn_payment_list.phone=b.phone")
+				->join("haoidcn_service ON haoidcn_payment_list.phone=haoidcn_service.phone")
+				
+				->limit($Page->firstRow. ',' . $Page->listRows)
+				->select();
     	foreach ($list as $key=>$value){
     		$money = $user_money_info->where("phone='{$list[$key]['phone']}'")->find();
     		$list[$key]['loan_people'] = $money['loan_people'];
@@ -146,7 +151,7 @@ class TransactionController extends CommonController {
     			}
     			$this->assign('content',$content);
     		}
-    		$list = $payment_list->join("haoidcn_user_info as b ON haoidcn_payment_list.phone=b.phone")->where("$where")->select();
+    		$list = $payment_list->join("haoidcn_user_info as b ON haoidcn_payment_list.openid=b.openid")->where("$where")->select();
     		foreach ($list as $key=>$value){
     			$money = $user_money_info->where("phone='{$list[$key]['phone']}'")->find();
     			$list[$key]['loan_people'] = $money['loan_people'];
@@ -170,11 +175,26 @@ class TransactionController extends CommonController {
     	$Page->setConfig('last',"尾页");
     	$show = $Page->show();
     	$this->assign('page',$show);
-    	$list = $payment_list->join("haoidcn_user_info as b ON haoidcn_payment_list.phone=b.phone")->limit($Page->firstRow. ',' . $Page->listRows)->order("payment_time desc")->select();
+    	$list = $payment_list
+		->join("haoidcn_user_info as b ON haoidcn_payment_list.openid=b.openid")
+		->field('haoidcn_payment_list.*,b.name')
+		->limit($Page->firstRow. ',' . $Page->listRows)
+		->order("payment_time desc")
+		->select();
+		$interest = M('user_volume')->where("id=1")->getField('interest');
+		
     	foreach ($list as $key=>$value){
-    		$money = $user_money_info->where("phone='{$list[$key]['phone']}'")->find();
+    		$money = $user_money_info->where("openid='{$list[$key]['openid']}'")->find();
     		$list[$key]['loan_people'] = $money['loan_people'];
+			if($value['volume_money']>0 && $interest>0){
+				$list[$key]['volume_time'] = $value['volume_money']/$interest;
+				$list[$key]['sum'] = $value['sum']+$value['volume_money'];
+				
+			}
+			
     	}
+		
+		
     	$this->assign('list',$list);
     	$data = array(
     			'sh_three' => "active",
@@ -234,22 +254,59 @@ class TransactionController extends CommonController {
     	$this->display();
     }
     public function is_loan(){
-    	$phone = I('phone');
+		$http_url="http://".$_SERVER['HTTP_HOST'];
+    	$id = I('pid');
+    	//$phone = I('phone');
+    	$credit = I('credit');
     	$payment_list = D('payment_list');
     	$time1 = date("Y-m-d H:i:s",time());
-    	$list = $payment_list->where("phone='$phone'")->find();
+    	$list = $payment_list->where("id='$id'")->find();
+		
+		
     	$user_money_info = D('user_money_info');
-    	$time = $user_money_info->field("max(id) as id")->where("phone='$phone'")->find();
+    	//$time = $user_money_info->field("max(id) as id")->where("phone='$phone'")->find();
+		$user_money_info_id=$list['user_money_info'];
+		
     	if($list['huankuan_type'] == '1'){
-    		$res = $user_money_info->where("id='{$time['id']}'")->find();
-    		$user_money_info->where("id='{$time['id']}'")->setField('is_renewal',0);
+			/*还款获取优惠券*/
+			$time = time();
+			$map['money_num'] =$list['money_num'];
+			$map['time_length'] =$list['time_length'];
+			$map['time_start'] = array('egt',$time);
+			$map['time_end'] = array('elt',$time);
+			$loan_money_info=M('loan_money')->where($map)->find();
+			if($loan_money_info['cash_coupon']){
+				$sdata['time_start']=strtotime($loan_money_info['time_start']);
+				$sdata['time_end']=strtotime($loan_money_info['time_end']);
+				$sdata['money_num']=$loan_money_info['cash_coupon'];
+				$sdata['status']=0;
+				$sdata['time']=time();
+				$sdata['openid']=$list['openid'];
+				M('user_cash_coupon')->add($sdata);
+				$map['openid'] = $list['openid'];
+				$name = M('user_info')->where($map)->getField('name');
+				$time = date('Y-m-d',time());
+				$news_data= array (
+							    'first' =>array('value' => urlencode("由于还款，您获得优惠券")),
+								'keyword1' =>array('value' => urlencode("优惠券提醒")),
+								'keyword2' => array('value' => urlencode($name)),
+								'keyword3' => array('value' => urlencode("您获得优惠券的金额为".$loan_money_info['cash_coupon']."元")),
+								'keyword4' =>array('value' => urlencode($time)),
+							  );
+							 
+				template_news($news_data,5,$list['openid']);
+			}
+			
+    		$res = $user_money_info->where("id='$user_money_info_id'")->find();
+    		$user_money_info->where("id='$user_money_info_id'")->setField('is_renewal',0);
     		$complete_renewal = $res['is_renewal'];
-    		$user_money_info->where("id='{$time['id']}'")->setInc('complete_renewal',$complete_renewal);
-    		$shoukuan = $payment_list->field("max(id) as id")->where("phone='$phone'")->find();
-    		$payment_list->where("id='{$shoukuan['id']}'")->setField("actual_time",$time1);
-    		$payment_list->where("id='{$shoukuan['id']}'")->setField("is_repayment",1);
-    		$payment_list->where("id='{$shoukuan['id']}'")->setField("wait_xuqi",'4');
-    		$user_money_info->where("id='{$time['id']}'")->setField("repayment_state",1);;
+    		$user_money_info->where("id='$user_money_info_id'")->setInc('complete_renewal',$complete_renewal);
+    		//$shoukuan = $payment_list->field("max(id) as id")->where("phone='$phone'")->find();
+    		$payment_list->where("id='$id'")->setField("actual_time",$time1);
+    		$payment_list->where("id='$id'")->setField("is_repayment",1);
+    		$payment_list->where("id='$id'")->setField("wait_xuqi",'4');
+    		$user_money_info->where("id='$user_money_info_id'")->setField("repayment_state",1);
+    		$user_money_info->where("id='$user_money_info_id'")->setField("credit",$credit);
     		$access_token = access_token();
     		$url = "https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=".$access_token;
     		$data = <<<json
@@ -274,10 +331,10 @@ json;
     			'state'=>'0',
     			'is_adopt'=>'0'
     		);
-    		$user_money_info->where("id='{$time['id']}'")->save($info);
-    		$shoukuan = $payment_list->field("max(id) as id")->where("phone='$phone'")->find();
-    		$payment_list->where("id='{$shoukuan['id']}'")->setField('wait_xuqi','2');
-    		$user_money_info->where("id='{$time['id']}'")->setInc('is_renewal',1);
+    		$user_money_info->where("id='$user_money_info_id'")->save($info);
+    		//$shoukuan = $payment_list->field("max(id) as id")->where("phone='$phone'")->find();
+    		$payment_list->where("id='$id'")->setField('wait_xuqi','2');
+    		$user_money_info->where("id='$user_money_info_id'")->setInc('is_renewal',1);
     		$access_token = access_token();
     		$url = "https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=".$access_token;
     		$data = <<<json
@@ -289,7 +346,7 @@ json;
 			         {
 			             "title":"交易提醒",
 			             "description":"尊敬的用户您的续期服务费用，我们已收到",
-			    		 "url":"http://www.leeyears.com/index.php/Weixin/xuqi?id={$time['id']}"
+			    		 "url":"$http_url/index.php/Weixin/xuqi?id={$user_money_info_id}"
 			         }
 			         ]
 			    }

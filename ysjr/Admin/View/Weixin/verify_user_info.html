@@ -94,7 +94,7 @@ div.error
 <body>
 	<div class="container">
 	  <div class="row img">
-		<img src="{$Think.config.URL}/images/xianjinbashi/lend-3.png"/>
+		<img src="{$Think.config.URL}/images/xianjinbashi/lend-2.jpg"/>
 	  </div>
 	  
 	  <div class="bs-example bs-example-tabs" data-example-id="togglable-tabs">
@@ -190,7 +190,7 @@ div.error
 	      	  </if>
 			  	<select name="info[work]" id="select4">
 					  <option value="">请选择您的职业</option>
-					  <option value="学生">学生</option>
+						<option value="学生">学生</option>
 					  <option value="企业、事业单位">企业、事业单位</option>
 					  <option value="专业技术人员">专业技术人员</option>
 					  <option value="商业、服务业">商业、服务业</option>
@@ -270,7 +270,7 @@ div.error
 				  		<span class="down-img"></span>
 				  	</span>
 				</div>
-				<div class="city-select clearfix">
+				<!-- <div class="city-select clearfix">
 	        	 	<p class="select half pull-left">
 	        	 		<input type="hidden" value="{$list4[0]['province']}" id="province2">
 	             		<select name="province4" class="province pull-left" id="select6"></select>    
@@ -286,14 +286,23 @@ div.error
 				  		</span>	
 					</p>
 					<div style="display:none"><select name="area4"></select></div>
-	        	</div>
+	        	</div> -->
 	        	<div class="form-group">
 				    <input type="text" class="form-control" name="info[school]" value="{$list4[0]['school']}" placeholder="请输入您的学校">
 				</div>
 				<div class="form-group">
-				    <input type="text" class="form-control" name="info[time]" value="{$list4[0]['time']}" placeholder="请输入您的入学时间">
+				    <input type="text" class="form-control" name="info[major]" value="{$list4[0]['major']}" placeholder="请输入您的专业">
 				</div>
 				<div class="form-group">
+				    <input type="text" class="form-control" name="info[account]" value="{$list4[0]['account']}" placeholder="请输入您的学信网账号">
+				</div>
+				<div class="form-group">
+				    <input type="password" class="form-control" name="info[password]" value="" placeholder="请输入您的学信网密码">
+				</div>
+				<!--<div class="form-group">
+				    <input type="text" class="form-control" name="info[time]" value="{$list4[0]['time']}" placeholder="请输入您的入学时间">
+				</div>
+				 <div class="form-group">
 				    <input type="text" class="form-control" name="info[account]" value="{$list4[0]['account']}" placeholder="请输入您的学信网账号">
 				</div>
 				<div class="form-group">
@@ -312,13 +321,14 @@ div.error
 							</dt>
 						</div>
 					</div>
-				</div>
+				</div> 
 				<div style="margin-top: 14px">
 					<a href="{:U('Weixin/xuexin')}" style="color:red;">截图案例</a>
-				</div>
+				</div>-->
 				<div class="or">
 			  		
 				  	<input type="hidden" value=""  name="info[name]" id="xue_name">
+					<button type="button" class="pull-left btn btn-primary" id="lasts">上一页</button>
 			  		<button type="button" class="pull-right btn btn-primary" id="lower" onclick="add_xuesheng()">下一页</button>		  	
 			  </div>
 	      	</form>
@@ -365,7 +375,7 @@ div.error
 			  <div class="form-group">
 			    <input type="text" class="form-control" name="info[gam_mobile]" value="{$list3[0]['gam_mobile']}" placeholder="请输入社交联系人的手机号码">
 			  </div>
-			  <div class="form-group select">
+			  <!-- <div class="form-group select">
 			  	<input type="hidden" value="{$list3[0]['gam2']}" id="gam2">
 			  	<select name="info[gam2]" id="select9">
 					  <option value="">社会关系</option>
@@ -382,7 +392,7 @@ div.error
 			  </div>
 			  <div class="form-group">
 			    <input type="text" class="form-control" name="info[gam_mobile2]" value="{$list3[0]['gam_mobile2']}" placeholder="请输入社交联系人的手机号码">
-			  </div>
+			  </div> -->
 			  <div class="or clearfix">
 			  	
 			  	<input type="hidden" value=""  name="info[name]" id="name1">
@@ -456,7 +466,7 @@ var city = $('#city').val();
 var province2 = $('#province2').val();
 var city2 = $('#city2').val();
 new PCAS("province5","city5","area5",""+province+"",""+city+"");
-new PCAS("province4","city4","area4",""+province2+"",""+city2+"");
+<!-- new PCAS("province4","city4","area4",""+province2+"",""+city2+""); -->
 var titBtn = $("#myTabs li");
 titBtn.click(function() {
 	$(this).addClass("border").siblings().removeClass("border").parent().siblings().children().eq($(this).index()).css({
@@ -666,8 +676,8 @@ function checkText3(){
 			"info[gam_mobile]":{
 				required:true,
 				isMobile:true
-			},
-			"info[gam2]":{
+			}
+			/*"info[gam2]":{
 				required:true
 			},
 			"info[gam_name2]":{
@@ -676,7 +686,7 @@ function checkText3(){
 			"info[gam_mobile2]":{
 				required:true,
 				isMobile:true
-			}
+			}*/
 		},
 		messages:{
 			"info[family]":{
@@ -698,7 +708,7 @@ function checkText3(){
 			"info[gam_mobile]":{
 				required:'请输入您的社交联系人的手机号',
 				isMobile:'请添加正确的手机号码'
-			},
+			}/*,
 			"info[gam2]":{
 				required:'请选择您的社会关系'
 			},
@@ -708,7 +718,7 @@ function checkText3(){
 			"info[gam_mobile2]":{
 				required:'请输入您的社交联系人的手机号',
 				isMobile:'请添加正确的手机号码'
-			}
+			}*/
 		}
 	})
 }
@@ -723,18 +733,21 @@ function checkText4(){
 			"info[work]":{
 				required:true
 			},
-			"province4":{
+			/*"province4":{
 				required:true
 			},
 			"city4":{
 				required:true
-			},
+			},*/
 			"info[school]":{
 				required:true
 			},
-			"info[time]":{
+			"info[major]":{
 				required:true
 			},
+			/*"info[time]":{
+				required:true
+			},*/
 			"info[account]":{
 				required:true
 			},
@@ -746,18 +759,21 @@ function checkText4(){
 			"info[work]":{
 				required:'请选择您的职业'
 			},
-			"province4":{
+			/*"province4":{
 				required:'请选择您的省'
 			},
 			"city4":{
 				required:'请选择您的城市'
-			},
+			},*/
 			"info[school]":{
 				required:'请输入您的学校'
 			},
-			"info[time]":{
-				required:"请输入您的入学时间"
+			"info[major]":{
+				required:"请输入您的专业"
 			},
+			/*"info[time]":{
+				required:"请输入您的入学时间"
+			},*/
 			"info[account]":{
 				required:'请输入您的学信网账号'
 			},
@@ -788,6 +804,12 @@ function add_user_info(){
  
 //用户职业信息上一页
 $("#last").click(function() {
+	$("#myTabs").children("li").eq(0).addClass("border").siblings("li").removeClass("border");
+	$("#user").show();
+	$("#work").hide();		
+})
+//用户职业信息上一页
+$("#lasts").click(function() {
 	$("#myTabs").children("li").eq(0).addClass("border").siblings("li").removeClass("border");
 	$("#user").show();
 	$("#work").hide();		
@@ -857,6 +879,7 @@ function add_user_gam(){
 		url:$('#user_gam').attr('action'),
 		datatype:"json",
 		success:function(data){
+		
 			if(data == '提交'){
 				
 				setTimeout(function(){window.location.href="/index.php/Weixin/zhengfeng"},1000);

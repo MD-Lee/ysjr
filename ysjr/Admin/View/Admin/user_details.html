@@ -51,29 +51,25 @@ jQuery(document).ready(function(){
                             <h4 class="widgettitle">会员管理</h4>
                             <div class="widgetcontent" id="user" style="height: 2500px;">
                             	<div style="float:left;margin-top: -15px;">
-	                            	<if condition="$list[0]['img1'] eq null or $list[0]['img2'] eq null or $list[0]['img3'] eq null">
+	                            	<if condition="$list[0]['img_url'] eq null">
 	                            	    <span>图片:</span>
 	                            		<span>未持证自拍</span>
 	                            	<else/>
 		                            	<p>
+		                            		<a href="{$list[0]['img_url']}" target="_blank"><img src="{$list[0]['img_url']}" style="width:600px;height:600px"></a>
+		                            	</p>
+		                            	<p>
 		                            		<a href="{$list[0]['img1']}" target="_blank"><img src="{$list[0]['img1']}" style="width:600px;height:600px"></a>
 		                            	</p>
-		                            	<p>
+										<p>
 		                            		<a href="{$list[0]['img2']}" target="_blank"><img src="{$list[0]['img2']}" style="width:600px;height:600px"></a>
 		                            	</p>
-		                            	<p>
-		                            		<a href="{$list[0]['img3']}" target="_blank"><img src="{$list[0]['img3']}" style="width:600px;height:600px"></a>
-		                            	</p>
-		                            	<if condition="$xuesheng['url'] neq null">
+		                            	<!-- <if condition="$xuesheng['url'] neq null">
 			                            	<p>
 			                            		<a href="{$xuesheng['url']}" target="_blank"><img src="{$xuesheng['url']}" style="width:600px;height:300px"></a>
 			                            	</p>
-		                            	</if>
-		                            	<if condition="$bank['img'] neq null">
-			                            	<p>
-			                            		<a href="{$bank['img']}" target="_blank"><img src="{$bank['img']}" style="width:600px;height:300px"></a>
-			                            	</p>
-		                            	</if>
+		                            	</if> -->
+		                            	
 	                            	</if>
                             	</div>
                             	
@@ -88,8 +84,8 @@ jQuery(document).ready(function(){
 								    </div>
 								    <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
 								      <div class="panel-body">
-								      	<p><span style="color:red;">芝麻分：</span><span>{$list[0]['integral']}</span>&nbsp;&nbsp;<a href="#myModal" role="button"  data-toggle="modal">设置芝麻分</a></p>
-								      	<p><span>手机号：</span><span id="phone">{$phone}</span></p>
+								     <!--  	<p><span style="color:red;">芝麻分：</span><span>{$list[0]['integral']}</span>&nbsp;&nbsp;<a href="#myModal" role="button"  data-toggle="modal">设置芝麻分</a></p> -->
+								      	<p><span>手机号：</span><span id="phone">{$list[0]['phone']}</span></p>
 			                            	<p><span>姓名：</span><span>{$list[0]['name']}</span></p>
 			                            	<p><span>身份证号：</span><span>{$list[0]['uid']}</span></p>
 			                            	<p><span>qq：</span><span>{$list[0]['qq']}</span></p>
@@ -132,8 +128,8 @@ jQuery(document).ready(function(){
 								    <div id="collapseTwo" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingTwo">
 								      <div class="panel-body">
 								      	<p><span>学校名称：</span><span>{$xuesheng['school']}</span></p>
-			                            	<p><span>地区：</span><span>{$xuesheng['province']}{$xuesheng['city']}</span></p>
-			                            	<p><span>入学时间：</span><span>{$xuesheng['time']}</span></p>
+			                            	<p><span>专业：</span><span>{$xuesheng['major']}</span></p>
+			                            	
 			                            	<p><span>学信网账号：</span><span>{$xuesheng['account']}</span></p>
 			                            	<p><span>学信网密码：</span><span>{$xuesheng['password']}</span></p>
 								      </div>
@@ -153,7 +149,7 @@ jQuery(document).ready(function(){
 								      <div class="panel-body">
 								      	<p><span>联系人：</span><span>{$list[0]['family']}</span>&nbsp;&nbsp;&nbsp;&nbsp;<p>姓名：<span>{$list[0]['family_name']}</span></p><span>电话：<span>{$list[0]['family_mobile']}</span></span></p>
 										<p><span>联系人：</span><span>{$list[0]['gam']}</span>&nbsp;&nbsp;&nbsp;&nbsp;<p>姓名：<span>{$list[0]['gam_name']}</span></p><span>电话：<span><span>{$list[0]['gam_mobile']}</span></span></p>
-										<p><span>联系人：</span><span>{$list[0]['gam2']}</span>&nbsp;&nbsp;&nbsp;&nbsp;<p>姓名：<span>{$list[0]['gam_name2']}</span></p><span>电话：<span><span>{$list[0]['gam_mobile2']}</span></span></p>
+										
 								      </div>
 								    </div>
 								  </div>
@@ -171,22 +167,27 @@ jQuery(document).ready(function(){
 								      		未绑定银行卡
 								      		<else/>
 								      		<p><span>持卡姓名：</span><span>{$bank['name']}</span></p>
-								      		<p><span>银行卡名称：</span><span>{$bank['bank_name']}</span></p>
-											<p><span>银行卡号：</span><span>{$bank['bank_num']}</span></p>
+								      		<p><span>银行卡号：</span><span>{$bank['bank_num']}</span></p>
+								      		<p><span>开户行：</span><span>{$bank['bank_name']}</span></p>
+											<p><span>开户行省份：</span><span>{$bank['province']}</span></p>
+								      		<p><span>开户行城市：</span><span>{$bank['city']}</span></p>
 											<p><span>开户行网点：</span><span>{$bank['account_opening']}</span></p>
 											</if>
 								      </div>
 								    </div>
 								  </div>
 								  <div class="panel panel-default">
-								    <div class="panel-heading" role="tab" id="headingsix">
+								  <if condition="$auditing neq null">
+									 <button type="button" class="btn btn-primary" onclick="auditing(this)" value="" id="{$id}">通过</button>
+									 <button type="button" class="btn"  value="" onclick="remark(this)" id="{$id}">不通过</button>
+								  </if> <!-- <div class="panel-heading" role="tab" id="headingsix">
 								      <h4 class="panel-title">
 								        <a class="button" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapsesix" aria-expanded="false" aria-controls="collapsesix">
 								          	借款信息
 								        </a>
 								      </h4>
-								    </div>
-								    <div id="collapsesix" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingsix">
+								    </div> -->
+								   <!--  <div id="collapsesix" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingsix">
 								      <div class="panel-body">
 			                            	<p><span>申请时间：</span><span>{$res[0]['apply_time']}</span></p>
 			                            	<p><span>金额：</span><span>{$res[0]['money_num']}</span></p>
@@ -236,7 +237,7 @@ jQuery(document).ready(function(){
 			                            	</if>
 			                            	</p>
 								      </div>
-								    </div>
+								    </div> -->
 								  </div>
 								</div>
                             	
@@ -299,6 +300,14 @@ function zmf(){
 			}
 		}
 	})
+}
+function auditing(obj){
+	var id = obj.id;
+	window.location.href="/index.php/Admin/auditing?id="+id;
+}
+function remark(obj){
+	var id = obj.id;
+	window.location.href="/index.php/Admin/no_auditing?id="+id;
 }
 //搜索手机用户 
 function user_search(){

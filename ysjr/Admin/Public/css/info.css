@@ -29,18 +29,21 @@ ul {
 	margin: 30px auto 0;
 }
 .tab-tit span {
-	width: 50%;
+	width: 33%;
 	height: 35px;
 	line-height: 35px;
 	text-align: center;
-	border: 2px solid #00B4FF;
+	border: 1px solid #00B4FF;
 }
 .tab-tit .data {
 	border-radius: 20px 0 0 20px;
 }
-.tab-tit .loan {
+.tab-tit .discount {
 	border-radius: 0 20px 20px 0;
 }
+/*.tab-tit .loan {
+	border-radius: 0 20px 20px 0;
+}*/
 /*表格*/
 .tab-con .table-list,
 .tab-con  .record {

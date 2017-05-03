@@ -9,7 +9,7 @@
 		'DB_PREFIX'		=> 'haoidcn_',					// 数据库表前缀
 		'DB_CHARSET'	=> 'UTF8',				// 数据库字符集
 		'URL'			=>	__ROOT__.'/ysjr/Admin/Public/',	//引入文件路径
-		'TITLE'			=>	'学之友微额速达',	//头部标题
+		'TITLE'			=>	'及时雨微额速达',	//头部标题
 
 
 		//邮箱

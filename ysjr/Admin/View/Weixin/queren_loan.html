@@ -90,18 +90,18 @@
 </style>
 </head> 
 <body>
-	<div class="container">
-	  <div class="row img">
-			<img src="{$Think.config.URL}/images/xianjinbashi/lend-4.png"/>
-	  </div>
-	  <div class="center-block look">
+	<div class="container" style="margin-top:0px">
+	  <!-- <div class="row img">
+			<img src="{$Think.config.URL}/images/xianjinbashi/lend-2.jpg"/>
+	  </div> -->
+	  <!-- <div class="center-block look">
 	  		<a href="{:U('Weixin/lend_details')}" class="center-block bowling" id="jiazai"><span class="pull-left tubiao"></span> <span>点击查看借款详情</span></a>
-	  </div>
+	  </div> -->
 	  <form class="list" id="form" action="{:U('Weixin/bank_card')}">
 	  		<div class="form-group select">
 	  			<input type="hidden" value="{$list[0]['bank_name']}" id="bank">
 			  	<select name="info[bank_name]" id="select1">
-			  		<option value="">请选择银行</option>
+			  		<option value="">请选择开户行</option>
 				  	<volist name="bank_name" id="vo">
 					  <option value="{$vo.name}">{$vo.name}</option>
 					</volist>
@@ -110,16 +110,43 @@
 			  		<span class="down-img"></span>
 			  	</span>
 			  </div>
-	  		  <div class="form-group select">
+			  <div class="city-select clearfix">
+        	 	<p class="select half pull-left">
+        	 		<input type="hidden" value="{$list[0]['province']}" id="province">
+             		<select name="province5" class="province pull-left" id="select6"></select>    
+			  		<span class="down pull-left">
+			  			<span class="down-img"></span>
+			  		</span>	
+        	 	</p>
+				<p class="select half pull-right">
+					<input type="hidden" value="{$list[0]['city']}" id="city">
+          			<select name="city5" class="city" id="select7"></select>
+			  		<span class="down">
+			  			<span class="down-img"></span>
+			  		</span>	
+				</p>
+				<div style="display:none"><select name="area5"></select></div>
+        	</div> 
+	  		<div class="form-group select">
 	  				<input type="text" name="info[account_opening]" class="form-control" value="{$list[0]['account_opening']}" placeholder="填写开户行网点"/>
-			  </div>
+			</div>
+			  
+			
 			<div>
 			  	<p>姓名：<span id="name">{$name}</span></p>
 			</div>
+			<div class="form-group select">
+	  				<input type="text" name="info[bank_id_number]" class="form-control" value="{$uid}" placeholder="填写开户身份证号"/>
+			</div>
+			
+			<div class="form-group select">
+	  				<input type="text" name="info[bank_mobile]" class="form-control" value="{$list[0]['bank_mobile']}" placeholder="填写预留手机号"/>
+			</div>
+			
 			<div style="margin-top: 20px;">
 			  	<input type="text" name="info[bank_num]" class="form-control" value="{$list[0]['bank_num']}" placeholder="请输入银行卡号"/>
 			</div>
-			<div class="control-group js_uploadBox" style="margin-top:20px;">
+			<!-- <div class="control-group js_uploadBox" style="margin-top:20px;">
 				<p>上传银行卡截图</p>
 				<div class="btn-upload" style="overflow: hidden;">
 				 	<label for="images1" style="float:left">
@@ -135,8 +162,8 @@
 				<div style="margin-top: 20px;">
 					<a href="bank_anli.html">截图案例</a>
 				</div>
-			</div>
-			
+			</div> -->
+			<input type="hidden" name="info[t]" value="{$t}">
 		  <button class="btn btn-primary" type="button" id="register" onclick="bank_card()">确认绑定</button>
 	  </form>
 	</div>
@@ -154,6 +181,12 @@
 </body>
 <script  type="text/javascript"  src="{$Think.config.URL}js/jquery.uploadView.js"></script>
 <script>
+var province = $('#province').val();
+var city = $('#city').val();
+var province2 = $('#province2').val();
+var city2 = $('#city2').val();
+new PCAS("province5","city5","area5",""+province+"",""+city+"");
+
 $(".js_upFile").uploadView({
 	uploadBox: '.js_uploadBox',//设置上传框容器
 	showBox : '.js_showBox',//设置显示预览图片的容器
@@ -211,9 +244,21 @@ function checkText(){
 			"info[account_opening]":{
 				required:true
 			},
-			"img1":{
+			"info[bank_id_number]":{
 				required:true
 			},
+			"info[bank_mobile]":{
+				required:true
+			},
+			"province5":{
+				required:true
+			},
+			"city5":{
+				required:true
+			},
+			/*"img1":{
+				required:true
+			},*/
 			"info[bank_num]":{
 				required:true,
 				creditcard:true
@@ -226,8 +271,20 @@ function checkText(){
 			"info[account_opening]":{
 				required:'请输入开户网点'
 			},
-			"img1":{
+			"info[bank_id_number]":{
+				required:'请输入开户身份证'
+			},
+			"info[bank_mobile]":{
+				required:'请输入预留手机号'
+			},
+			/*"img1":{
 				required:'请上传银行卡截图'
+			},*/
+			"province5":{
+				required:'请选择您开户的省份'
+			},
+			"city5":{
+				required:'请选择您开户的城市'
 			},
 			"info[bank_num]":{
 				required:'请输入银行卡卡号',
@@ -247,9 +304,9 @@ function bank_card(){
 		data:{'name':name},
 		datatype:"json",
 		success:function(data){
-			if(data == '放款成功'){
+			if(data == '提交成功'){
 				$('.class').css('display','none');
-				alert('银行卡信息提交成功');
+				alert('信息提交成功');
 				setTimeout(function(){WeixinJSBridge.call('closeWindow')},1000);
 			}else{
 				$('.class').css('display','none');

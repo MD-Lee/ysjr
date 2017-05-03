@@ -17,16 +17,27 @@ class Wechat{
             $msgType = trim($postObj->MsgType);
 			$fromUsername = $postObj -> FromUserName;
 			$condition['openid']="$fromUsername";
-		    $ret = M('service')->where($condition)->field('openid')->select();
+		    $ret = M('service')->where($condition)->getField('id');
 			if(empty($ret)){
                 if(!empty($fromUsername)){
 					/*添加基本关注信息*/
 				    $data['openid']="$fromUsername";
-					$data['time']=time();
                     M('service')->add($data);
                  
                 }
             }
+			$newsTpl = "<xml>
+                         <ToUserName><![CDATA[%s]]></ToUserName>
+                         <FromUserName><![CDATA[%s]]></FromUserName>
+                         <CreateTime>%s</CreateTime>
+                         <MsgType><![CDATA[%s]]></MsgType>
+                         <ArticleCount>%s</ArticleCount>
+                         <Articles>
+                         %s
+                         </Articles>
+                         <FuncFlag>0</FuncFlag>
+                         </xml>";
+			
             switch ($msgType)
             {
                 case "text":
@@ -51,13 +62,15 @@ class Wechat{
 
 
     function receiveImage($object){
+		$http_url="http://".$_SERVER['HTTP_HOST'];
         $FromUserName = trim($object->FromUserName);
         $CreateTime = date("Y-m-d H:i:s",time());
         $PicUrl = trim($object->PicUrl);
         $MediaId = trim($object->MediaId);
         $service = D('service');
-        $list = $service->where("openid='$FromUserName'")->select();
-        $phone = $list[0]['phone'];
+		$condition['openid']="$FromUserName";
+        $phone = $service->where($condition)->getField('phone');
+       // $phone = $list[0]['phone'];
         if($phone){
             $access_token = $this->access_token();
             $url = "http://file.api.weixin.qq.com/cgi-bin/media/get?access_token=".$access_token."&media_id=".$MediaId;
@@ -68,7 +81,7 @@ class Wechat{
             //判断图片是否存在，是的话创建
             $img_url = $img_url."/".time().".".rand(1,9999).".jpg";
             file_exists("$img_url") || file_put_contents("$img_url",$fileInfo['body']);
-
+			$img_url=substr($img_url,1);
             $info = array(
                 'openid'=> $FromUserName,
                 'phone'=> $phone,
@@ -76,47 +89,34 @@ class Wechat{
                 'img_url'=> $img_url,
             );
             $weixin_img = D('weixin_img');
-            $img = $weixin_img->where("openid='$FromUserName'")->select();
+            $img = $weixin_img->where($condition)->find();
             if($img){
-                $user_money_info = D('user_money_info');
-                $result = $user_money_info->where("phone='$phone'")->order("id desc")->select();
-                if($result[0]['is_adopt'] == '-1' or $result[0]['is_adopt'] == '2' or $result[0]['is_adopt'] == '3'){
-                    $info['is_adopt'] = '0';
-                    $weixin_img->where("openid='$FromUserName'")->save($info);
-                }
+				$weixin_img->where($condition)->save($info);
+                
             }else{
                 $weixin_img->add($info);
             }
-
-            $arr_item[] = array(
-                "Title" =>"资料上传成功",
-                "Description" =>"尊敬的用户您好，你的资料已经上传成功到我们的后台审核系统，我们的审核人员会尽快与您联系，感谢您对e快金的支持和厚爱！",
-                "PicUrl" =>"$PicUrl"
-            );
-            $itemTpl = "    <item>
-						        <Title><![CDATA[%s]]></Title>
-						        <Description><![CDATA[%s]]></Description>
-						        <PicUrl><![CDATA[%s]]></PicUrl>
-						    </item>
-						";
-            $item_str = "";
-            foreach ($arr_item as $item)
-                $item_str .= sprintf($itemTpl, $item['Title'], $item['Description'], $item['PicUrl']);
-
-            $newsTpl = "<xml>
-				<ToUserName><![CDATA[%s]]></ToUserName>
-				<FromUserName><![CDATA[%s]]></FromUserName>
-				<CreateTime>%s</CreateTime>
-				<MsgType><![CDATA[news]]></MsgType>
-				<Content><![CDATA[]]></Content>
-				<ArticleCount>%s</ArticleCount>
-				<Articles>
-				$item_str</Articles>
-				<FuncFlag>%s</FuncFlag>
-				</xml>";
-
-            $resultStr = sprintf($newsTpl, $object->FromUserName, $object->ToUserName, time(), count($arr_item));
-            return $resultStr;
+			//$PicUrl=$http_url.$img_url;
+			$access_token = $this->access_token();
+            $url = "https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=".$access_token;
+            $text = <<<json
+	    	{
+			    "touser":"$FromUserName",
+			    "msgtype":"news",
+			    "news":{
+			        "articles": [
+			         {
+			             "title":"资料上传成功",
+			             "description":"尊敬的用户您好，你的资料已经上传成功到我们的后台审核系统，我们的审核人员会尽快与您联系，感谢您对及时雨微额速达的支持和厚爱！",
+			         }
+			         ]
+			    }
+			}
+json;
+            $this->https_request($url,$text);
+			
+			
+           
         }else{
             $access_token = $this->access_token();
             $url = "https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=".$access_token;
@@ -129,6 +129,7 @@ class Wechat{
 			         {
 			             "title":"尊敬的用户您尚未注册",
 			             "description":"请注册完再持证自拍上传资料",
+						 "url":"$http_url/index.php/Weixin/register",
 			         }
 			         ]
 			    }
@@ -142,67 +143,49 @@ json;
     function receiveEvent($object)
     {
         $FromUserName = $object->FromUserName;
-		
+		$this -> update_info($FromUserName);
+		$condition['openid']="$FromUserName";
         
-        $service_info = D('service')->where("openid='$FromUserName'")->field('phone,uname')->find();
-		$phone= $service_info['phone'];
+        $service_info = D('service')->where($condition)->field('phone,uname')->find();
+		$phone = $service_info['phone'];
+		if($phone){
+			$is_adopt =  D('user_money_info')->where($condition)->field('is_adopt')->order("id desc")->limit(1)->find();
 		
+		
+			$pwd = D('user_mobile')->where($condition)->find();
+			
+		   
+			$info = D('user_info')->where($condition)->find();
+			
+		   
+			$work = D('user_work')->where($condition)->find();
+			
+			$xuesheng = D('xuesheng')->where($condition)->find();
+			if($xuesheng){
+				$work_info = "学生";
+			}else{
+				$work_info =  $work['work'];
+			}
+		   
+			$gam = D('user_gam')->where($condition)->find();
+		}
 	
-		$is_adopt =  D('user_money_info')->where("openid='$FromUserName'")->field('is_adopt')->order("id desc")->limit(1)->find();
 		
-		
-        $pwd = D('user_mobile')->where("openid='$FromUserName'")->find();
-		
-       
-        $info = D('user_info')->where("openid='$FromUserName'")->find();
-		
-       
-        $work = D('user_work')->where("openid='$FromUserName'")->find();
-		
-       
-        $gam = D('user_gam')->where("openid='$FromUserName'")->find();
 		
 		$http_url="http://".$_SERVER['HTTP_HOST'];
+	
         switch ($object->Event)
         {
             case "subscribe":
 				$this -> update_info($FromUserName);
-                $contentStr = "欢迎关注学之友微额速达";
-                $tuijian = trim($object->EventKey);
-                if ($tuijian != null){
-                    $tuijian = trim($object->EventKey);
-                    $access_token = $this->access_token();
-                    $url = "https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=".$access_token;
-                    $text = <<<json
-			    	{
-					    "touser":"$FromUserName",
-					    "msgtype":"news",
-					    "news":{
-					        "articles": [
-					         {
-					             "title":"推荐码",
-					             "description":"{$tuijian}",
-					         }
-					         ]
-					    }
-					}
-json;
-                    $this->https_request($url,$text);
-                    $time = date("Y-m-d",time());
-                    $openid = trim($FromUserName);
-                    $tj = D('tuijian');
-                    $tuijian_info = array(
-                        'time'=>$time,
-                        'tuijian'=>$tuijian,
-                        'openid'=>$openid
-                    );
-                    $list = $tj->where("openid='$openid'")->select();
-                    if($list){
-                        $tj->where("openid='$openid'")->save($tuijian_info);
-                    }else{
-                        $tj->add($tuijian_info);
-                    }
-                }
+				$uname = D('service')->where($condition)->getField('uname');
+				$PicUrl =$http_url."/Uploads/logo.jpg";
+				$contentStr[] = array(
+                                "Title" =>"欢迎",
+                                "Description" =>"尊敬的用户:".$uname."您好！欢迎关注及时雨微额速达.\n 请点击<查看全文>进行注册",
+								"PicUrl" =>"$PicUrl",
+								"Url" =>"$http_url/index.php/Weixin/register"
+                            );
                 break;
             case "CLICK":
                 switch ($object->EventKey)
@@ -212,18 +195,18 @@ json;
                             $contentStr[] = array(
                                 "Title" =>"注册",
                                 "Description" =>"尊敬的用户:".$service_info['uname']."，您尚未注册，无法使用本功能,点击<查看全文>进行注册",
-								"Url" =>"$http_url/index.php/Weixin/register"
+								"Url" =>"$http_url/index.php/Weixin/register",
                             );
                         }else if(empty($pwd)){
                             $contentStr[] = array(
                                 "Title" =>"尚未验证",
                                 "Description" =>"您尚未进行手机实名认证，点击<查看全文>开始手机实名认证",
-                                "Url" =>"$http_url/index.php/Weixin/mobile"
+                                "Url" =>"$http_url/index.php/Weixin/mobile",
                             );
                         }else{
                             $contentStr[] = array(
                                 "Title" =>"手机已认证",
-                                "Description" =>"尊敬的用户：".$service_info['uname']."，您已经完成手机认证"
+                                "Description" =>"尊敬的用户：".$service_info['uname']."，您已经完成手机认证",
                             );
                         }/* else if($is_adopt == '1'){
                             $contentStr[] = array(
@@ -242,31 +225,31 @@ json;
                             $contentStr[] = array(
                                 "Title" =>"注册",
                                 "Description" =>"尊敬的用户:".$service_info['uname']."，您尚未注册，无法使用本功能,点击<查看全文>进行注册",
-								"Url" =>"$http_url/index.php/Weixin/register"
+								"Url" =>"$http_url/index.php/Weixin/register",
                             );
                         }else if(empty($info) or empty($gam)){
                             $contentStr[] = array(
                                 "Title" =>"尚未认证",
                                 "Description" =>"您的身份尚未认证,点击<查看全文>开始身份认证",
-                                "Url" =>"$http_url/index.php/Weixin/user_info"
+                                "Url" =>"$http_url/index.php/Weixin/user_info",
                             );
                         }else if($is_adopt == '0'){
                             $contentStr[] = array(
                                 "Title" =>"身份认证中",
-                                "Description" =>"我们正在马不停蹄的验证您的身份资料，请您的稍等片刻"
+                                "Description" =>"我们正在马不停蹄的验证您的身份资料，请您的稍等片刻",
                             );
                         }else if($is_adopt == '1'){
                             $contentStr[] = array(
                                 "Title" =>"身份已认证",
-                                "Description" =>"尊敬的用户您好，您的身份已经认证成功"
+                                "Description" =>"尊敬的用户您好，您的身份已经认证成功",
                             );
                         }else if($info and $gam){
                             $contentStr[] = array(
                                 "Title" =>"已提交",
                                 "Description" =>"姓名：{$info['name']}
 身份证号：{$info['uid']}
-职业：{$work['work']}
-薪资：{$work['wages']}
+职业：{$work_info}
+
 
 联系人手机号
 {$gam['family']}：{$gam['family_mobile']}
@@ -285,10 +268,11 @@ json;
                         );
                         break;
                     case "V05":
-                        $contentStr[] = array(
+						$contentStr='';
+                       /*  $contentStr[] = array(
                             "Title" =>"您可直接微信留言，我们将尽快回复您！",
                             "Description" =>"咨询时间：周一至周日 早上9：30-晚上17：30",
-                        );
+                        ); */
                         break;
                     case "V06":
                         $contentStr[] = array(
@@ -330,9 +314,20 @@ json;
         }
         if (is_array($contentStr)){
             $resultStr = $this->transmitNews($object, $contentStr);
-        }else{
+        }elseif(!empty($contentStr)){
             $resultStr = $this->transmitText($object, $contentStr);
-        }
+        }else{
+			$fromUsername = $object->FromUserName;
+			$toUsername = $object->ToUserName;
+			$time = time();
+			$resultStr = "<xml>
+            <ToUserName><![CDATA[$fromUsername]]></ToUserName>
+            <FromUserName><![CDATA[$toUsername]]></FromUserName>
+            <CreateTime>$time</CreateTime>
+            <MsgType><![CDATA[transfer_customer_service]]></MsgType>
+            </xml>";
+			
+		}
         return $resultStr;
     }
 
@@ -341,30 +336,32 @@ json;
         //首条标题28字，其他标题39字
         if(!is_array($arr_item))
             return;
-
         $itemTpl = "    <item>
 						        <Title><![CDATA[%s]]></Title>
 						        <Description><![CDATA[%s]]></Description>
+						        <PicUrl><![CDATA[%s]]></PicUrl>
 						        <Url><![CDATA[%s]]></Url>
 						    </item>
 						";
         $item_str = "";
-        foreach ($arr_item as $item)
-            $item_str .= sprintf($itemTpl, $item['Title'], $item['Description'], $item['Url']);
-
+        foreach ($arr_item as $item){
+			
+		$item_str .= sprintf($itemTpl, $item['Title'], $item['Description'],$item['PicUrl'], $item['Url']);
+		};
         $newsTpl = "<xml>
 				<ToUserName><![CDATA[%s]]></ToUserName>
 				<FromUserName><![CDATA[%s]]></FromUserName>
 				<CreateTime>%s</CreateTime>
 				<MsgType><![CDATA[news]]></MsgType>
-				<Content><![CDATA[]]></Content>
 				<ArticleCount>%s</ArticleCount>
 				<Articles>
-				$item_str</Articles>
+				%s
+				</Articles>
 				<FuncFlag>%s</FuncFlag>
 				</xml>";
-
-        $resultStr = sprintf($newsTpl, $object->FromUserName, $object->ToUserName, time(), count($arr_item), $funcFlag);
+		$ArticleCount=count($arr_item);
+		$time=time();
+        $resultStr = sprintf($newsTpl, $object->FromUserName, $object->ToUserName, $time, $ArticleCount,$item_str,$funcFlag);
         return $resultStr;
     }
 
@@ -463,6 +460,8 @@ json;
 			$appid = $ret['appid'];
 			$appsecret = $ret['appsecret'];
 			$dateline = $ret['dateline'];
+			$access_token = $ret['access_token'];
+			
 			$time = time();
 		
         if(($time - $dateline) > 7200){
@@ -491,7 +490,7 @@ json;
     }
   private function update_info($wxid){
             $access_token =  $this->access_token();
-			$url = "https://api.weixin.qq.com/cgi-bin/user/info?access_token=$access_token&openid=$wxid";
+			$url = "https://api.weixin.qq.com/cgi-bin/user/info?access_token=$access_token&openid=".$wxid;
 			$res_json = $this->https_request($url);
 		    $w_user = json_decode($res_json, TRUE);
 			$w_sql = "UPDATE  `haoidcn_service` SET  `uname` =  '$w_user[nickname]',`headimgurl` =  '$w_user[headimgurl]'  WHERE `openid` = '$wxid';";

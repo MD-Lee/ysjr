@@ -69,7 +69,7 @@ jQuery(document).ready(function(){
                             			<option value="2">未通过</option>
                             			<option value="3">已取消申请</option>
                             		</select>
-                            		<if condition="$limits eq '1'">
+                            		<!-- <if condition="$limits eq '1'">
                             			<input type="hidden" value="{$loan_people}" id="loan_people">
 	                            		<select name="loan_people" style="width:100px;" id="select3">
 	                            			<option value="">选择审核人员</option>
@@ -77,7 +77,7 @@ jQuery(document).ready(function(){
 		                            				<option value="{$vo.userid}">{$vo.userid}</option>
 		                            			</volist>
 	                            		</select>
-                            		</if>
+                            		</if> -->
                             		<span>日期：<input type="text" id="datepicker1" style="width:80px" name="apply_time1" value="{$apply_time1}">至<input type="text" id="datepicker2" style="width:80px" name="apply_time2" value="{$apply_time2}"></span>
 	                            	<input type="submit" class="btn btn-primary" value="搜索" name="submit">
 	                            </form>
@@ -89,30 +89,32 @@ jQuery(document).ready(function(){
 	                            			<th width="200px;">手机</th>
 	                            			<th width="300px;">注册时间</th>
 	                            			<th width="200px;">状态</th>
-	                            			<th width="100px;">审核人员</th>
-	                            			<th width="100px;">推荐人</th>
+	                            			<th width="200px;">操作</th>
+	                            			<!-- <th width="100px;">审核人员</th>
+	                            			<th width="100px;">推荐人</th> -->
 	                            		</tr>
 	                            		<volist name="list" id="vo">
 	                            			<tr id="s_manage{$vo.id}">
 	                            				<td>{$vo.uname}</td>
 	                            				<td>{$vo.name}</td>
-	                            				<td><a href="{:U('Admin/user_details',array('phone'=>$vo[phone]))}">{$vo.phone}</a></td>
+	                            				<td><a href="{:U('Admin/user_details',array('id'=>$vo[id]))}">{$vo.phone}</a></td>
 	                            				<td>{$vo.time}</td>
 	                            				<td>
-	                            					<if condition="$vo.is_adopt eq -1">
+	                            					<if condition="$vo.status eq -1">
 		                           						未完善个人资料
-		                           					<elseif condition="$vo.is_adopt eq 0"/>
-		                           						<span style="color:red">申请中</span>
-		                           					<elseif condition="$vo.is_adopt eq 1"/>
+		                           					<elseif condition="$vo.status eq 0"/>
+		                           						提交资料,审核中
+		                           					<elseif condition="$vo.status eq 1"/>
 		                           						通过审核
-		                           					<elseif condition="$vo.is_adopt eq 2"/>
+		                           					<elseif condition="$vo.status eq 2"/>
 		                           						未通过
-		                           					<else/>
-		                           						已取消申请
+													<elseif condition="$vo.status eq 3"/>
+		                           						重新提交资料,审核中
 		                           					</if>
 	                            				</td>
-	                            				<td>{$vo.loan_people}</td>
-	                            				<td>{$vo.recommend}</td>
+	                            				<!-- <td>{$vo.loan_people}</td>
+	                            				<td>{$vo.recommend}</td> -->
+	                            				<td><if condition="$vo.status eq 3 or $vo.status eq 0"><a href="{:U('Admin/user_details',array('id'=>$vo[id],'auditing'=>1))}">审核</a></if></td> 
 	                            			</tr>
 	                            		</volist>
 	                            	</table> 

@@ -28,22 +28,27 @@
 </head>
 <body>
 	<div class="container">
-	  <div class="row">
-	  	<div class="row img">
-			<img src="{$Think.config.URL}/images/xianjinbashi/lend-2.png"/>
-	  	</div>
+	 <div class="row img">
+		<img src="{$Think.config.URL}/images/xianjinbashi/lend-1.jpg"/>
 	  </div>
 	  <form id="form" action="{:U('Weixin/verify_mobile_method')}">
 		  <div align="center" class="text">
 		  	<p id="phone">您的手机号：<span id="phoneInfo">{$telString}</span></p>
 		  	<p>所属运营商：<span id="operator">{$carrier}</span></p>
 		  </div>
-		  <div class="form-group">
-		    <input type="text" class="form-control" value="{$list[0]['service_pwd']}" name="info[service_pwd]" placeholder="手机服务密码" style="width:70%;float:left;">
+		 <div class="form-group">
+		    <input type="text" class="form-control" value="{$list['name']}" name="info[name]" placeholder="真实姓名" >
+		  </div> 
+		   <div class="form-group">
+		    <input type="text" class="form-control" value="{$list['idcard']}" name="info[idcard]" placeholder="证件号码" >
+		  </div> 
+		 
+		  <!-- <div class="form-group">
+		    <input type="text" class="form-control" value="{$list['service_pwd']}" name="info[service_pwd]" placeholder="手机服务密码" style="width:70%;float:left;">
 		    <button type="button" class="btn btn-primary what" style="width:30%">
 		    	<a href="{:U('Weixin/guide')}">忘记密码？</a>
 		    </button>
-		  </div>
+		  </div> -->
 		  <div class="form-group clearfix" >
 		    <input type="text" class="form-control" name="info[verify]" placeholder="请输入图片验证码" style="width:70%;float:left;">
 		    <p class="pull-left drawing" >
@@ -77,20 +82,40 @@ function checkText(){
 		},
 		errorElement: "div",
 		rules:{
-			"info[service_pwd]":{
+			/*"info[service_pwd]":{
 				required:true,
 				number:true,
 				maxlength:6
+			},*/
+			"info[name]":{
+				required:true,
+				
+				maxlength:12
+			},
+			"info[idcard]":{
+				required:true,
+				number:true,
+				maxlength:18
 			},
 			"info[verify]":{
 				required:true
 			}
 		},
 		messages:{
-			"info[service_pwd]":{
+			/*"info[service_pwd]":{
 				required:'请输入您的运营商服务密码',
 				number:"请输入正确的服务密码",
 				maxlength:"请输入正确的服务密码"
+			},*/
+			"info[name]":{
+				required:'请输入您的真实姓名',
+				
+				maxlength:"请输入正确的真实姓名"
+			},
+			"info[idcard]":{
+				required:'请输入您的证件号码',
+				number:"请输入正确的证件号码",
+				maxlength:"请输入正确的证件号码"
 			},
 			"info[verify]":{
 				required:'请输入图形验证码'
@@ -114,7 +139,17 @@ function verify_mobile_method(){
 				setTimeout(function(){window.location.href="/index.php/Weixin/verify_user_info"},1000);
 			}else{
 				$('.class').css('display','none');
-				alert(data);
+				//alert(data);
+				if(data == "1"){
+					alert("亲，验证码不正确");
+				}else if(data == "2"){
+					alert("亲，信息不正确！请检查填写的是否正确");
+				}else if(data == "3"){
+					alert("亲,运营商正忙,请稍后再试!");
+				}else{
+					alert("请求信息正在路上");
+				}
+				//alert(data);
 			}
 		}
 	})

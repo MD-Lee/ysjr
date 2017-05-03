@@ -75,12 +75,12 @@ jQuery(document).ready(function(){
                             			<th width="50px;">实际放款额度</th>
                             			<th width="200px;">放款日期</th>
                             			<th width="100px;">约定还款日期</th>
-                            			<th width="150px;">风控级别</th>
-                            			<th width="100px;">审核人员</th>
+                            			<!-- <th width="150px;">风控级别</th>
+                            			<th width="100px;">审核人员</th> -->
                             		</tr>
                             		<volist name="list" id="vo">
                             			<tr>
-                            				<td><a href="{:U('Transaction/contract',array('phone'=>$vo['phone']))}">{$vo.phone}</a></td>
+                            				<td><a href="{:U('Task/jiekuan',array('id'=>$vo['user_money_info']))}">{$vo.phone}</a></td>
                             				<td>{$vo.name}</td>
                             				<td>{$vo.bank_num}</td>
                             				<td>{$vo.account_opening}</td>
@@ -94,8 +94,8 @@ jQuery(document).ready(function(){
                             				<td>{$vo.actual_money}</td>
                             				<td>{$vo.payment_time}</td>
                             				<td>{$vo.appoint_time}</td>
-                            				<td>{$vo.level}</td>
-                            				<td>{$vo.loan_people}</td>
+                            				<!-- <td>{$vo.level}</td>
+                            				<td>{$vo.loan_people}</td> -->
                             			</tr>
                             		</volist>
                             	</table> 

@@ -36,6 +36,7 @@
 			  
 			  var files = obj[0].files;
 			  var f = files[0];
+			// alert(f.name);
 			  if (!isAllowFile(f.name)) {
 			    alert("请上传常规格式的图片,如：jpg,png,gif等");
 			    return false;
@@ -72,6 +73,7 @@
 		}
 		//获取上传文件的后缀名
 		var getFileExt = function(fileName){
+			
 			  if (!fileName) {
 				    return '';
 				  }

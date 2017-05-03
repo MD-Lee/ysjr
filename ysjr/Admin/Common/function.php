@@ -175,6 +175,52 @@ json;
 	$array = json_decode($output,true);
 	return $array;
 }
+
+
+function template_news($data,$type=0,$newid){
+	if($newid){
+		$openid =$newid;
+	}else{
+		$admin_info = M('admin_data')->join("haoidcn_service as a ON haoidcn_admin_data.mobile=a.phone")->where("haoidcn_admin_data.id=1")->field('a.openid')->find();
+		$openid = $admin_info['openid'];
+	}
+	
+	$type = $type ?$type:0;
+	if(!empty($openid)){
+		/*1 借款模板 0还款模板 2 资料提交成功提醒*/
+		switch ($type)
+            {
+                case "1":
+                    $template_id = 'EaBjt7-3zIkbL7g88ZhRvXVvYPxMvTmrJyyiMnfz3L8';
+                    break;
+                case "2":
+                    $template_id = 'SsRnIl6PMVwpQxyfnpdFlPfVxWpZW_YG0dpkYMRzSGw';
+                    break;
+                case "0":
+                     $template_id = 'a2Awcz5bDzxmb3er7a8UTNktfDurEMRRwnyAUip3BJ4';
+                    break;
+				case "5":
+                     $template_id = '7g30nXUsSluSoRll-QCOO51FFjEh-p-6hWuUMkYfDac';
+                    break;
+                default:
+                    $template_id = "";
+                    break;
+            }
+		//$template_id=$type?'EaBjt7-3zIkbL7g88ZhRvXVvYPxMvTmrJyyiMnfz3L8':'a2Awcz5bDzxmb3er7a8UTNktfDurEMRRwnyAUip3BJ4';
+		$sendata =array (
+				'touser' =>"".$openid."",
+				'template_id' =>"$template_id",
+				'url' =>'',
+				'data' =>$data
+				);
+		$access_token = access_token();
+		$url="https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=".$access_token;
+		$sendata=urldecode(json_encode($sendata));
+		$res=https_request($url,$sendata);
+		
+	}
+	
+}
 function newaccess_token(){
 			/*配置信息查询*/
 			$condition['id']=1;
@@ -245,4 +291,75 @@ function  new_get_user_info($redirect_uri){
 	    header("Location: $oauth_url");
 	    exit;
 	}
+	
+function newdownloadWeixinFile($url){
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_NOBODY, 0);    //只取body头
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        $package = curl_exec($ch);
+        $httpinfo = curl_getinfo($ch);
+        curl_close($ch);
+        $imageAll = array_merge(array('header' => $httpinfo), array('body' => $package));
+        return $imageAll;
+    }
+function validate_bank($bank_num,$name,$bank_id_number,$bank_mobile){
+		//银行卡四要素验证  bank_num 银行卡号   name 姓名  bank_id_number 身份证号  bank_mobile 预留手机号
+		$url = "http://api.jisuapi.com/bankcardverify4/verify?appkey=f21fab567be0a064&bankcard=".$bank_num."&realname=".$name."&idcard=".$bank_id_number."&mobile=".$bank_mobile;
+		$result = https_request($url);
+		$jsonarr = json_decode($result, true);
+		if($jsonarr['status'] != 0){
+			//echo $jsonarr['msg'];
+			//$data = '抱歉，银行卡号校验不一致！请检查各项信息是否正确';
+			return	false;
+		}else{
+			return	true;
+		}	
+}
 
+function validate_mobile($name, $idcard, $mobile){
+	//手机实名认证  姓名  身份证号  手机号
+	$url = "http://api.jisuapi.com/mobileverify/verify?appkey=f21fab567be0a064&realname=".$name."&idcard=".$idcard."&typeid=1&mobile=".$mobile;
+	$result = https_request($url);
+	$jsonarr = json_decode($result, true);
+	if($jsonarr['status'] != 0){
+		if(in_array($jsonarr['status'],array(101,102,103,104,105,106,107,108))){
+			/*系统错误*/
+			return	3;
+		}else{
+			/*信息不符合*/
+			return	2;
+		}
+	}else{
+		return	1;
+	}	
+}
+
+function remind(){
+	$where['is_overdue'] = 0;
+	$where['is_repayment'] = 0;
+	
+	$time = date('Y-m-d',time());
+	$list = M('payment_list')->where($where)->select();
+	
+	foreach($list as $v){
+		$atime = strtotime($v['appoint_time']);
+		$start=$atime-60*60*24;
+		$btime = time();
+		
+		if($btime>$start){
+			$news_data= array (
+							    'first' =>array('value' => urlencode("马上就到还款日期了")),
+								'keyword1' =>array('value' => urlencode("还款提醒")),
+								'keyword2' => array('value' => urlencode("尊敬的客户")),
+								'keyword3' => array('value' => urlencode("马上就到还款日期了")),
+								'keyword4' =>array('value' => urlencode($time)),
+							  );
+							 
+			template_news($news_data,5,$v['openid']);
+		}
+		
+	}
+}

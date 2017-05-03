@@ -47,7 +47,7 @@
 					<em class="next"></em>
 				</li>
 				
-				<if condition="$data eq 9">
+				<!-- <if condition="$data eq 9">
 					<li class="list-item" id="two">
 						<i class="icons"></i>
 						绑定银行卡
@@ -59,25 +59,47 @@
 						绑定银行卡
 						<span class="fr text">正在验证</span>
 					</li>
-				<elseif condition="$data eq 5  or $data eq 4 or $data eq 6 or $data eq 7"/>
+				<elseif condition="$data eq 5  or $data eq 4 or $data eq 6 or $data eq 7 or $data eq 11 or $data eq 12"/>
 					<li class="list-item color" id="two">
 						<i class="icons loading yes"></i>
 						绑定银行卡
 						<span class="fr text">完成</span>
 					</li>
-				</if>
+				</if> -->
+				
+				<!-- <li class="list-item">
+					<em class="next"></em>
+				</li>
+				<li class="list-item color" id="two">
+						<i class="icons loading yes"></i>
+						签约
+						<span class="fr text">完成</span>
+					</li> -->
+				<!-- <if condition="$data eq 11">
+					<li class="list-item" id="two">
+						<i class="icons"></i>
+						签约
+						<span class="fr text">未签约</span>
+					</li>
+				<elseif condition="$data eq 12"/>
+					<li class="list-item color" id="two">
+						<i class="icons loading yes"></i>
+						签约
+						<span class="fr text">完成</span>
+					</li>
+ 				</if> -->
 				
 				<li class="list-item">
 					<em class="next"></em>
 				</li>
 				
-				<if condition="$data eq 1 or $data eq 2 or $data eq 5  or $data eq 3 or $data eq 9">
-					<li class="list-item" id="five">
-						<i class="icons"></i>
+				<if condition="$datas eq 1">
+					<li class="list-item color" id="five">
+						<i class="icons loading yes"></i>
 						开始放款
-						<span class="fr text">未放款</span>
+						<span class="fr text">成功</span>
 					</li>
-				<elseif condition="$data eq 4"/>
+				<else/>
 					<li class="list-item color" id="five">
 						<i class="icons loading yes"></i>
 						开始放款
@@ -100,9 +122,25 @@
 				</if>
 			</if>
 			</ul>
+			
+			<if condition="$data eq 9 ">
+			<a href="queren_loan">
+			<button class="sure" style="background-color: #00b4ff;">
+				绑定银行卡
+			</button>
+			</a>
+			<elseif condition="$data eq 11"/>
+			<a href="{:U('Weixin/protocol',array('id'=>$id))}">
+			<button class="sure" style="background-color: #00b4ff;">
+				签约
+			</button>
+			</a>
+			<else/>
 			<button class="sure">
 				后台审核中...
 			</button>
+			</if>
+			
 <!--			<p class="explain">我们正在审核您的资料，请耐心等待。<br>点击<a href="">查看详情</a></p>
 -->		</div>
 	</body>

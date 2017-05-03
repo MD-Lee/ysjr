@@ -71,7 +71,7 @@ jQuery(document).ready(function(){
                                    		<th width="50px">实际放款</th>
                                    		<th width="150px">银行卡号</th>
                                    		<th width="100px">开户行</th>
-                                   		<th width="50px">审核人员</th>
+                                   		
                                    		<th width="150px">操作</th>                                                                  		
                                    	</tr>
                                    	<volist name="list" id="vo">
@@ -106,7 +106,7 @@ jQuery(document).ready(function(){
 	                                         <td>{$vo.daozhang}</td>
 	                                         <td>{$vo.bank_num}</td>
 	                                         <td>{$vo.account_opening}</td>
-	                                         <td>{$vo.loan_people}</td>              
+	                                      
 	                                         <td>
 	                                         	<a href="#myModal" role="button"  data-toggle="modal" onclick="loan(this)" id="{$vo.id}">确定放款</a>
 	                                         </td>

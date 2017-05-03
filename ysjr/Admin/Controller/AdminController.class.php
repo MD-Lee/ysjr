@@ -350,6 +350,7 @@ class AdminController extends CommonController {
     		$this->assign("page",$show); 
     		//$list = $User->join("haoidcn_user_money_info as b ON haoidcn_service.phone=b.phone")->order("haoidcn_service.id desc")->limit($Page->firstRow. ',' . $Page->listRows)->select();
     		$list = $User->order("id desc")->limit($Page->firstRow. ',' . $Page->listRows)->select();
+			
     		foreach ($list as $key=>$value){
     			//$name = $user_info->where("phone='{$list[$key]['phone']}'")->find();
     			$name = $user_info->where("openid='{$list[$key]['openid']}'")->find();
@@ -374,30 +375,127 @@ class AdminController extends CommonController {
     	$this->assign("data",$data);
     	$this->display();
     }
+	/*会员审核 修改*/
+	
+	public function auditing(){
+		$id = I('id');//USER_ID
+		$map['id'] = $id;
+		if(empty($id)){
+			$this->error('缺少参数', U('Admin/user_details',array('id'=>$id,'auditing'=>1)));
+		}else{
+			$sdata['status'] =1; 
+			$sdata['auditing_time'] =time(); 
+			$result = M('service')->where($map)->save($sdata);
+			
+			$openid=M('service')->where($map)->getField('openid');
+			if($result){
+				$access_token = access_token();
+				$url = "https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=".$access_token;
+				$text = <<<json
+						{
+							"touser":"$openid",
+							"msgtype":"news",
+							"news":{
+								"articles": [
+								{
+										"title":"审核提醒",
+										"description":"尊敬的用户，您好，您提交的资料已审核成功！",
+								}
+								]
+							}
+						}
+json;
+    	$this->https_request($url,$text);
+				
+				$this->error('审核成功', U('Admin/user_details',array('id'=>$id)));
+			}else{
+				$this->error('审核失败', U('Admin/user_details',array('id'=>$id,'auditing'=>1)));	
+			}	
+		}
 
+	}
+	public function no_auditing(){
+		$id = I('id');//USER_ID
+		$map['id'] = $id;
+		if(IS_POST){
+			$id = I('id');//USER_ID
+			$map['id'] = $id;
+			$openid=M('service')->where($map)->getField('openid');
+			$remark = I('remark');
+			$data['remark'] = $remark;
+			$data['status'] = 2;
+		
+			$data['auditing_time'] =time(); 
+			
+			$result = M('service')->where($map)->save($data);
+			if($result){
+			$access_token = access_token();
+    		$url = "https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=".$access_token;
+    		$data = <<<json
+    		{
+			    "touser":"$openid",
+			    "msgtype":"news",
+			    "news":{
+			        "articles": [
+			         {
+			             "title":"很抱歉，您的申请未通过",
+			             "description":"根据您提交的资料，我们系统未能通过您的借款申请，没能帮到您，实在很抱歉
+拒接原因：$remark
+若有任何疑问请直接微信留言，感谢您的参与与支持",
+			         }
+			         ]
+			    }
+			}
+json;
+    		$this->https_request($url,$data);
+				$data = '提交成功';
+				$this->ajaxReturn($data);
+			}else{
+				$data = '审核失败';
+				$this->ajaxReturn($data);
+			}
+			
+			
+		}
+		$this->assign('id',$id);
+		$this->display();
+	}
+	
     
     //会员详情
     public function user_details(){
-    	$phone = I('phone');
-    	$user = D('service');
-    	$user_money_info = D("user_money_info");
-    	$xuesheng = D('xuesheng');
-    	$xs = $xuesheng->where("phone='$phone'")->find();
-    	$list = $user->query("select * from haoidcn_service as a left join haoidcn_user_info as b ON a.phone=b.phone left join haoidcn_user_gam as d ON a.phone=d.phone left join haoidcn_user_mobile as e ON a.phone=e.phone left join haoidcn_weixin_img as g ON a.openid=g.openid  where a.phone='$phone'");
+    	/* $phone = I('phone'); */
+		$id = I('id');
+		$auditing = I('auditing');
+		$openid = M('service')->where("id='$id'")->getField('openid');
+		$map['openid'] = $openid;
+    	$xs = D('xuesheng')->where($map)->find();
+		//$user_info=M('user_info')->where($map)->find();
+		
+    	$list = D()->query("select g.img_url,g.img1,g.img2,a.id,b.phone,b.name,b.uID,b.qq,b.email,b.education,b.marriage,b.is_children,
+							d.family,d.family_name,d.family_mobile,d.gam,d.gam_name,d.gam_mobile
+						from haoidcn_service as a 
+						left join haoidcn_user_info as b ON a.openid=b.openid 
+						left join haoidcn_user_gam as d ON a.openid=d.openid 
+						left join haoidcn_user_mobile as e ON a.openid=e.openid 
+						left join haoidcn_weixin_img as g ON a.openid=g.openid  
+						where a.openid='$openid'");
     	$this->assign('list',$list);
     	$user_work = D('user_work');
-    	$work = $user_work->where("phone='$phone'")->find();
+    	$work = $user_work->where($map)->find();
     	$this->assign('work',$work);
     	$bank_info = D('bank_info');
-    	$bank = $bank_info->where("phone='$phone'")->find();
+    	$bank = $bank_info->where($map)->find();
     	$this->assign('bank',$bank);
     	$payment_list = D('payment_list');
-    	$fangkuan = $payment_list->where("phone='$phone' and is_repayment=0")->find();
-    	$res = $user_money_info->where("phone='$phone'")->order("id desc")->select();
+    	$fangkuan = $payment_list->where("openid='$openid' and is_repayment=0")->find();
+    	$res =  D("user_money_info")->where($map)->order("id desc")->select();
     	$this->assign('res',$res);
     	$this->assign('fangkuan',$fangkuan);
     	$this->assign('phone',$phone);
     	$this->assign('xuesheng',$xs);
+    	$this->assign('id',$id);
+    	$this->assign('auditing',$auditing);
     	$this->display();
     }
     //会员列表搜索
@@ -1288,7 +1386,7 @@ json;
     //信贷信息页面
     public function money_manage(){
     	$loan_money = D('loan_money');
-    	$list = $loan_money->select();
+    	$list = $loan_money->order('time_length desc,money_num asc')->select();
     	$this->assign('list',$list);
     	$data = array(
     			'sh_seven' => "active",
@@ -1310,21 +1408,35 @@ json;
     }
     //修改信贷信息
     public function edit_money(){
+		
     	$id = I('id');
-    	$loan_money = D('loan_money');
-    	$list = $loan_money->where("id={$id}")->select();
+		if($id){
+			$loan_money = D('loan_money');
+			$list = $loan_money->where("id={$id}")->select();	
+		}else{
+			$list='';
+		}
+    	
     	$this->ajaxReturn($list);
     }
     
     //把修改的信息到数据里面更新
     public function edit_money_manage(){
     	$info = I('info');
-    	$info['sum'] = $info['money_num']-$info['letter']-$info['account_money']-$info['interest'];
+    	$info['sum'] = $info['money_num']+$info['letter']+$info['account_money']+$info['interest'];
     	$loan_money = D('loan_money');
     	if(is_array($info)){
-    		$loan_money->where("id=".$info['id'])->save($info);
-    		$data = '修改配置成功';
-    		$this->ajaxReturn($data);
+			if($info['id']){
+				$loan_money->where("id=".$info['id'])->save($info);
+				$data = '修改配置成功';
+				$this->ajaxReturn($data);
+			}else{
+				$loan_money->add($info);
+				$data = '添加配置成功';
+				$this->ajaxReturn($data);
+			}
+    		
+    		
     	}
     }
 
@@ -1375,7 +1487,43 @@ json;
     		}
     	}
     }
+    //容时配置界面
+    public function volume(){
+  
+    	$result = D('user_volume')->find();
+    	$interest = $result['interest'];  
     
+    	$this->assign('interest',$interest);  
+    	
+    	$data = array(
+    			'sh_seven' => "active",
+    			'sh_block6' => " style='display:block';",
+    			'sh_two33' => " class='active'"
+    	);
+    	$this->assign("data",$data);
+    	$this->display();
+    }
+    
+    
+    //添加容时费用
+    public function add_volume(){
+    	$info = I('info');
+  
+    	if(is_array($info)){
+    		
+    		$result = D('user_volume')->find();
+    		if($result){
+				$info['id'] = 1;
+    			D('user_volume')->save($info);
+    			$data = '更新配置成功';
+    			$this->ajaxReturn($data);
+    		}else{
+    			D('user_volume')->add($info);
+    			$data = '更新配置成功';
+    			$this->ajaxReturn($data);
+    		}
+    	}
+    }
     
     //续期配置界面
     public function xuqi(){

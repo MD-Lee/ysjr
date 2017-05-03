@@ -40,7 +40,7 @@
                                     <h4 class="widgettitle">审核备注</h4>
                                     <div class="widgetcontent">
                                     	<div style="padding:15px 40px;">
-	                                    	<form action="{:U('Task/on_adopt')}" id="form">
+	                                    	<form action="{:U('Task/adopt_ok')}" id="form">
 		                                    	<p style="margin:0 0;">
 		                                            <div>手机号：{$list['phone']}</div>
 		                                        </p>
@@ -54,7 +54,7 @@
 		                                        <p style="margin:0 0;">
 		                                        	<div>实际放款额度：{$list['daozhang']}</div>
 		                                        </p>
-		                                        <p style="margin:0 0;">
+		                                       <!--  <p style="margin:0 0;">
 		                                        	<label style="float:left;margin-top: 5px;">平台审批额度：</label>
 		                                        	<input type="text" class="input-xlarge" name="content"/>
 		                                        </p>
@@ -65,7 +65,7 @@
 				                            			<option value="一般">一般</option>
 				                            			<option value="优秀">优秀</option>
 				                            		</select>
-		                                        </p>
+		                                        </p> -->
 		                                        <input type="hidden" value="{$id}" name="id">
 		                                    </form>
                                             <p>
@@ -95,18 +95,18 @@
 <script>
 function submit_loan(){
 	var id = $("input[name=id]").val();
-	var content = $("input[name=content]").val();
+	//var content = $("input[name=content]").val();
 	var money_num = $("input[name=money_num]").val();
-	var level = $("select[name=level]").val();
+	//var level = $("select[name=level]").val();
 	var time_length = $("#time_length").text();
 	$.ajax({
 		type:"POST",
 		url:"{:U('Task/adopt_ok')}",
 		data:{
 			'id':id,
-			'content':content,
+			//'content':content,
 			'money_num':money_num,
-			'level':level,
+			//'level':level,
 			'time_length':time_length
 		},
 		datatype:"json",
