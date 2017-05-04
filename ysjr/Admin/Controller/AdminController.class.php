@@ -390,6 +390,7 @@ class AdminController extends CommonController {
 			$openid=M('service')->where($map)->getField('openid');
 			if($result){
 				$access_token = access_token();
+				$wurl =  U('Weixin/choice_money@ysjr.9xgk.com');
 				$url = "https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=".$access_token;
 				$text = <<<json
 						{
@@ -400,6 +401,7 @@ class AdminController extends CommonController {
 								{
 										"title":"审核提醒",
 										"description":"尊敬的用户，您好，您提交的资料已审核成功！",
+										"url":"$wurl"
 								}
 								]
 							}

@@ -269,12 +269,13 @@ class TransactionController extends CommonController {
 		
     	if($list['huankuan_type'] == '1'){
 			/*还款获取优惠券*/
-			$time = time();
+			$time = date("Y-m-d",time());
 			$map['money_num'] =$list['money_num'];
 			$map['time_length'] =$list['time_length'];
-			$map['time_start'] = array('egt',$time);
-			$map['time_end'] = array('elt',$time);
-			$loan_money_info=M('loan_money')->where($map)->find();
+
+			$map['time_end'] = array('egt',$time);
+			$loan_money_info = M('loan_money')->where($map)->find();
+			
 			if($loan_money_info['cash_coupon']){
 				$sdata['time_start']=strtotime($loan_money_info['time_start']);
 				$sdata['time_end']=strtotime($loan_money_info['time_end']);
@@ -354,8 +355,8 @@ json;
 json;
     		$this->https_request($url,$data);
     	}
-    	$data = "确定放款";
-    	$this->ajaxReturn($data);
+    	//$data = "确定放款";
+    	//$this->ajaxReturn($data);
     }
     
     //未收到还款

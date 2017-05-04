@@ -229,13 +229,13 @@
 						<ul class="list-data clearfix">
 							<li class="itme fl">
 								<p class="itme-data change"><span>7</span>天</p>
-								<p class="moeny fund">￥<span class="list">{$loan_money[0]['money_num']}</span><em style="display:none">{$day1}</em></p>
+								<p class="moeny fund">￥<span class="list">{$loan_money[0]['sum']}</span><em style="display:none">{$day1}</em></p>
 								<input type="hidden" value="{$money}">
 							</li>
 							<li class="itme fr">
 								<p class="itme-data "><span>14</span>天</p>
 								<p class="moeny ">￥<span class="list">
-								{$loan_money[1]['money_num']}
+								{$loan_money[1]['sum']}
 								</span><em style="display:none">{$day2}</em></p>
 								<input type="hidden" value="{$money2}">
 							</li>
@@ -248,7 +248,8 @@
 						</p>
 						<p class="total">
 							到期还款总额: <span class="sum">
-								{$loan_money[0]['money_num']}
+								<!-- {$loan_money[0]['sum']} -->
+								{$list['sum']}
 							</span>元
 						</p>
 						<button class="sure" id="account">确定</button>
@@ -411,7 +412,7 @@
 				$("#sum2").text(num);
 				$("#xuqi").text(xuqi);
 				$(".span").text(date);
-				$(".sum").text(money);	
+				//$(".sum").text(money);	
 		})
 		 
 			//		续期弹窗出现

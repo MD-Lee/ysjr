@@ -605,7 +605,7 @@ json;
 	
 	
 	//获取短信验证码接口方法
-	public function message_verify(){
+	/* public function message_verify(){
 		$verify = rand(100000,999999);   //把随机验证码提交到session里面
 		$_SESSION['verify'] = $verify;
 		$phone = I('phone');
@@ -632,10 +632,27 @@ json;
 		$data = $statusStr[$result];
 
 		$this->ajaxReturn($data);
+	} */
+	public function message_verify(){
+		$verify = rand(100000,999999);   //把随机验证码提交到session里面
+		$_SESSION['verify'] = $verify;
+		$mobile = I('phone');
+		$_SESSION['phone'] = $mobile;
+		$content="【及时雨微额速达】您的验证码是{$verify}";//要发送的短信内容
+		$userid = 3116;
+		$account = "jsy";
+		$password = "jsy123";
+		$url = "http://dx.qxtsms.cn/sms.aspx?action=send&userid=".$userid."&account=".$account."&password=".$password."&mobile=".$mobile."&content=".$content."&sendTime=&checkcontent=0";
+		$restult = https_request($url,1);
+		$xml = simplexml_load_string($restult);
+		$data = json_decode(json_encode($xml),TRUE);
+		$result = $data['returnstatus']=='Success'?"短信发送成功":"失败";
+		$this->ajaxReturn($result);
+		
 	}
 	//提交用户注册接口方法
 	public function user_register(){
-		$verify = '123123';//$_SESSION['verify'];   //获取到session里面的验证码
+		$verify = $_SESSION['verify'];   //获取到session里面的验证码
 		$info = I('info');
 		$phone = $info['phone'];
 		/*if($phone != $_SESSION['phone']){
@@ -656,33 +673,9 @@ json;
 				$this->ajaxReturn($data);
 			}else{
 				if(is_array($info)){
-					$time = date("Y-m-d H:i:s",time());
-					$activity = D('activity');
-					$re = $activity->field("max(id) as id")->find();
-					$res = $activity->where("id='{$re['id']}' and time_start < '$time' and time_end > '$time'")->find();
-					if($res != null){
-						$access_token = access_token();
-						$url = "https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=".$access_token;
-						$text = <<<json
-	    	{
-			    "touser":"$openid",
-			    "msgtype":"news",
-			    "news":{
-			        "articles": [
-			         {
-			             "title":"尊敬的用户,您好",
-			             "description":"活动期间{$res['time_start']}到{$res['time_end']}，新用户可以获得{$res['money_num']}元优惠卷",
-			         }
-			         ]
-			    }
-			}
-json;
-						$this->https_request($url,$text);
-						
-						$info['money'] = $res['money_num'];
-					}
 					$map['openid']=$openid;
 					$res2 = $user->where($map)->save($info);
+					//echo $user->getLastsql();
 					if($res2){
 						$data = "注册成功";
 						$this->ajaxReturn($data);
@@ -1083,8 +1076,9 @@ json;
 				//$password = base64_encode($service_pwd);//用户密码 //!!!需自行设定!!!
 				//$lee = $Lm->process($username,$password);
 				//$lee=array("msg"=>"密码错误","code"=>"1102");
-				//$result = validate_mobile($info['name'], $info['idcard'], $phone);//new add
-				$result=1;
+				$result = validate_mobile($info['name'], $info['idcard'], $phone);//new add
+				
+				//$result=1;
 				if($result == 2 || $result == 3){
 					$data = $result==2?2:3;
 					

@@ -119,12 +119,12 @@ div.error
 			  <div class="form-group">
 			    <input type="text" class="form-control" name="info[uID]" value="{$list1[0]['uid']}" id="uid" placeholder="身份证号">
 			  </div>
-			  <div class="form-group">
+			<!--   <div class="form-group">
 			    <input type="text" class="form-control" name="info[qq]" value="{$list1[0]['qq']}" placeholder="QQ号码">
 			  </div>
 			  <div class="form-group">
 			    <input type="text" class="form-control" name="info[email]" value="{$list1[0]['email']}" placeholder="电子邮箱地址">
-			  </div>
+			  </div> -->
 			  <div class="form-group select">
 			  	<input type="hidden" value="{$list1[0]['education']}" id="education">
 			  	<select name="info[education]" id="select1">
@@ -549,13 +549,13 @@ function checkText1(){
 				required:true,
 				isIdCardNo:true
 			},
-			"info[qq]":{
+			/*"info[qq]":{
 				required:true,
 				isQq:true
 			},
 			"info[email]":{
 				required:true
-			},
+			},*/
 			"info[education]":{
 				required:true
 			},
@@ -578,13 +578,13 @@ function checkText1(){
 				required:'请输入您的身份证号码',
 				isIdCardNo:'请输入正确的身份证号'
 			},
-			"info[qq]":{
+			/*"info[qq]":{
 				required:'请输入您的QQ号码',
 				isQq:'请输入正确的QQ号码'
 			},
 			"info[email]":{
 				required:'请输入您的邮箱'
-			},
+			},*/
 			"info[education]":{
 				required:'请选择教育水平'
 			},

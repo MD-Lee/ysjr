@@ -187,20 +187,20 @@ function template_news($data,$type=0,$newid){
 	
 	$type = $type ?$type:0;
 	if(!empty($openid)){
-		/*1 借款模板 0还款模板 2 资料提交成功提醒*/
+		/*1 借款模板 0还款模板 2 资料提交成功提醒 5审核提醒*/
 		switch ($type)
             {
                 case "1":
-                    $template_id = 'EaBjt7-3zIkbL7g88ZhRvXVvYPxMvTmrJyyiMnfz3L8';
+                    $template_id = 'pVi3JhiubgjFNmVPCZQ2dapUBsf1E501NJo7Ad1rsEY';
                     break;
                 case "2":
-                    $template_id = 'SsRnIl6PMVwpQxyfnpdFlPfVxWpZW_YG0dpkYMRzSGw';
+                    $template_id = 'VVyivyraA888_JW3GbRfmU_l7xIFy9XQS49jUdPuxGw';
                     break;
                 case "0":
-                     $template_id = 'a2Awcz5bDzxmb3er7a8UTNktfDurEMRRwnyAUip3BJ4';
+                     $template_id = 'cbH-_JGPSg2WzPy9J2xz1nYUiJxhd-eyEKtPRuwYylQ';
                     break;
 				case "5":
-                     $template_id = '7g30nXUsSluSoRll-QCOO51FFjEh-p-6hWuUMkYfDac';
+                     $template_id = 'OopUj6YErQxCzuECdSWqxTR_72DX6lEQLifEarYJXKw';
                     break;
                 default:
                     $template_id = "";
@@ -321,9 +321,11 @@ function validate_bank($bank_num,$name,$bank_id_number,$bank_mobile){
 
 function validate_mobile($name, $idcard, $mobile){
 	//手机实名认证  姓名  身份证号  手机号
-	$url = "http://api.jisuapi.com/mobileverify/verify?appkey=f21fab567be0a064&realname=".$name."&idcard=".$idcard."&typeid=1&mobile=".$mobile;
+	$url = "http://api.jisuapi.com/mobileverify/verify?appkey=7d402ab058043b8f&realname=".$name."&idcard=".$idcard."&typeid=1&mobile=".$mobile;
 	$result = https_request($url);
 	$jsonarr = json_decode($result, true);
+
+
 	if($jsonarr['status'] != 0){
 		if(in_array($jsonarr['status'],array(101,102,103,104,105,106,107,108))){
 			/*系统错误*/
@@ -333,7 +335,13 @@ function validate_mobile($name, $idcard, $mobile){
 			return	2;
 		}
 	}else{
-		return	1;
+		if($jsonarr['result']['verifystatus'] ==1){
+			/*信息不符合*/
+			return	2;
+		}else{
+			return	1;
+		}
+		
 	}	
 }
 
