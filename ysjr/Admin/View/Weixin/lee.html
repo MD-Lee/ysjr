@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>微信JS-SDK Demo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0">
+  <link rel="stylesheet" href="http://demo.open.weixin.qq.com/jssdk/css/style.css?ts=1420774989">
+  <script type="text/javascript" src="{$Think.config.URL}js/jquery-1.9.1.min.js"></script>
+</head>
+<body ontouchstart="">
+ <button class="btn btn_primary" id="chooseImage">chooseImage</button>
+ <button class="btn btn_primary" id="uploadImage">uploadImage</button>
+ <div class="btn btn_primary" id="yq">yq</div>
+<img id="lee"src=""></img>
+</body>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script>
+  wx.config({
+      debug: true,
+      appId: '{$signPackage[appId]}',
+	  timestamp: '{$signPackage[timestamp]}',
+      nonceStr: '{$signPackage[nonceStr]}',
+	  signature: '{$signPackage[signature]}',
+      jsApiList: [
+        'chooseImage',
+		'uploadImage'
+      ]
+  });
+  wx.ready(function(){
+  var images = {
+    localId: [],
+    serverId: []
+  };
+  document.querySelector('#chooseImage').onclick = function () {
+	   wx.chooseImage({
+		count: 1, // 默认9
+		sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+		sourceType: [ 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+		success: function (res) {
+		   images.localId = res.localIds;
+		   alert(images.localId);
+			var localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+			$("#lee").attr('src',localIds); 
+				wx.uploadImage({
+			localId:  $("#lee")[0].src, // 需要上传的图片的本地ID，由chooseImage接口获得
+			isShowProgressTips: 1, // 默认为1，显示进度提示
+			success: function (res) {
+				var serverId = res.serverId; // 返回图片的服务器端ID
+				$("#yq").html(serverId);
+			}
+			});
+			
+		}
+		});
+  };
+  document.querySelector('#uploadImage').onclick = function () {
+  
+	wx.uploadImage({
+		localId:  $("#lee")[0].src, // 需要上传的图片的本地ID，由chooseImage接口获得
+		isShowProgressTips: 1, // 默认为1，显示进度提示
+		success: function (res) {
+			var serverId = res.serverId; // 返回图片的服务器端ID
+			$("#yq").html(serverId);
+		}
+		});
+  };
+ 
+});
+
+</script>
+
+</html>

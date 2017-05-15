@@ -400,7 +400,7 @@ class AdminController extends CommonController {
 								"articles": [
 								{
 										"title":"审核提醒",
-										"description":"尊敬的用户，您好，您提交的资料已审核成功！",
+										"description":"尊敬的用户，您好，您提交的资料已审核成功！请点击选择金额",
 										"url":"$wurl"
 								}
 								]

@@ -324,7 +324,7 @@ function validate_mobile($name, $idcard, $mobile){
 	$url = "http://api.jisuapi.com/mobileverify/verify?appkey=7d402ab058043b8f&realname=".$name."&idcard=".$idcard."&typeid=1&mobile=".$mobile;
 	$result = https_request($url);
 	$jsonarr = json_decode($result, true);
-
+print_r($jsonarr);
 
 	if($jsonarr['status'] != 0){
 		if(in_array($jsonarr['status'],array(101,102,103,104,105,106,107,108))){
@@ -371,3 +371,28 @@ function remind(){
 		
 	}
 }
+
+/*数字转成大写数字*/
+function cny($ns) {
+    static $cnums = array("零","壹","贰","叁","肆","伍","陆","柒","捌","玖"),
+    $cnyunits = array("圆","角","分"),
+	$grees = array("拾","佰","仟","万","拾","佰","仟","亿");
+    list($ns1,$ns2) = explode(".",$ns,2);
+    $ns2 = array_filter(array($ns2[1],$ns2[0]));
+    $ret = array_merge($ns2,array(implode("",_cny_map_unit(str_split($ns1),$grees)),""));
+    $ret = implode("",array_reverse(_cny_map_unit($ret,$cnyunits)));
+    return str_replace(array_keys($cnums),$cnums,$ret);
+}
+
+function _cny_map_unit($list,$units) {
+    $ul = count($units);
+    $xs = array();
+    foreach (array_reverse($list) as $x) {
+        $l = count($xs);
+        if ($x!="0" || !($l%4)) $n=($x=='0'?'':$x).($units[($l-1)%$ul]);
+        else $n = is_numeric($xs[0][0])?$x:'';
+        array_unshift($xs,$n);
+    }
+    return $xs;
+}
+/*END*/

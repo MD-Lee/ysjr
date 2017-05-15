@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>审核管理</title>
+
+<!-- header binge -->
+<include file="Public/header" />
+
+<!-- header end -->
+
+<script type="text/javascript" src="{$Think.config.URL}js/new/unify.js"></script>
+</head>
+
+
+<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="js/excanvas.min.js"></script><![endif]-->
+</head>
+<body >
+
+<!-- header binge -->
+<include file="Public/head" />
+
+<!-- header end -->
+    
+    <div class="rightpanel">
+        
+        <!-- head binge -->
+        
+			<include file="Public/nav" name='审核管理'/>
+		
+		<!-- head end -->
+                
+        <div class="maincontent">
+            <div class="maincontentinner">
+                <div class="row-fluid">
+                        <div>
+                            
+                                <div class="widgetbox personal-information">
+                                    <h4 class="widgettitle">审核备注</h4>
+                                    <div class="widgetcontent">
+                                    	<div style="padding:15px 40px;">
+                                    
+                                    		<form action="{:U('Admin/no_auditing')}" id="form">
+		                                        <p style="margin:0 0;">
+		                                        	<label style="float:left;margin-top: 5px;">审核备注：</label>
+		                                        	<textarea rows="3" name="remark"></textarea>
+		                                        </p>
+		                                     </form>
+                                            <p>
+												
+	                                        	<button class="btn btn-primary" onclick="submit_auditing({$id})">提交审核</button>
+			                                </p>
+                                    	</div>
+                                    </div>
+                                </div>
+                            
+                        </div><!--span8-->
+                    </div><!--row-fluid-->
+                   <div style="height:292px;"></div>
+                  
+        		 <!-- footer binge -->
+				<include file="Public/footer" />
+				
+				<!-- footer end -->
+                
+                
+                
+            </div><!--maincontentinner-->
+        </div><!--maincontent-->
+        
+    </div><!--rightpanel-->
+    
+</div><!--mainwrapper-->
+<script>
+function submit_auditing(id){
+	$('#form').ajaxSubmit({
+		type:"POST",
+		url:$('#form').attr('action'),
+		data:{'id':id},
+		datatype:"json",
+		success:function(data){
+			alert(data);
+			setTimeout(function(){window.location.href="{:U('Admin/s_manage')}"},1000);
+		}
+	})
+}
+</script>
+</body>
+</html>

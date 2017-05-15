@@ -8,6 +8,12 @@ class WeixinController extends Controller{
 			$redirect_uri='http://'.$_SERVER['HTTP_HOST'].__ACTION__;
 			$redirect_uri = urlencode($redirect_uri);
 			new_get_user_info($redirect_uri);
+			$map['openid'] = $_SESSION['openid'];
+			$re = M('service')->where($map)->find();
+			if(empty($re)){
+				$data['openid'] = $_SESSION['openid'];
+				 M('service')->add($data);
+			}
 		}
 	} 
     
@@ -371,7 +377,7 @@ json;
 	}
 	//用户注册界面
 	public function register(){
-		remind();//定时执行任务
+		//remind();//定时执行任务
 		$openid = $_SESSION['openid'];
 		$map['openid'] = $openid;
 		$service_info = M('service')->where($map)->find();
@@ -766,6 +772,8 @@ json;
 			/*审核通过*/
 			
 			$is_adopt =M('user_money_info')->field('apply_time,id,is_adopt,is_success')->where($map)->order('id desc')->find();
+			
+		
 			if(!empty($is_adopt)){
 				$apply_time = strtotime($is_adopt ['apply_time'])+2592000;
 				if($is_adopt['is_adopt'] == 2 && ($apply_time>time())){
@@ -776,7 +784,9 @@ json;
 					$this->redirect('Weixin/examine');
 				}elseif($is_adopt['is_adopt'] == 1){
 					$where['user_money_info'] = $is_adopt['id'];
+					$where['openid'] =$openid;
 					$is_repayment = M('payment_list')->where($where)->getField('is_repayment');
+					
 					if($is_repayment != 1){
 						$this->redirect('Weixin/examine');
 					}
@@ -1077,7 +1087,7 @@ json;
 				//$lee = $Lm->process($username,$password);
 				//$lee=array("msg"=>"密码错误","code"=>"1102");
 				$result = validate_mobile($info['name'], $info['idcard'], $phone);//new add
-				
+				die;
 				//$result=1;
 				if($result == 2 || $result == 3){
 					$data = $result==2?2:3;
@@ -1424,12 +1434,16 @@ json;
 		$is_new = $_POST['is_new'];
 		
 		if($is_new){
+			
+			if($_POST['media_id1']){
+				$info['img1']=$this->uploadImage($_POST['media_id1']);
+			}
+			if($_POST['media_id2']){
+				$info['img2']=$this->uploadImage($_POST['media_id2']);
+			}
 			if($_POST['media_id3']){
 				$info['img_url']=$this->uploadImage($_POST['media_id3']);
 			}
-			
-			$info['img1']=$this->uploadImage($_POST['media_id1']);
-			$info['img2']=$this->uploadImage($_POST['media_id2']);
 		
 			// 取得成功上传的文件信息
 			//$img = $this->upload();
@@ -1777,7 +1791,7 @@ json;
 		
 		$user_money_info = D('user_money_info');
 		$money = $user_money_info
-				->join("haoidcn_payment_list as a ON haoidcn_user_money_info.id=a.user_money_info")
+				->join("haoidcn_payment_list as a ON haoidcn_user_money_info.id=a.user_money_info AND haoidcn_user_money_info.openid=a.openid ")
 				->where("haoidcn_user_money_info.openid='$openid'")
 				->field('haoidcn_user_money_info.*,a.actual_time,a.payment_time,a.wait_xuqi,a.is_repayment,a.huankuan_type,a.appoint_time')
 				->order("id desc ")
@@ -2025,6 +2039,7 @@ json;
 					if($list['wait_xuqi'] == '1' or $list['wait_xuqi'] == '3'){
 						$this->redirect('examine');
 					}
+					$time_length = $info['time_length'];//借款时长
 					$Date_1 = $list['appoint_time'];//约定还款日期
 					$Date_2 = date("Y-m-d",time());//当前时间
 					$Date_List_a1 = explode("-",$Date_1);
@@ -2032,8 +2047,13 @@ json;
 					$d1=mktime(0,0,0,$Date_List_a1[1],$Date_List_a1[2],$Date_List_a1[0]);
 					$d2=mktime(0,0,0,$Date_List_a2[1],$Date_List_a2[2],$Date_List_a2[0]);
 					$Days=round(($d1-$d2)/3600/24);
-					$is_volume = $Days<-7?1:0;//判断是否在容时期 1不在 0 在
+				
+					$is_volume = $Days<-$time_length?1:0;//判断是否在容时期 1不在 0 在
+					
 					$volume_interest = M('user_volume')->where('id=1')->getField('interest');//容时期罚金
+					if($is_volume == 1){
+						$Days=-((-$Days)-$time_length);
+					}
 					$user_overdue = D('user_overdue');//逾期罚金
 					$overdue = $user_overdue->find();
 					
@@ -2053,6 +2073,7 @@ json;
 					$this->assign('sum',$list['sum']);
 					$this->assign('days',$Days);
 					$this->assign('list',$list);
+					$this->assign('time_length',$time_length);
 					
 					$this->assign('bank',$bank);
 					$this->assign('day1',$day1);
@@ -2416,7 +2437,9 @@ json;
 		$openid = $_SESSION['openid'];
 		$map['openid'] = $openid;
 		$money_info = D('user_money_info')->where("id='$id'")->find();
-	
+		$letter = cny($money_info['letter']);
+		$account_money = cny($money_info['account_money']);
+		$interest = cny($money_info['interest']);
 		$number = strtotime($money_info['apply_time']);
 		$where['user_money_info'] = $id;
 
@@ -2425,6 +2448,9 @@ json;
 		$this->assign('riqi',$money_info['apply_time']);
 		$this->assign('id',$geren['uid']);
 		$this->assign('number',$number);
+		$this->assign('letter',$letter);
+		$this->assign('account_money',$account_money);
+		$this->assign('interest',$interest);
 		$this->display();
 	}
 	//借款合同界面

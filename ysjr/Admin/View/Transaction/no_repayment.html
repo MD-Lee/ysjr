@@ -63,6 +63,8 @@ jQuery(document).ready(function(){
                             		<tr>
                             			<th width="150px;">手机号</th>
                             			<th width="100px;">姓名</th>
+										<th width="250px;">借款合同</th>
+                            			<th width="250px;">服务合同</th>
                             			<th width="150px;">银行卡号</th>
                             			<th width="100px;">金额</th>
                             			<th width="100px;">期限</th>
@@ -81,6 +83,8 @@ jQuery(document).ready(function(){
                             			<tr>
                             				<td>{$vo.phone}</td>
                             				<td>{$vo.name}</td>
+											<td><a href="{:U('Task/jiekuan',array('id'=>$vo['user_money_info']))}">借款合同</a></td>
+                            				<td><a href="{:U('Task/fuwuxy',array('id'=>$vo['user_money_info']))}">服务合同</a></td>
                             				<td>{$vo.bank_num}</td>
                             				<td>{$vo.money_num}</td>
                             				<td>{$vo.time_length}</td>

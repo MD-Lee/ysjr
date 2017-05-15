@@ -471,12 +471,17 @@ class TaskController extends CommonController {
 		$map['openid'] = $money_info['openid'];
 		$number = strtotime($money_info['apply_time']);
 		$where['user_money_info'] = $id;
-
+		$letter = cny($money_info['letter']);
+		$account_money = cny($money_info['account_money']);
+		$interest = cny($money_info['interest']);
 		$geren = D('user_info')->where($map)->find();
 		$this->assign('user_name',$geren['name']);
 		$this->assign('riqi',$money_info['apply_time']);
 		$this->assign('id',$geren['uid']);
 		$this->assign('number',$number);
+		$this->assign('letter',$letter);
+		$this->assign('account_money',$account_money);
+		$this->assign('interest',$interest);
 		$this->display();
 	}
     //curl方法
@@ -913,8 +918,11 @@ json;
     	$this->assign('info',$info);
     	$xs = $xuesheng->where("openid='$openid'")->find();
     	$res = $user_money_info->where("openid='$openid'")->order("id desc")->select();
+		$bank_info = D('bank_info');
+    	$bank = $bank_info->where("openid='$openid'")->find();
     	$this->assign('xuesheng',$xs);
     	$this->assign('res',$res);
+    	$this->assign('bank',$bank);
     	$this->display();
     }
     public function ok_adopt(){

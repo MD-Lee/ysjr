@@ -4,7 +4,7 @@ use Think\Controller;
 
 class IndexController extends Controller {
     public function index(){
-		remind();//定时执行任务
+		//remind();//定时执行任务
     	//timer();	//定时执行任务
     	
     	//Session_start();

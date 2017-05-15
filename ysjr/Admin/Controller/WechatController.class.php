@@ -4,7 +4,7 @@ use Think\Controller;
 class WechatController extends Controller{
 	public function index(){
         $weixins = new \Org\Wechat\Wechat();
-        $weixins->valid();
+        //$weixins->valid();
         $weixins->responseMsg();
     }	
 	//自定义菜单
@@ -75,11 +75,6 @@ class WechatController extends Controller{
 			{
 	           "name":"更多服务",
 	           "sub_button":[
-	           {	
-	               "type":"click",
-	               "name":"有奖调研",
-	               "key":"V04"
-	            },
 	            {
 	               "type":"view",
 	               "name":"常见问题",
@@ -89,11 +84,6 @@ class WechatController extends Controller{
 	               "type":"click",
 	               "name":"联系客服",
 	               "key":"V05"
-	            },
-	            {
-	               "type":"click",
-	               "name":"留言给CEO",
-	               "key":"V06"
 	            }]
 		    }]
 		 }

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>签约</title>
+<link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+<link href="{$Think.config.URL}/css/Weixin.register.css" rel="stylesheet">
+<script type="text/javascript" src="{$Think.config.URL}js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="{$Think.config.URL}js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="{$Think.config.URL}js/validate-methods.js"></script>
+<script type="text/javascript" src="{$Think.config.URL}js/jquery.form-3.51.0.js"></script>
+<style>
+.class {
+	-webkit-animation:rotage-change 2s linear 0.5s infinite ;
+}
+.jk_title{ margin:15px 0; font-size:18px;}
+.fl{ float:left;}
+.agreebox{ margin:0 0 6px 0;}
+.jk_table{ width:100%;}
+.jk_table td{ padding:0 0 12px 0; font-size:16px;}
+.jk_table td.first{ padding:0 0 10px 20px;}
+.jk_table td label{ font-size:14px; font-weight:normal;}
+.container{ background:#fff; border-radius:6px;}
+.name{ color:#777;}
+@-webkit-keyframes rotage-change {
+             /*起始*/
+         from {         
+              -webkit-transform: rotate(0deg);
+         }
+         /*结束*/
+         to {
+              -webkit-transform: rotate(360deg);
+         }
+      }
+
+</style>
+</head>
+<body>
+	<div class="container" style="margin-top:0px">
+		<div class="jk_title" align="center">
+			借款协议
+		</div>
+		<form id="register" action="{:U('Weixin/protocol_ok',array('id'=>$id))}" style="margin:16px 0 0 0;">
+        	<table class="jk_table" cellpadding="0" cellspacing="0">
+            	<tr>
+                	<td class="first" style="width:110px;">借款人：</td>
+                	<td><span class="name">{$name}</span></td>
+                </tr>
+            	<tr>
+                	<td class="first">借款全额：</td>
+                	<td><span class="name">{$loan_info['sum']}</span></td>
+                </tr>
+            	<tr>
+                	<td class="first">借款时长：</td>
+                	<td><span class="name">{$loan_info['time_length']}</span></td>
+                </tr>
+            	<tr>
+                	<td class="first">综合费用：</td>
+                	<td><span class="name">{$money}</span></td>
+                </tr>
+            	<tr>
+                	<td class="first">还款方式：</td>
+                	<td><span class="name">一次性还款{$loan_info['sum']}</span></td>
+                </tr>
+            	<tr>
+                	<td class="first">还款日期：</td>
+                	<td><span class="name">{$appoint_time}</span></td>
+                </tr>
+                <tr>
+                	<td colspan="2" style="padding:0 0 0 25px;">
+                        <label for="agree" style="overflow:hidden;">
+                          <input type="checkbox" name="agree" id="agree" class="fl" style="margin:1px 5px 0 0;">
+                           我同意<a class="span" href="{:U('Weixin/jiekuan',array('id'=>$id))}">《借款协议》</a>
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                	<td colspan="2" style="padding:0 0 0 25px;">
+                    	<label for="noAgree" style="overflow:hidden;">
+                          <input type="checkbox" name="agree1" id="noAgree" class="fl" style="margin:1px 5px 0 0;"> 
+                          <span class="fl">我同意<a class="span" href="{:U('Weixin/fuwuxy',array('id'=>$id))}">《服务协议协议》</a></span>
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                	<td colspan="2">
+                    <button type="button" class="btn btn-primary" id="frame" onclick="user_register()" style="font-size:18px; margin:15px 0 0 0;">签约</button>
+                    </td>
+                </tr>
+            </table>
+		  
+		</form>
+		<!--<div class="text">
+			<a href="{:U('Weixin/login',array('openid'=>$openid))}" style="color: red;">已经注册？点我登录</a>
+		</div>-->
+	</div>
+</body>
+<script>
+ 
+//输入框非空方法 
+function checkText(){
+	return $("#register").validate({
+		errorPlacement: function(error, element) {  
+		    error.appendTo(element.parent());  
+		},
+		errorElement: "div",
+		rules:{
+			
+			"agree":{
+				required:true
+			},
+			"agree1":{
+				required:true
+			}
+		},
+		messages:{
+			
+			"agree":{
+				required:'<span style=" color:red; font-size:12px; margin:0 0 0 20px;">请同意我们的协议</span>'
+			},
+			"agree1":{
+				required:'<span style=" color:red; font-size:12px; margin:0 0 0 20px;">请同意我们的协议</span>'
+			}
+		}
+	})
+}
+//提交用户注册信息到后台
+function user_register(){
+	if(!checkText().form())return;
+	var url=$('#register').attr('action');
+	window.location.href=url;
+	
+	
+}
+</script>
+</html>

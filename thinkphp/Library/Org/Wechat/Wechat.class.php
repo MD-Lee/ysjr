@@ -23,31 +23,18 @@ class Wechat{
 					/*添加基本关注信息*/
 				    $data['openid']="$fromUsername";
                     M('service')->add($data);
-                 
                 }
             }
-			$newsTpl = "<xml>
-                         <ToUserName><![CDATA[%s]]></ToUserName>
-                         <FromUserName><![CDATA[%s]]></FromUserName>
-                         <CreateTime>%s</CreateTime>
-                         <MsgType><![CDATA[%s]]></MsgType>
-                         <ArticleCount>%s</ArticleCount>
-                         <Articles>
-                         %s
-                         </Articles>
-                         <FuncFlag>0</FuncFlag>
-                         </xml>";
-			
             switch ($msgType)
-            {
+            {	
+				case "event":
+                    $resultStr = $this->receiveEvent($postObj);
+                    break;
                 case "text":
                     $resultStr = $this->receiveText($postObj);
                     break;
                 case "image":
                     $resultStr = $this->receiveImage($postObj);
-                    break;
-                case "event":
-                    $resultStr = $this->receiveEvent($postObj);
                     break;
                 default:
                     $resultStr = "";
@@ -144,6 +131,7 @@ json;
     {
         $FromUserName = $object->FromUserName;
 		$this -> update_info($FromUserName);
+		sleep(1);
 		$condition['openid']="$FromUserName";
         
         $service_info = D('service')->where($condition)->field('phone,uname')->find();
@@ -169,15 +157,11 @@ json;
 		   
 			$gam = D('user_gam')->where($condition)->find();
 		}
-	
-		
-		
 		$http_url="http://".$_SERVER['HTTP_HOST'];
-	
+		
         switch ($object->Event)
         {
             case "subscribe":
-				$this -> update_info($FromUserName);
 				$uname = D('service')->where($condition)->getField('uname');
 				$PicUrl =$http_url."/Uploads/logo.jpg";
 				$contentStr[] = array(
@@ -208,17 +192,7 @@ json;
                                 "Title" =>"手机已认证",
                                 "Description" =>"尊敬的用户：".$service_info['uname']."，您已经完成手机认证",
                             );
-                        }/* else if($is_adopt == '1'){
-                            $contentStr[] = array(
-                                "Title" =>"手机已认证",
-                                "Description" =>"尊敬的用户：".$service_info['uname']."，您已经完成手机认证"
-                            );
-                        }else{
-                            $contentStr[] = array(
-                                "Title" =>"数据验证中",
-                                "Description" =>"我们正在马不停蹄的验证您的手机数据，请您的稍等片刻"
-                            );
-                        } */
+                        }
                         break;
                     case "V02":
                         if(empty($phone)){
@@ -493,6 +467,7 @@ json;
 			$url = "https://api.weixin.qq.com/cgi-bin/user/info?access_token=$access_token&openid=".$wxid;
 			$res_json = $this->https_request($url);
 		    $w_user = json_decode($res_json, TRUE);
+			
 			$w_sql = "UPDATE  `haoidcn_service` SET  `uname` =  '$w_user[nickname]',`headimgurl` =  '$w_user[headimgurl]'  WHERE `openid` = '$wxid';";
 			$db=D();
 			$db->execute($w_sql);

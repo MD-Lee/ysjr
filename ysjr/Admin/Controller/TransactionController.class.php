@@ -299,6 +299,13 @@ class TransactionController extends CommonController {
 			}
 			
     		$res = $user_money_info->where("id='$user_money_info_id'")->find();
+			if($res['coupon_id']){
+				$cwhere['id'] = $res['coupon_id'];
+				$cwhere['openid'] = $list['openid'];
+				$cdata['status'] = 1;
+				M('user_cash_coupon')->where($cwhere)->save($cdata);
+				
+			}
     		$user_money_info->where("id='$user_money_info_id'")->setField('is_renewal',0);
     		$complete_renewal = $res['is_renewal'];
     		$user_money_info->where("id='$user_money_info_id'")->setInc('complete_renewal',$complete_renewal);
@@ -361,16 +368,17 @@ json;
     
     //未收到还款
     public function no_loan(){
-    	$phone = I('phone');
+		$id = I('pid');
+		$map['id'] = $id;
     	$payment_list = D('payment_list');
-    	$list = $payment_list->where("phone='$phone'")->find();
+    	$list = $payment_list->where($map)->find();
+		$user_money_info_id=$list['user_money_info'];
     	$user_money_info = D('user_money_info');
-    	$time = $user_money_info->field("max(id) as id")->where("phone='$phone'")->find();
-    	$user_money_info->where("id='{$time['id']}'")->setField('is_adopt','1');
-    	$shoukuan = $payment_list->field("max(id) as id")->where("phone='$phone'")->find();
-    	$payment_list->where("id='{$shoukuan['id']}'")->setField('wait_xuqi','');
-    	$payment_list->where("id='{$shoukuan['id']}'")->setField('trade_mode','');
-    	$payment_list->where("id='{$shoukuan['id']}'")->setField('huankuan_type','');
+		$where['id'] = $user_money_info_id;
+    	$user_money_info->where($where)->setField('is_adopt','1');
+    	$payment_list->where($map)->setField('wait_xuqi','');
+    	$payment_list->where($map)->setField('trade_mode','');
+    	$payment_list->where($map)->setField('huankuan_type','');
     	if($list['huankuan_type'] == '1'){
     		$access_token = access_token();
     		$url = "https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=".$access_token;

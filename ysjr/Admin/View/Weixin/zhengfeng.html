@@ -91,6 +91,7 @@
 				 <input class="js_upFile"type="button" name="img1" id="images1">
 				 <div class="js_showBox con"  style="float:left">
 						<img class="js_logoBox" id="i1" width="100px" src="{$res['img1']}"/>
+						<input type="hidden"  id="i11" value="{$res['img1']}">
 						<input type="hidden" value="" id="media_id1" name="media_id1">
 				</div>
 			</div>
@@ -104,6 +105,7 @@
 				 <input class="js_upFile"type="button" name="img2" id="images2">
 				 <div class="js_showBox con" style="float:left">
 						<img class="js_logoBox" id="i2" width="100px" src="{$res['img2']}"/>
+						<input type="hidden"  id="i22" value="{$res['img2']}">
 						<input type="hidden" value="" id="media_id2" name="media_id2">
 				</div>
 			</div>
@@ -117,7 +119,7 @@
 				 <input class="js_upFile"type="button" name="img3" id="images3">
 				 <div class="js_showBox con" style="float:left">
 						<img class="js_logoBox" id="i3" width="100px" src="{$res['img_url']}"/>
-					
+						<input type="hidden" id="i33" value="{$res['img_url']}">
 						<input type="hidden" value="" id="media_id3" name="media_id3">
 						<input type="hidden" value="" id="is_new" name="is_new">
 				</div>
@@ -142,9 +144,11 @@
 	</div>
 </body>
 <!-- <script  type="text/javascript"  src="{$Think.config.URL}js/jquery.uploadView.js"></script> -->
-<script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+ <script  type="text/javascript"  src="{$Think.config.URL}js/jweixin.js"></script> 
+<!-- <script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script> -->
 <script>
-  wx.config({
+$(function(){  
+   wx.config({
       debug: false,
       appId: '{$signPackage[appId]}',
 	  timestamp: '{$signPackage[timestamp]}',
@@ -156,7 +160,6 @@
       ]
   });
   wx.ready(function(){
-  
    var images1 = {
     localId: [],
     serverId: []
@@ -164,13 +167,13 @@
   document.querySelector('#images1').onclick = function () {
 	   wx.chooseImage({
 		count: 1, // 默认9
-		sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
-		sourceType: [ 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+		sizeType: ['original'], // 可以指定是原图还是压缩图，默认二者都有
+		sourceType: ['camera'], // 可以指定来源是相册还是相机，默认二者都有
 		success: function (res) {
 			images1.localId = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
 			$("#i1").attr('src',images1.localId[0]); 
-			
-			wx.uploadImage({
+			 setTimeout(function(){
+				wx.uploadImage({
 				localId: images1.localId[0], // 需要上传的图片的本地ID，由chooseImage接口获得
 				isShowProgressTips: 1, // 默认为1，显示进度提示
 				success: function (res) {
@@ -178,7 +181,9 @@
 					$("#media_id1").val(serverId);
 					$("#is_new").val('1');
 				}
-			});
+				});
+			},100);
+			
 			
 		}
 		});
@@ -190,20 +195,23 @@
     document.querySelector('#images2').onclick = function () {
 	   wx.chooseImage({
 		count: 1, // 默认9
-		sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
-		sourceType: [ 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+		sizeType: ['compressed'], // 可以指定是原图还是压缩图，默认二者都有
+		sourceType: ['camera'], // 可以指定来源是相册还是相机，默认二者都有
 		success: function (res) {
 			images2.localId = res.localIds;// 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
 			$("#i2").attr('src',images2.localId[0]);
-			wx.uploadImage({
+			setTimeout(function(){
+				wx.uploadImage({
 				localId: images2.localId[0],  // 需要上传的图片的本地ID，由chooseImage接口获得
 				isShowProgressTips: 1, // 默认为1，显示进度提示
-				success: function (res) {
-					var serverId = res.serverId; // 返回图片的服务器端ID
-					$("#media_id2").val(serverId);
-					$("#is_new").val('1');
-				}
-			});
+					success: function (res) {
+						var serverId = res.serverId; // 返回图片的服务器端ID
+						$("#media_id2").val(serverId);
+						$("#is_new").val('1');
+					}
+				});
+			},100);
+			
 			
 		}
 		});
@@ -221,9 +229,8 @@
 		
 			images.localId = res.localIds;// 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
 			$("#i3").attr('src',images.localId[0]); 
-	
-			
-			wx.uploadImage({
+		setTimeout(function(){
+				wx.uploadImage({
 				localId: images.localId[0],// 需要上传的图片的本地ID，由chooseImage接口获得
 				isShowProgressTips: 1, // 默认为1，显示进度提示
 				success: function (res) {
@@ -231,7 +238,10 @@
 					$("#media_id3").val(serverId);
 					$("#is_new").val('1');
 				}
-			});
+				});
+			},100);
+			
+			
 		}
 		});
   }
@@ -240,6 +250,8 @@
  
 });
 
+});
+  
 </script>
 <script>
 /*$(".js_upFile").uploadView({
@@ -284,16 +296,19 @@ $(".biger-pic span").on("click", function() {
 })
 function upload_img(){
 	
-	$('.class').css('display','block');
+	
 	var media_id3 = $("#media_id3").val();
-	var i3 = $("#i3")[0].src;
-	//alert(i3);
-	var media_id1 = $("#media_id1").val();
 	var media_id2 = $("#media_id2").val();
-	//alert(media_id1);
-	//alert(media_id2);
-	//alert(media_id3);
-	if( (media_id3 && media_id1 && media_id2 )|| (i3 && i2 && i1)){
+	var media_id1 = $("#media_id1").val();
+	var i33 = $("#i33").val();
+	var i22 = $("#i22").val();
+	var i11 = $("#i11").val();
+//alert(i11);
+//alert(i22);
+//alert(i33);
+	
+	if( (media_id3 && media_id1 && media_id2 )|| (i33 && i22 && i11)){
+	$('.class').css('display','block');
 		$('#form').ajaxSubmit({
 			type:"POST",
 			url:$('#form').attr("action"),
@@ -311,6 +326,8 @@ function upload_img(){
 	}else{
 		alert("图片上传不完整");
 		return false;
+		
+		
 	}
 	//var img2 = document.getElementById("images2").value;
 	//var img3 = document.getElementById("images3").value;
